@@ -1,0 +1,8 @@
+dataset_root = "/path/to/nutrition5k_dataset"
+output_root = "/path/to/artifacts"
+model_name = "ViT-B-32"
+pretrained = "laion2b_s34b_b79k"
+image_source = "overhead_rgb"
+batch_size = 64
+num_workers = 4
+device = "auto"

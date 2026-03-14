@@ -1,0 +1,75 @@
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from visionmealrl.embedding import extract_embeddings_main
+from visionmealrl.regression import train_regressor_main
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="visionmealrl",
+        description="Nutrition5K CLIP embedding and regression pipeline.",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    extract_parser = subparsers.add_parser(
+        "extract-embeddings",
+        help="Extract CLIP embeddings for Nutrition5K splits.",
+    )
+    extract_parser.add_argument("--dataset-root", type=Path, required=True)
+    extract_parser.add_argument("--output-root", type=Path, required=True)
+    extract_parser.add_argument("--model-name", default="ViT-B-32")
+    extract_parser.add_argument("--pretrained", default="laion2b_s34b_b79k")
+    extract_parser.add_argument(
+        "--image-source",
+        choices=["overhead_rgb", "side_angles_frames"],
+        default="overhead_rgb",
+    )
+    extract_parser.add_argument("--batch-size", type=int, default=64)
+    extract_parser.add_argument("--num-workers", type=int, default=4)
+    extract_parser.add_argument("--device", default="auto")
+    extract_parser.add_argument(
+        "--no-normalize",
+        action="store_true",
+        help="Disable L2 normalization of CLIP embeddings before saving.",
+    )
+
+    train_parser = subparsers.add_parser(
+        "train-regressor",
+        help="Train a dish-level regressor from extracted embeddings.",
+    )
+    train_parser.add_argument("--embeddings-root", type=Path, required=True)
+    train_parser.add_argument("--output-root", type=Path, required=True)
+    train_parser.add_argument("--head", choices=["linear", "mlp"], default="mlp")
+    train_parser.add_argument("--batch-size", type=int, default=128)
+    train_parser.add_argument("--epochs", type=int, default=50)
+    train_parser.add_argument("--learning-rate", type=float, default=1e-3)
+    train_parser.add_argument("--weight-decay", type=float, default=1e-4)
+    train_parser.add_argument("--hidden-dim", type=int, default=512)
+    train_parser.add_argument("--dropout", type=float, default=0.1)
+    train_parser.add_argument("--val-fraction", type=float, default=0.1)
+    train_parser.add_argument("--seed", type=int, default=7)
+    train_parser.add_argument("--device", default="auto")
+
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.command == "extract-embeddings":
+        extract_embeddings_main(args)
+        return
+
+    if args.command == "train-regressor":
+        train_regressor_main(args)
+        return
+
+    parser.error(f"Unknown command: {args.command}")
+
+
+if __name__ == "__main__":
+    main()

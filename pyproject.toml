@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "visionmealrl"
+version = "0.1.0"
+description = "CLIP embedding extraction and nutrition regression for Nutrition5K."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "numpy>=2.0",
+  "open-clip-torch==3.3.0",
+  "Pillow>=10.0",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+visionmealrl = "visionmealrl.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
