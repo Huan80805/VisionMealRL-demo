@@ -126,16 +126,25 @@ def compute_metrics(predictions: np.ndarray, targets: np.ndarray) -> dict[str, o
     per_target = {}
     for idx, column in enumerate(TARGET_COLUMNS):
         target_values = targets[:, idx]
-        denominator = np.maximum(np.abs(target_values), 1e-6)
+        denominator = max(float(np.abs(target_values).sum()), 1e-6)
+        total_variance = float(((target_values - target_values.mean()) ** 2).sum())
+        residual_sum = float(squared_error[:, idx].sum())
+        r2 = 0.0
+        if total_variance > 1e-12:
+            r2 = 1.0 - residual_sum / total_variance
         per_target[column] = {
             "mae": float(absolute_error[:, idx].mean()),
             "rmse": float(np.sqrt(squared_error[:, idx].mean())),
-            "mape": float((absolute_error[:, idx] / denominator).mean()),
+            "wape": float(absolute_error[:, idx].sum() / denominator),
+            "r2": float(r2),
         }
 
+    target_means = np.maximum(np.abs(targets.mean(axis=0)), 1e-6)
+    normalized_mae = absolute_error.mean(axis=0) / target_means
     return {
         "overall_mae": float(absolute_error.mean()),
         "overall_rmse": float(np.sqrt(squared_error.mean())),
+        "overall_normalized_mae": float(normalized_mae.mean()),
         "per_target": per_target,
     }
 
@@ -210,6 +219,15 @@ def write_predictions_csv(path: Path, dish_ids: list[str], predictions: np.ndarr
             writer.writerow(row)
 
 
+def write_split_manifest(path: Path, split_name: str, dish_ids: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["split", "dish_id"])
+        writer.writeheader()
+        for dish_id in dish_ids:
+            writer.writerow({"split": split_name, "dish_id": dish_id})
+
+
 def train_regressor_main(args) -> None:
     configure_logging()
     set_seed(args.seed)
@@ -226,8 +244,10 @@ def train_regressor_main(args) -> None:
 
     x_train = train_split.features[train_indices]
     y_train = train_split.targets[train_indices]
+    train_dish_ids = [train_split.dish_ids[idx] for idx in train_indices]
     x_val = train_split.features[val_indices]
     y_val = train_split.targets[val_indices]
+    val_dish_ids = [train_split.dish_ids[idx] for idx in val_indices]
 
     y_train_scaled, y_val_scaled, target_mean, target_std = standardize_targets(y_train, y_val)
 
@@ -292,7 +312,10 @@ def train_regressor_main(args) -> None:
     val_metrics = compute_metrics(val_predictions, y_val)
     test_metrics = compute_metrics(test_predictions, test_split.targets)
 
-    output_dir = args.output_root / "regressors" / args.head
+    if getattr(args, "output_dir", None) is not None:
+        output_dir = args.output_dir
+    else:
+        output_dir = args.output_root / "regressors" / args.head
     output_dir.mkdir(parents=True, exist_ok=True)
 
     torch.save(
@@ -341,4 +364,6 @@ def train_regressor_main(args) -> None:
         predictions=test_predictions,
         targets=test_split.targets,
     )
+    write_split_manifest(output_dir / "train_split_manifest.csv", "train", train_dish_ids)
+    write_split_manifest(output_dir / "val_split_manifest.csv", "val", val_dish_ids)
     LOGGER.info("Saved regressor outputs to %s", output_dir)

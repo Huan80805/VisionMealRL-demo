@@ -1,11 +1,14 @@
+dataset_root = "/path/to/nutrition5k_dataset"
 embeddings_root = "/path/to/artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb"
 output_root = "/path/to/artifacts"
-head = "linear"
 batch_size = 128
 epochs = 50
 learning_rate = 0.001
 weight_decay = 0.0001
-hidden_dim = 512
-dropout = 0.1
 val_fraction = 0.1
 seed = 7
+device = "auto"
+top_k = 100
+ingredient_min_mass = 5.0
+ingredient_min_fraction = 0.02
+ranking_k = 5

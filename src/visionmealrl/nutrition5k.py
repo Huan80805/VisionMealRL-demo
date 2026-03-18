@@ -25,6 +25,20 @@ class DishData:
         return [getattr(self, column) for column in TARGET_COLUMNS]
 
 
+@dataclass(frozen=True)
+class IngredientData:
+    ingredient_id: str
+    name: str
+    mass: float
+
+
+@dataclass(frozen=True)
+class DishAnnotation:
+    dish_id: str
+    targets: DishData
+    ingredients: tuple[IngredientData, ...]
+
+
 # a dish may have multiple images, dish_id and dish_data will be the same
 @dataclass(frozen=True)
 class ImageRecord:
@@ -39,14 +53,35 @@ def _resolve_existing(path: Path) -> Path:
     return path
 
 
-def load_dish_targets(dataset_root: Path) -> dict[str, DishData]:
+def _metadata_csv_paths(dataset_root: Path) -> list[Path]:
     metadata_dir = _resolve_existing(dataset_root / "metadata")
-    csv_paths = [
+    return [
         metadata_dir / "dish_metadata_cafe1.csv",
         metadata_dir / "dish_metadata_cafe2.csv",
     ]
-    targets: dict[str, DishData] = {}
 
+
+def _parse_ingredient_columns(row: list[str]) -> tuple[IngredientData, ...]:
+    ingredients: list[IngredientData] = []
+    for start in range(6, len(row), 7):
+        chunk = row[start : start + 7]
+        if len(chunk) < 7:
+            continue
+        ingredient_id, name, mass = chunk[0], chunk[1], chunk[2]
+        ingredients.append(
+            IngredientData(
+                ingredient_id=ingredient_id,
+                name=name,
+                mass=float(mass),
+            )
+        )
+    return tuple(ingredients)
+
+
+def load_dish_annotations(dataset_root: Path) -> dict[str, DishAnnotation]:
+    annotations: dict[str, DishAnnotation] = {}
+    csv_paths = _metadata_csv_paths(dataset_root)
+    metadata_dir = _resolve_existing(dataset_root / "metadata")
     for csv_path in csv_paths:
         if not csv_path.exists():
             continue
@@ -64,47 +99,54 @@ def load_dish_targets(dataset_root: Path) -> dict[str, DishData]:
                         f"Expected at least 6 columns in {csv_path}, got {len(row)}: {row}"
                     )
                 dish_id = row[0]
-                targets[dish_id] = DishData(
-                    total_calories=float(row[1]),
-                    total_mass=float(row[2]),
-                    total_fat=float(row[3]),
-                    total_carb=float(row[4]),
-                    total_protein=float(row[5]),
+                annotations[dish_id] = DishAnnotation(
+                    dish_id=dish_id,
+                    targets=DishData(
+                        total_calories=float(row[1]),
+                        total_mass=float(row[2]),
+                        total_fat=float(row[3]),
+                        total_carb=float(row[4]),
+                        total_protein=float(row[5]),
+                    ),
+                    ingredients=_parse_ingredient_columns(row),
                 )
 
-    if not targets:
+    if not annotations:
         raise FileNotFoundError(
             f"No Nutrition5K dish metadata could be loaded from {metadata_dir}"
         )
 
-    return targets
+    return annotations
 
 
-def discover_split_files(dataset_root: Path) -> dict[str, Path]:
+def load_dish_targets(dataset_root: Path) -> dict[str, DishData]:
+    annotations = load_dish_annotations(dataset_root)
+    return {dish_id: annotation.targets for dish_id, annotation in annotations.items()}
+
+
+def split_prefix_for_image_source(image_source: str) -> str:
+    if image_source in {"overhead_rgb", "side_angles_frames"}:
+        return "rgb"
+    raise ValueError(f"Unsupported image source: {image_source}")
+
+
+def discover_split_files(dataset_root: Path, image_source: str) -> dict[str, Path]:
     split_dir = _resolve_existing(dataset_root / "dish_ids" / "splits")
-    split_paths = list(split_dir.glob("*.txt"))
-    if not split_paths:
-        raise FileNotFoundError(f"No split files found under {split_dir}")
-
-    found: dict[str, Path] = {}
-    for path in split_paths:
-        name = path.stem.lower()
-        if "train" in name and "train" not in found:
-            found["train"] = path
-        elif "test" in name and "test" not in found:
-            found["test"] = path
-
-    missing = {"train", "test"} - set(found)
-    if missing:
-        raise FileNotFoundError(
-            f"Could not infer split files for {sorted(missing)} under {split_dir}"
-        )
-
-    return found
+    prefix = split_prefix_for_image_source(image_source)
+    split_files = {
+        "train": split_dir / f"{prefix}_train_ids.txt",
+        "test": split_dir / f"{prefix}_test_ids.txt",
+    }
+    for split, path in split_files.items():
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Expected {split} split file for image source {image_source} at {path}"
+            )
+    return split_files
 
 
-def load_split_ids(dataset_root: Path) -> dict[str, list[str]]:
-    split_files = discover_split_files(dataset_root)
+def load_split_ids(dataset_root: Path, image_source: str) -> dict[str, list[str]]:
+    split_files = discover_split_files(dataset_root, image_source)
     split_ids: dict[str, list[str]] = {}
     for split, path in split_files.items():
         with path.open("r", encoding="utf-8") as handle:
@@ -161,7 +203,7 @@ def build_image_records(
     dataset_root: Path,
     image_source: str,
 ) -> dict[str, list[ImageRecord]]:
-    split_ids = load_split_ids(dataset_root)
+    split_ids = load_split_ids(dataset_root, image_source)
     dish_targets = load_dish_targets(dataset_root)
     records_by_split: dict[str, list[ImageRecord]] = defaultdict(list)
 

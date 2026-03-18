@@ -1,6 +1,6 @@
 # VisionMealRL
 
-CLIP embedding extraction and nutrition regression for the official Nutrition5K dataset.
+CLIP embedding extraction, ingredient classification, and nutrition regression for the official Nutrition5K dataset.
 
 This scaffold is aligned to the current maintained OpenCLIP package and the official Nutrition5K dataset layout:
 
@@ -102,13 +102,13 @@ Each split contains:
 - `dish_manifest.csv`
 - `metadata.json`
 
-## Train a regressor (WIP)
+## Train a regressor
 
 ```bash
 visionmealrl train-regressor \
   --embeddings-root /path/to/artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb \
   --output-root /path/to/artifacts \
-  --head mlp
+  --head linear
 ```
 
 Outputs are written under:
@@ -125,3 +125,67 @@ Each run includes:
 - `metrics.json`
 - `predictions_test.csv`
 - `run_config.json`
+
+## Train a classifier
+
+```bash
+visionmealrl train-classifier \
+  --dataset-root /path/to/nutrition5k_dataset \
+  --embeddings-root /path/to/artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb \
+  --output-root /path/to/artifacts \
+  --top-k 100 \
+  --ranking-k 5
+```
+
+Outputs are written under:
+
+```text
+artifacts/
+└── classifiers/
+    └── linear/
+```
+
+Each run includes:
+
+- `best_model.pt`
+- `label_vocabulary.json`
+- `metrics.json`
+- `per_class_metrics.csv`
+- `predictions_test.csv`
+- `run_config.json`
+
+## Run the baseline benchmark
+
+```bash
+visionmealrl run-benchmark \
+  --dataset-root /path/to/nutrition5k_dataset \
+  --output-root /path/to/artifacts \
+  --model-name ViT-B-32 \
+  --pretrained laion2b_s34b_b79k \
+  --image-source overhead_rgb \
+  --top-k 100 \
+  --ranking-k 5
+```
+
+This command:
+
+- extracts dish embeddings unless `--skip-extraction` is passed
+- trains the linear nutrition regressor baseline
+- trains the linear top-100 ingredient classifier baseline
+- saves a report-friendly summary row
+
+Benchmark outputs are written under:
+
+```text
+artifacts/
+└── benchmarks/
+    ├── benchmark_runs.csv
+    └── open_clip_ViT-B-32_laion2b_s34b_b79k/
+        └── overhead_rgb/
+            └── linear_top100_at5_seed7/
+                ├── benchmark_config.json
+                ├── benchmark_summary.csv
+                ├── benchmark_summary.json
+                ├── classification/
+                └── regression/
+```
