@@ -1,7 +1,40 @@
-# ──────────────────────────────────────────────────────────────────────────────
-# STEP 3.5 — Diversity-aware recipe selection
-# ──────────────────────────────────────────────────────────────────────────────
- 
+import argparse
+import math
+from collections import Counter, defaultdict
+import torch
+from pathlib import Path
+# import open_clip
+import numpy as np
+import torch
+from PIL import Image
+import json
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Select recipes from the filtered RecipeNLG dataset for a balance" \
+        "of diversity and popular ingredients"
+    )
+    parser.add_argument(
+        "count", type=int, default=False,
+        help="Whether or not the script will collect statistics about ingredient occurences, "
+        "used for further specifying the script (default: False)"
+    )
+    parser.add_argument(
+        "--min_freq", type=int, default=5,
+        help="Minimum number of times an ingredient must appear"
+    )
+    parser.add_argument(
+        "--decay", type=float, default=1.0,
+        help="Directory where results are saved (default: ./out)"
+    )
+    parser.add_argument(
+        "--recipe-dir", type=Path, default="out/filtered_recipes.json",
+        help="Path to RecipeNLG CSV (default: out/filtered_recipes.json)"
+    )
+
+    return parser.parse_args()
+
+
 def select_recipes(
     recipes: list,
     n: int,
@@ -35,9 +68,6 @@ def select_recipes(
     Returns:
         List of N selected recipe dicts, in selection order.
     """
-    import math
-    from collections import Counter, defaultdict
- 
     if n >= len(recipes):
         print(f"  [select] Requested {n} >= pool size {len(recipes)}, returning all.")
         return recipes
@@ -124,10 +154,6 @@ def embed_recipes_with_clip(filtered_recipes: list, output_dir: Path):
     Output: numpy array of shape (N, D) saved as recipe_text_embeddings.npy
             plus a recipe_index.json mapping row → recipe title
     """
-    import torch
-    import open_clip
-    import numpy as np
- 
     print("\n=== STEP 4a: Embedding recipes with CLIP text encoder ===")
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"  Device: {device}")
@@ -176,10 +202,6 @@ def retrieve_recipes(query_image_path: str, output_dir: Path, top_k: int = 5):
     Example:
         results = retrieve_recipes("my_dish.jpg", output_dir=Path("./out"), top_k=5)
     """
-    import torch
-    import open_clip
-    import numpy as np
-    from PIL import Image
  
     emb_path   = output_dir / "recipe_text_embeddings.npy"
     index_path = output_dir / "recipe_index.json"
@@ -211,3 +233,20 @@ def retrieve_recipes(query_image_path: str, output_dir: Path, top_k: int = 5):
     for r in results:
         print(f"  #{r['rank']}  score={r['score']:.4f}  title={r['title']}")
     return results
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    COUNT = args.count
+    print(COUNT)
+    MIN_FREQ = args.min_freq
+    DECAY = args.decay
+    RECIPE_NLG_CSV = args.recipe_dir
+
+    with open(RECIPE_NLG_CSV, 'r') as file:
+        data = json.load(file)
+
+    catalog = select_recipes(data, COUNT, MIN_FREQ, DECAY)
+
+    with open("out/final_catalog.json", "w") as f:
+        json.dump(catalog, f, indent=2)
