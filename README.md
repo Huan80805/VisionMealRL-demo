@@ -102,6 +102,22 @@ Each split contains:
 - `dish_manifest.csv`
 - `metadata.json`
 
+
+For downstream code that needs the embeddings joined with nutrition metadata:
+
+```python
+from visionmealrl import load_dish_embedding_lookup
+
+lookup = load_dish_embedding_lookup(
+    "artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb/train"
+)
+
+dish_id = 'dish_1556572657' # whichever dish you wish to inspect
+record = lookup[dish_id]
+embedding = record["embedding"]
+nutrition_metadata = record["nutrition_metadata"]
+```
+
 ## Train a regressor
 
 ```bash
