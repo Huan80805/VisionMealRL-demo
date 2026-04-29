@@ -2,7 +2,11 @@
 .pytest_cache/
 .venv/
 __pycache__/
-artifacts/
+artifacts/benchmarks
+artifacts/embeddings
+artifacts/multitask/*/epoch_checkpoints
+artifacts/multitask/*/*.csv
+artifacts/multitask/*/*.json
 build/
 dist/
 *.egg-info/

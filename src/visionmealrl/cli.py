@@ -4,109 +4,70 @@ import argparse
 from pathlib import Path
 
 from visionmealrl.benchmark import run_benchmark_main
-from visionmealrl.classification import train_classifier_main
-from visionmealrl.embedding import extract_embeddings_main
-from visionmealrl.regression import train_regressor_main
+from visionmealrl.multitask import train_multitask_main
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="visionmealrl",
-        description="Nutrition5K CLIP embedding and regression pipeline.",
+        description="Nutrition5K end-to-end baseline and multitask pipelines.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    extract_parser = subparsers.add_parser(
-        "extract-embeddings",
-        help="Extract CLIP embeddings for Nutrition5K splits.",
+    baseline_parser = subparsers.add_parser(
+        "run-baseline",
+        help="Run the frozen-embedding baseline end to end and save benchmark outputs.",
     )
-    extract_parser.add_argument("--dataset-root", type=Path, required=True)
-    extract_parser.add_argument("--output-root", type=Path, required=True)
-    extract_parser.add_argument("--model-name", default="ViT-B-32")
-    extract_parser.add_argument("--pretrained", default="laion2b_s34b_b79k")
-    extract_parser.add_argument(
+    baseline_parser.add_argument("--dataset-root", type=Path, required=True)
+    baseline_parser.add_argument("--output-root", type=Path, required=True)
+    baseline_parser.add_argument("--model-name", default="ViT-B-32")
+    baseline_parser.add_argument("--pretrained", default="laion2b_s34b_b79k")
+    baseline_parser.add_argument(
         "--image-source",
         choices=["overhead_rgb", "side_angles_frames"],
         default="overhead_rgb",
     )
-    extract_parser.add_argument("--batch-size", type=int, default=64)
-    extract_parser.add_argument("--num-workers", type=int, default=4)
-    extract_parser.add_argument("--device", default="auto")
-    extract_parser.add_argument(
-        "--no-normalize",
-        action="store_true",
-        help="Disable L2 normalization of CLIP embeddings before saving.",
-    )
+    baseline_parser.add_argument("--extract-batch-size", type=int, default=64)
+    baseline_parser.add_argument("--extract-num-workers", type=int, default=4)
+    baseline_parser.add_argument("--head-batch-size", type=int, default=128)
+    baseline_parser.add_argument("--head-epochs", type=int, default=50)
+    baseline_parser.add_argument("--head-learning-rate", type=float, default=1e-3)
+    baseline_parser.add_argument("--head-weight-decay", type=float, default=1e-4)
+    baseline_parser.add_argument("--validation-size", type=float, default=0.1)
+    baseline_parser.add_argument("--seed", type=int, default=7)
+    baseline_parser.add_argument("--device", default="auto")
+    baseline_parser.add_argument("--run-name")
+    baseline_parser.add_argument("--skip-extraction", action="store_true")
 
-    train_parser = subparsers.add_parser(
-        "train-regressor",
-        help="Train a dish-level regressor from extracted embeddings.",
+    multitask_parser = subparsers.add_parser(
+        "run-multitask",
+        help="Run the multitask finetuning pipeline with a shared encoder and selective unfreezing.",
     )
-    train_parser.add_argument("--embeddings-root", type=Path, required=True)
-    train_parser.add_argument("--output-root", type=Path, required=True)
-    train_parser.add_argument("--head", choices=["linear", "mlp"], default="mlp")
-    train_parser.add_argument("--batch-size", type=int, default=128)
-    train_parser.add_argument("--epochs", type=int, default=50)
-    train_parser.add_argument("--learning-rate", type=float, default=1e-3)
-    train_parser.add_argument("--weight-decay", type=float, default=1e-4)
-    train_parser.add_argument("--hidden-dim", type=int, default=512)
-    train_parser.add_argument("--dropout", type=float, default=0.1)
-    train_parser.add_argument("--val-fraction", type=float, default=0.1)
-    train_parser.add_argument("--seed", type=int, default=7)
-    train_parser.add_argument("--device", default="auto")
-
-    classifier_parser = subparsers.add_parser(
-        "train-classifier",
-        help="Train a dish-level ingredient classifier from extracted embeddings.",
-    )
-    classifier_parser.add_argument("--dataset-root", type=Path, required=True)
-    classifier_parser.add_argument("--embeddings-root", type=Path, required=True)
-    classifier_parser.add_argument("--output-root", type=Path, required=True)
-    classifier_parser.add_argument("--batch-size", type=int, default=128)
-    classifier_parser.add_argument("--epochs", type=int, default=50)
-    classifier_parser.add_argument("--learning-rate", type=float, default=1e-3)
-    classifier_parser.add_argument("--weight-decay", type=float, default=1e-4)
-    classifier_parser.add_argument("--val-fraction", type=float, default=0.1)
-    classifier_parser.add_argument("--seed", type=int, default=7)
-    classifier_parser.add_argument("--device", default="auto")
-    classifier_parser.add_argument("--top-k", type=int, default=100)
-    classifier_parser.add_argument("--ingredient-min-mass", type=float, default=5.0)
-    classifier_parser.add_argument("--ingredient-min-fraction", type=float, default=0.02)
-    classifier_parser.add_argument("--ranking-k", type=int, default=5)
-
-    benchmark_parser = subparsers.add_parser(
-        "run-benchmark",
-        help="Run the baseline benchmark end to end and persist summary outputs.",
-    )
-    benchmark_parser.add_argument("--dataset-root", type=Path, required=True)
-    benchmark_parser.add_argument("--output-root", type=Path, required=True)
-    benchmark_parser.add_argument("--model-name", default="ViT-B-32")
-    benchmark_parser.add_argument("--pretrained", default="laion2b_s34b_b79k")
-    benchmark_parser.add_argument(
+    multitask_parser.add_argument("--dataset-root", type=Path, required=True)
+    multitask_parser.add_argument("--output-root", type=Path, required=True)
+    multitask_parser.add_argument("--model-name", default="ViT-B-32")
+    multitask_parser.add_argument("--pretrained", default="laion2b_s34b_b79k")
+    multitask_parser.add_argument(
         "--image-source",
         choices=["overhead_rgb", "side_angles_frames"],
         default="overhead_rgb",
     )
-    benchmark_parser.add_argument("--extract-batch-size", type=int, default=64)
-    benchmark_parser.add_argument("--extract-num-workers", type=int, default=4)
-    benchmark_parser.add_argument("--head-batch-size", type=int, default=128)
-    benchmark_parser.add_argument("--head-epochs", type=int, default=50)
-    benchmark_parser.add_argument("--head-learning-rate", type=float, default=1e-3)
-    benchmark_parser.add_argument("--head-weight-decay", type=float, default=1e-4)
-    benchmark_parser.add_argument("--val-fraction", type=float, default=0.1)
-    benchmark_parser.add_argument("--seed", type=int, default=7)
-    benchmark_parser.add_argument("--device", default="auto")
-    benchmark_parser.add_argument("--top-k", type=int, default=100)
-    benchmark_parser.add_argument("--ingredient-min-mass", type=float, default=5.0)
-    benchmark_parser.add_argument("--ingredient-min-fraction", type=float, default=0.02)
-    benchmark_parser.add_argument("--ranking-k", type=int, default=5)
-    benchmark_parser.add_argument("--run-name")
-    benchmark_parser.add_argument("--skip-extraction", action="store_true")
-    benchmark_parser.add_argument(
-        "--no-normalize",
-        action="store_true",
-        help="Disable L2 normalization of CLIP embeddings before saving.",
-    )
+    multitask_parser.add_argument("--batch-size", type=int, default=32)
+    multitask_parser.add_argument("--num-workers", type=int, default=4)
+    multitask_parser.add_argument("--epochs", type=int, default=20)
+    multitask_parser.add_argument("--freeze-epochs", type=int, default=3)
+    multitask_parser.add_argument("--head-lr", type=float, default=1e-3)
+    multitask_parser.add_argument("--encoder-lr", type=float, default=1e-5)
+    multitask_parser.add_argument("--weight-decay", type=float, default=1e-4)
+    multitask_parser.add_argument("--dropout", type=float, default=0.1)
+    multitask_parser.add_argument("--lambda-reg", type=float, default=1.0)
+    multitask_parser.add_argument("--lambda-cls", type=float, default=1.0)
+    multitask_parser.add_argument("--unfreeze-last-n-blocks", type=int, default=2)
+    multitask_parser.add_argument("--unfreeze-projection", action="store_true")
+    multitask_parser.add_argument("--validation-size", type=float, default=0.1)
+    multitask_parser.add_argument("--seed", type=int, default=7)
+    multitask_parser.add_argument("--device", default="auto")
+    multitask_parser.add_argument("--run-name")
 
     return parser
 
@@ -115,19 +76,11 @@ def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
 
-    if args.command == "extract-embeddings":
-        extract_embeddings_main(args)
+    if args.command == "run-multitask":
+        train_multitask_main(args)
         return
 
-    if args.command == "train-regressor":
-        train_regressor_main(args)
-        return
-
-    if args.command == "train-classifier":
-        train_classifier_main(args)
-        return
-
-    if args.command == "run-benchmark":
+    if args.command == "run-baseline":
         run_benchmark_main(args)
         return
 

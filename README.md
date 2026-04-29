@@ -24,6 +24,9 @@ VisionMealRL/
 
 ## Install
 
+Make sure to enable large files by:
+`git lfs install`
+
 The project uses [uv](https://docs.astral.sh/uv/) for environment management.
 
 ```bash
@@ -84,12 +87,17 @@ The loader reads:
 - `metadata/dish_metadata_cafe2.csv`
 - split files under `dish_ids/splits/`
 
-## Extract CLIP embeddings
+## Run the Baseline
 
-Default mode uses overhead RGB images and mean-pools view embeddings into one embedding per dish.
+This is the frozen-embedding baseline:
+
+- extract L2-normalized CLIP dish embeddings
+- train the linear nutrition regressor
+- train the linear top-100 ingredient classifier
+- write the benchmark summary and all intermediate outputs
 
 ```bash
-visionmealrl extract-embeddings \
+visionmealrl run-baseline \
   --dataset-root /path/to/nutrition5k_dataset \
   --output-root /path/to/artifacts \
   --model-name ViT-B-32 \
@@ -98,113 +106,6 @@ visionmealrl extract-embeddings \
 ```
 
 Outputs are written under:
-
-```text
-artifacts/
-└── embeddings/
-    └── open_clip_ViT-B-32_laion2b_s34b_b79k/
-        └── overhead_rgb/
-            ├── train/
-            └── test/
-```
-
-Each split contains:
-
-- `per_image_embeddings.npy`
-- `per_image_manifest.csv`
-- `dish_embeddings.npy`
-- `dish_manifest.csv`
-- `metadata.json`
-
-
-For downstream code that needs the embeddings joined with nutrition metadata:
-
-```python
-from visionmealrl import load_dish_embedding_lookup
-
-lookup = load_dish_embedding_lookup(
-    "artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb/train"
-)
-
-dish_id = 'dish_1556572657' # whichever dish you wish to inspect
-record = lookup[dish_id]
-embedding = record["embedding"]
-nutrition_metadata = record["nutrition_metadata"]
-```
-
-## Train a regressor
-
-```bash
-visionmealrl train-regressor \
-  --embeddings-root /path/to/artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb \
-  --output-root /path/to/artifacts \
-  --head linear
-```
-
-Outputs are written under:
-
-```text
-artifacts/
-└── regressors/
-    └── mlp/
-```
-
-Each run includes:
-
-- `best_model.pt`
-- `metrics.json`
-- `predictions_test.csv`
-- `run_config.json`
-
-## Train a classifier
-
-```bash
-visionmealrl train-classifier \
-  --dataset-root /path/to/nutrition5k_dataset \
-  --embeddings-root /path/to/artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb \
-  --output-root /path/to/artifacts \
-  --top-k 100 \
-  --ranking-k 5
-```
-
-Outputs are written under:
-
-```text
-artifacts/
-└── classifiers/
-    └── linear/
-```
-
-Each run includes:
-
-- `best_model.pt`
-- `label_vocabulary.json`
-- `metrics.json`
-- `per_class_metrics.csv`
-- `predictions_test.csv`
-- `run_config.json`
-
-## Run the baseline benchmark
-
-```bash
-visionmealrl run-benchmark \
-  --dataset-root /path/to/nutrition5k_dataset \
-  --output-root /path/to/artifacts \
-  --model-name ViT-B-32 \
-  --pretrained laion2b_s34b_b79k \
-  --image-source overhead_rgb \
-  --top-k 100 \
-  --ranking-k 5
-```
-
-This command:
-
-- extracts dish embeddings unless `--skip-extraction` is passed
-- trains the linear nutrition regressor baseline
-- trains the linear top-100 ingredient classifier baseline
-- saves a report-friendly summary row
-
-Benchmark outputs are written under:
 
 ```text
 artifacts/
@@ -217,7 +118,117 @@ artifacts/
                 ├── benchmark_summary.csv
                 ├── benchmark_summary.json
                 ├── classification/
-                └── regression/
+                ├── regression/
+                └── ...
+```
+
+The baseline still writes extracted embeddings in the same split format under
+`artifacts/embeddings/...`. Each split contains:
+
+- `per_image_embeddings.npy`
+- `per_image_manifest.csv`
+- `dish_embeddings.npy`
+- `dish_manifest.csv`
+- `metadata.json`
+
+`dish_embeddings.npy` stores the dish-level embedding matrix directly as a NumPy
+array. Its rows are aligned with `dish_manifest.csv`, which contains the
+corresponding `dish_id`, image count, and nutrition targets.
+
+For downstream code that needs the embeddings joined with nutrition metadata:
+
+```python
+from visionmealrl import load_dish_embedding_lookup
+
+lookup = load_dish_embedding_lookup("artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train")
+
+dish_id = 'dish_1556572657' # whichever dish you wish to inspect
+record = lookup[dish_id]
+embedding = record["embedding"]
+nutrition_metadata = record["nutrition_metadata"]
+```
+
+## Run the Multitask Pipeline
+
+This command trains a shared CLIP visual encoder jointly for:
+
+- nutrition regression (`total_calories`, `total_mass`, `total_fat`, `total_carb`, `total_protein`)
+- ingredient multi-label classification
+
+It starts by training the task heads with the encoder frozen, then selectively
+unfreezes the last visual transformer blocks for end-to-end finetuning.
+
+```bash
+visionmealrl run-multitask \
+  --dataset-root /path/to/nutrition5k_dataset \
+  --output-root /path/to/artifacts \
+  --model-name ViT-B-32 \
+  --pretrained laion2b_s34b_b79k \
+  --image-source overhead_rgb \
+  --epochs 20 \
+  --freeze-epochs 3 \
+  --unfreeze-last-n-blocks 2
+```
+
+Outputs are written under:
+
+```text
+artifacts/
+└── multitask/
+    └── open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/
+        ├── best_model.pt
+        ├── label_vocabulary.json
+        ├── metrics.json
+        ├── run_config.json
+        ├── regression_predictions_test.csv
+        ├── classification_predictions_test.csv
+        ├── classification_per_class_metrics.csv
+        └── finetuned_embeddings/
+            ├── train/
+            └── test/
+```
+
+The finetuned embedding export uses the same split artifact format as the
+baseline extractor (`dish_embeddings.npy`, `dish_manifest.csv`, `metadata.json`,
+plus per-image files), so downstream code can reuse the same loading path.
+
+## Reconstruct Embedding Model From Cached Weights
+The exported weights for the embedding model is stored in `artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt`.
+```
+from pathlib import Path
+
+import numpy as np
+import torch
+from PIL import Image
+
+from visionmealrl.embedding import load_openclip_model_and_preprocess, resolve_device
+from visionmealrl.multitask.artifacts import load_checkpoint
+
+checkpoint_path = Path(
+    "artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt"
+)
+image_path = Path("/path/to/dish_image.png")
+
+device = resolve_device("auto")
+checkpoint = load_checkpoint(checkpoint_path, device=device)
+
+clip_model, preprocess = load_openclip_model_and_preprocess(
+    model_name=checkpoint["model_name"],
+    pretrained=checkpoint["pretrained"],
+    device=device,
+)
+clip_model.load_state_dict(checkpoint["clip_model_state_dict"])
+clip_model.eval()
+
+with Image.open(image_path) as image:
+    image_tensor = preprocess(image.convert("RGB")).unsqueeze(0).to(device)
+
+with torch.inference_mode():
+    embedding = clip_model.encode_image(image_tensor)
+    embedding = embedding / embedding.norm(dim=-1, keepdim=True).clamp(min=1e-12)
+
+embedding_np = embedding[0].detach().cpu().numpy().astype(np.float32)
+print(embedding_np)
 ```
 
 ## DQN meal planning agent

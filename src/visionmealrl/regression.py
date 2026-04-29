@@ -6,16 +6,25 @@ import logging
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
+from visionmealrl.artifacts import load_manifest_rows, write_split_manifest
+from visionmealrl.checkpointing import (
+    capture_rng_state,
+    epoch_checkpoint_path,
+    load_training_checkpoint,
+    restore_rng_state,
+    save_training_checkpoint,
+)
 from visionmealrl.constants import TARGET_COLUMNS
 from visionmealrl.embedding import resolve_device
 from visionmealrl.logging_utils import configure_logging
+from visionmealrl.training_utils import predict_numpy, run_supervised_epoch
 
 LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +37,6 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def load_manifest_csv(path: Path) -> list[dict[str, str]]:
-    with path.open("r", newline="", encoding="utf-8") as handle:
-        return list(csv.DictReader(handle))
-
-
 @dataclass
 class RegressionSplit:
     features: np.ndarray
@@ -42,7 +46,7 @@ class RegressionSplit:
 
 def load_regression_split(split_dir: Path) -> RegressionSplit:
     features = np.load(split_dir / "dish_embeddings.npy")
-    manifest = load_manifest_csv(split_dir / "dish_manifest.csv")
+    manifest = load_manifest_rows(split_dir / "dish_manifest.csv")
     targets = np.asarray(
         [[float(row[column]) for column in TARGET_COLUMNS] for row in manifest],
         dtype=np.float32,
@@ -95,11 +99,13 @@ class MLPRegressor(nn.Module):
         return self.net(inputs)
 
 
-def train_val_indices(num_rows: int, val_fraction: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
+def train_val_indices(
+    num_rows: int, validation_size: float, seed: int
+) -> tuple[np.ndarray, np.ndarray]:
     indices = np.arange(num_rows)
     rng = np.random.default_rng(seed)
     rng.shuffle(indices)
-    val_size = max(1, int(round(num_rows * val_fraction)))
+    val_size = max(1, int(round(num_rows * validation_size)))
     val_indices = np.sort(indices[:val_size])
     train_indices = np.sort(indices[val_size:])
     if train_indices.size == 0:
@@ -107,7 +113,9 @@ def train_val_indices(num_rows: int, val_fraction: float, seed: int) -> tuple[np
     return train_indices, val_indices
 
 
-def standardize_targets(train_targets: np.ndarray, other_targets: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def standardize_targets(
+    train_targets: np.ndarray, other_targets: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     mean = train_targets.mean(axis=0)
     std = train_targets.std(axis=0)
     std = np.where(std < 1e-8, 1.0, std)
@@ -160,47 +168,9 @@ def build_model(args, input_dim: int, output_dim: int) -> nn.Module:
     )
 
 
-def run_epoch(
-    model: nn.Module,
-    dataloader: DataLoader,
-    optimizer: Optional[torch.optim.Optimizer],
-    loss_fn: nn.Module,
-    device: str,
-) -> float:
-    is_train = optimizer is not None
-    model.train(is_train)
-
-    total_loss = 0.0
-    total_examples = 0
-
-    for features, targets in dataloader:
-        features = features.to(device)
-        targets = targets.to(device)
-
-        predictions = model(features)
-        loss = loss_fn(predictions, targets)
-
-        if is_train:
-            optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            optimizer.step()
-
-        batch_size = features.shape[0]
-        total_loss += float(loss.item()) * batch_size
-        total_examples += batch_size
-
-    return total_loss / max(total_examples, 1)
-
-
-def predict(model: nn.Module, features: np.ndarray, device: str) -> np.ndarray:
-    model.eval()
-    with torch.inference_mode():
-        inputs = torch.from_numpy(features.astype(np.float32)).to(device)
-        outputs = model(inputs).detach().cpu().numpy()
-    return outputs.astype(np.float32)
-
-
-def write_predictions_csv(path: Path, dish_ids: list[str], predictions: np.ndarray, targets: np.ndarray) -> None:
+def write_predictions_csv(
+    path: Path, dish_ids: list[str], predictions: np.ndarray, targets: np.ndarray
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = ["dish_id"]
     for column in TARGET_COLUMNS:
@@ -219,15 +189,6 @@ def write_predictions_csv(path: Path, dish_ids: list[str], predictions: np.ndarr
             writer.writerow(row)
 
 
-def write_split_manifest(path: Path, split_name: str, dish_ids: list[str]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["split", "dish_id"])
-        writer.writeheader()
-        for dish_id in dish_ids:
-            writer.writerow({"split": split_name, "dish_id": dish_id})
-
-
 def train_regressor_main(args) -> None:
     configure_logging()
     set_seed(args.seed)
@@ -238,7 +199,7 @@ def train_regressor_main(args) -> None:
 
     train_indices, val_indices = train_val_indices(
         num_rows=train_split.features.shape[0],
-        val_fraction=args.val_fraction,
+        validation_size=args.validation_size,
         seed=args.seed,
     )
 
@@ -249,7 +210,9 @@ def train_regressor_main(args) -> None:
     y_val = train_split.targets[val_indices]
     val_dish_ids = [train_split.dish_ids[idx] for idx in val_indices]
 
-    y_train_scaled, y_val_scaled, target_mean, target_std = standardize_targets(y_train, y_val)
+    y_train_scaled, y_val_scaled, target_mean, target_std = standardize_targets(
+        y_train, y_val
+    )
 
     train_dataset = EmbeddingRegressionDataset(x_train, y_train_scaled)
     val_dataset = EmbeddingRegressionDataset(x_val, y_val_scaled)
@@ -269,6 +232,13 @@ def train_regressor_main(args) -> None:
     )
     loss_fn = nn.MSELoss()
 
+    if getattr(args, "output_dir", None) is not None:
+        output_dir = args.output_dir
+    else:
+        output_dir = args.output_root / "regressors" / args.head
+    output_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_dir = output_dir / "epoch_checkpoints"
+
     best_val_loss = float("inf")
     best_state = None
     history: List[Dict[str, Union[float, int]]] = []
@@ -282,13 +252,43 @@ def train_regressor_main(args) -> None:
     )
 
     for epoch in range(1, args.epochs + 1):
-        train_loss = run_epoch(model, train_loader, optimizer, loss_fn, device)
-        val_loss = run_epoch(model, val_loader, None, loss_fn, device)
+        checkpoint_path = epoch_checkpoint_path(checkpoint_dir, epoch)
+        if checkpoint_path.exists():
+            checkpoint = load_training_checkpoint(checkpoint_path, device=device)
+            model.load_state_dict(checkpoint["model_state_dict"])
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            history = list(checkpoint["history"])
+            best_val_loss = float(checkpoint["best_val_loss"])
+            checkpoint_best_state = checkpoint.get("best_state_dict")
+            best_state = (
+                None
+                if checkpoint_best_state is None
+                else {
+                    key: value.detach().cpu()
+                    if isinstance(value, torch.Tensor)
+                    else value
+                    for key, value in checkpoint_best_state.items()
+                }
+            )
+            restore_rng_state(checkpoint.get("rng_state"))
+            LOGGER.info(
+                "Loaded existing regression checkpoint for epoch %d/%d",
+                epoch,
+                args.epochs,
+            )
+            continue
+
+        train_loss = run_supervised_epoch(
+            model, train_loader, optimizer, loss_fn, device
+        )
+        val_loss = run_supervised_epoch(model, val_loader, None, loss_fn, device)
         history.append({"epoch": epoch, "train_loss": train_loss, "val_loss": val_loss})
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            best_state = {key: value.detach().cpu() for key, value in model.state_dict().items()}
+            best_state = {
+                key: value.detach().cpu() for key, value in model.state_dict().items()
+            }
 
         LOGGER.info(
             "Epoch %d/%d | train_loss=%.6f | val_loss=%.6f",
@@ -298,25 +298,32 @@ def train_regressor_main(args) -> None:
             val_loss,
         )
 
+        save_training_checkpoint(
+            checkpoint_path,
+            {
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "history": history,
+                "best_val_loss": best_val_loss,
+                "best_state_dict": best_state,
+                "rng_state": capture_rng_state(),
+            },
+        )
+
     if best_state is None:
         raise RuntimeError("Training did not produce a valid checkpoint.")
 
     model.load_state_dict(best_state)
 
-    val_predictions_scaled = predict(model, x_val, device)
-    test_predictions_scaled = predict(model, test_split.features, device)
+    val_predictions_scaled = predict_numpy(model, x_val, device)
+    test_predictions_scaled = predict_numpy(model, test_split.features, device)
 
     val_predictions = val_predictions_scaled * target_std + target_mean
     test_predictions = test_predictions_scaled * target_std + target_mean
 
     val_metrics = compute_metrics(val_predictions, y_val)
     test_metrics = compute_metrics(test_predictions, test_split.targets)
-
-    if getattr(args, "output_dir", None) is not None:
-        output_dir = args.output_dir
-    else:
-        output_dir = args.output_root / "regressors" / args.head
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     torch.save(
         {
@@ -351,7 +358,7 @@ def train_regressor_main(args) -> None:
         "weight_decay": args.weight_decay,
         "hidden_dim": args.hidden_dim,
         "dropout": args.dropout,
-        "val_fraction": args.val_fraction,
+        "validation_size": args.validation_size,
         "seed": args.seed,
         "device": device,
     }
@@ -364,6 +371,8 @@ def train_regressor_main(args) -> None:
         predictions=test_predictions,
         targets=test_split.targets,
     )
-    write_split_manifest(output_dir / "train_split_manifest.csv", "train", train_dish_ids)
+    write_split_manifest(
+        output_dir / "train_split_manifest.csv", "train", train_dish_ids
+    )
     write_split_manifest(output_dir / "val_split_manifest.csv", "val", val_dish_ids)
     LOGGER.info("Saved regressor outputs to %s", output_dir)

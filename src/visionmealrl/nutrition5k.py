@@ -39,6 +39,14 @@ class DishAnnotation:
     ingredients: tuple[IngredientData, ...]
 
 
+@dataclass(frozen=True)
+class DishRecord:
+    dish_id: str
+    image_paths: tuple[Path, ...]
+    targets: DishData
+    ingredients: tuple[IngredientData, ...]
+
+
 # a dish may have multiple images, dish_id and dish_data will be the same
 @dataclass(frozen=True)
 class ImageRecord:
@@ -203,37 +211,103 @@ def build_image_records(
     dataset_root: Path,
     image_source: str,
 ) -> dict[str, list[ImageRecord]]:
+    dish_records_by_split = build_dish_records_by_split(dataset_root, image_source)
+    return {
+        split: image_records_from_dish_records(dish_records)
+        for split, dish_records in dish_records_by_split.items()
+    }
+
+
+def image_records_from_dish_records(dish_records: Iterable[DishRecord]) -> list[ImageRecord]:
+    records: list[ImageRecord] = []
+    for dish_record in dish_records:
+        for image_path in dish_record.image_paths:
+            records.append(
+                ImageRecord(
+                    dish_id=dish_record.dish_id,
+                    image_path=image_path,
+                    targets=dish_record.targets,
+                )
+            )
+    return records
+
+
+def _build_dish_records_for_ids(
+    dish_ids: Iterable[str],
+    annotations: dict[str, DishAnnotation],
+    dataset_root: Path,
+    image_source: str,
+) -> tuple[list[DishRecord], int, int]:
+    records: list[DishRecord] = []
+    missing_images = 0
+    missing_targets = 0
+
+    for dish_id in dish_ids:
+        annotation = annotations.get(dish_id)
+        if annotation is None:
+            missing_targets += 1
+            continue
+
+        image_paths = tuple(list_images_for_dish(dataset_root, dish_id, image_source))
+        if not image_paths:
+            missing_images += 1
+            continue
+
+        records.append(
+            DishRecord(
+                dish_id=dish_id,
+                image_paths=image_paths,
+                targets=annotation.targets,
+                ingredients=annotation.ingredients,
+            )
+        )
+
+    return records, missing_images, missing_targets
+
+
+def build_dish_records(
+    dataset_root: Path,
+    dish_ids: Iterable[str],
+    image_source: str,
+) -> list[DishRecord]:
+    annotations = load_dish_annotations(dataset_root)
+    records, missing_images, missing_targets = _build_dish_records_for_ids(
+        dish_ids=dish_ids,
+        annotations=annotations,
+        dataset_root=dataset_root,
+        image_source=image_source,
+    )
+
+    LOGGER.info(
+        "Prepared %d dish records (%d missing images, %d missing targets).",
+        len(records),
+        missing_images,
+        missing_targets,
+    )
+    return records
+
+
+def build_dish_records_by_split(
+    dataset_root: Path,
+    image_source: str,
+) -> dict[str, list[DishRecord]]:
     split_ids = load_split_ids(dataset_root, image_source)
-    dish_targets = load_dish_targets(dataset_root)
-    records_by_split: dict[str, list[ImageRecord]] = defaultdict(list)
+    annotations = load_dish_annotations(dataset_root)
+    records_by_split: dict[str, list[DishRecord]] = {}
 
     for split, dish_ids in split_ids.items():
-        missing_images = 0
-        missing_targets = 0
-        for dish_id in dish_ids:
-            targets = dish_targets.get(dish_id)
-            if targets is None:
-                missing_targets += 1
-                continue
-
-            image_paths = list_images_for_dish(dataset_root, dish_id, image_source)
-            if not image_paths:
-                missing_images += 1
-                continue
-
-            for image_path in image_paths:
-                records_by_split[split].append(
-                    ImageRecord(
-                        dish_id=dish_id,
-                        image_path=image_path,
-                        targets=targets,
-                    )
-                )
+        split_records, missing_images, missing_targets = _build_dish_records_for_ids(
+            dish_ids=dish_ids,
+            annotations=annotations,
+            dataset_root=dataset_root,
+            image_source=image_source,
+        )
+        records_by_split[split] = split_records
 
         LOGGER.info(
-            "Prepared %s split with %d image records across %d dishes (%d missing images, %d missing targets).",
+            "Prepared %s split with %d dish records across %d dishes (%d missing images, %d missing targets).",
             split,
-            len(records_by_split[split]),
+            len(split_records),
             len(set(dish_ids)),
             missing_images,
             missing_targets,

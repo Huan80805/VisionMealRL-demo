@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
-from typing import TypedDict, Union
+from typing import Sequence, TypedDict, Union
 
 import numpy as np
 
@@ -33,6 +33,15 @@ def parse_manifest_value(value: str) -> ManifestValue:
 def load_manifest_rows(path: Path) -> list[dict[str, str]]:
     with path.open("r", newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
+
+
+def write_split_manifest(path: Path, split_name: str, dish_ids: Sequence[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["split", "dish_id"])
+        writer.writeheader()
+        for dish_id in dish_ids:
+            writer.writerow({"split": split_name, "dish_id": dish_id})
 
 
 def load_dish_embedding_lookup(split_dir: Path | str) -> dict[str, DishEmbeddingRecord]:

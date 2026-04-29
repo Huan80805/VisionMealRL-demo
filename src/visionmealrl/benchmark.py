@@ -5,13 +5,19 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
+from visionmealrl.constants import (
+    DEFAULT_INGREDIENT_MIN_FRACTION,
+    DEFAULT_INGREDIENT_MIN_MASS,
+    DEFAULT_INGREDIENT_TOP_K,
+    DEFAULT_RANKING_K,
+)
 from visionmealrl.classification import train_classifier_main
 from visionmealrl.embedding import extract_embeddings_main, slugify_model_name
 from visionmealrl.regression import train_regressor_main
 
 
-def default_run_name(seed: int, top_k: int, ranking_k: int) -> str:
-    return f"linear_top{top_k}_at{ranking_k}_seed{seed}"
+def default_run_name(seed: int) -> str:
+    return f"linear_top{DEFAULT_INGREDIENT_TOP_K}_at{DEFAULT_RANKING_K}_seed{seed}"
 
 
 def build_summary_row(
@@ -29,12 +35,11 @@ def build_summary_row(
         "model_name": args.model_name,
         "pretrained": args.pretrained,
         "image_source": args.image_source,
-        "normalize_embeddings": not args.no_normalize,
         "seed": args.seed,
-        "ingredient_top_k": args.top_k,
-        "ingredient_min_mass": args.ingredient_min_mass,
-        "ingredient_min_fraction": args.ingredient_min_fraction,
-        "ranking_k": args.ranking_k,
+        "ingredient_top_k": DEFAULT_INGREDIENT_TOP_K,
+        "ingredient_min_mass": DEFAULT_INGREDIENT_MIN_MASS,
+        "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
+        "ranking_k": DEFAULT_RANKING_K,
         "embeddings_root": str(embeddings_root),
         "benchmark_root": str(benchmark_root),
         "regression_overall_mae": regression_test["overall_mae"],
@@ -45,8 +50,8 @@ def build_summary_row(
         "classification_macro_map": classification_test["macro_map"],
         "classification_micro_f1": classification_test["micro_f1"],
         "classification_macro_f1": classification_test["macro_f1"],
-        f"classification_precision_at_{args.ranking_k}": classification_test[f"precision_at_{args.ranking_k}"],
-        f"classification_recall_at_{args.ranking_k}": classification_test[f"recall_at_{args.ranking_k}"],
+        f"classification_precision_at_{DEFAULT_RANKING_K}": classification_test[f"precision_at_{DEFAULT_RANKING_K}"],
+        f"classification_recall_at_{DEFAULT_RANKING_K}": classification_test[f"recall_at_{DEFAULT_RANKING_K}"],
     }
 
     for target_name, metrics in regression_test["per_target"].items():
@@ -80,11 +85,7 @@ def run_benchmark_main(args) -> None:
     model_dir_name = slugify_model_name(args.model_name, args.pretrained)
     embeddings_root = args.output_root / "embeddings" / model_dir_name / args.image_source
 
-    run_name = args.run_name or default_run_name(
-        seed=args.seed,
-        top_k=args.top_k,
-        ranking_k=args.ranking_k,
-    )
+    run_name = args.run_name or default_run_name(seed=args.seed)
     benchmark_root = args.output_root / "benchmarks" / model_dir_name / args.image_source / run_name
     benchmark_root.mkdir(parents=True, exist_ok=True)
 
@@ -101,14 +102,13 @@ def run_benchmark_main(args) -> None:
         "head_epochs": args.head_epochs,
         "head_learning_rate": args.head_learning_rate,
         "head_weight_decay": args.head_weight_decay,
-        "val_fraction": args.val_fraction,
+        "validation_size": args.validation_size,
         "seed": args.seed,
         "device": args.device,
-        "normalize_embeddings": not args.no_normalize,
-        "top_k": args.top_k,
-        "ingredient_min_mass": args.ingredient_min_mass,
-        "ingredient_min_fraction": args.ingredient_min_fraction,
-        "ranking_k": args.ranking_k,
+        "top_k": DEFAULT_INGREDIENT_TOP_K,
+        "ingredient_min_mass": DEFAULT_INGREDIENT_MIN_MASS,
+        "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
+        "ranking_k": DEFAULT_RANKING_K,
         "skip_extraction": args.skip_extraction,
     }
     with (benchmark_root / "benchmark_config.json").open("w", encoding="utf-8") as handle:
@@ -125,7 +125,6 @@ def run_benchmark_main(args) -> None:
                 batch_size=args.extract_batch_size,
                 num_workers=args.extract_num_workers,
                 device=args.device,
-                no_normalize=args.no_normalize,
             )
         )
 
@@ -142,7 +141,7 @@ def run_benchmark_main(args) -> None:
             weight_decay=args.head_weight_decay,
             hidden_dim=512,
             dropout=0.0,
-            val_fraction=args.val_fraction,
+            validation_size=args.validation_size,
             seed=args.seed,
             device=args.device,
         )
@@ -159,13 +158,9 @@ def run_benchmark_main(args) -> None:
             epochs=args.head_epochs,
             learning_rate=args.head_learning_rate,
             weight_decay=args.head_weight_decay,
-            val_fraction=args.val_fraction,
+            validation_size=args.validation_size,
             seed=args.seed,
             device=args.device,
-            top_k=args.top_k,
-            ingredient_min_mass=args.ingredient_min_mass,
-            ingredient_min_fraction=args.ingredient_min_fraction,
-            ranking_k=args.ranking_k,
         )
     )
 
