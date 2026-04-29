@@ -24,6 +24,9 @@ VisionMealRL/
 
 ## Install
 
+Make sure to enable large files by:
+`git lfs install`
+
 The project uses [uv](https://docs.astral.sh/uv/) for environment management.
 
 ```bash
@@ -139,7 +142,7 @@ from visionmealrl import load_dish_embedding_lookup
 
 lookup = load_dish_embedding_lookup("artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train")
 
-dish_id = next(iter(lookup))
+dish_id = 'dish_1556572657' # whichever dish you wish to inspect
 record = lookup[dish_id]
 embedding = record["embedding"]
 nutrition_metadata = record["nutrition_metadata"]
