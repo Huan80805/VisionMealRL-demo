@@ -18,7 +18,12 @@ from tqdm import tqdm
 
 from visionmealrl.constants import TARGET_COLUMNS
 from visionmealrl.logging_utils import configure_logging
-from visionmealrl.nutrition5k import ImageRecord, build_image_records
+from visionmealrl.nutrition5k import (
+    DishRecord,
+    ImageRecord,
+    build_dish_records_by_split,
+    image_records_from_dish_records,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,6 +42,22 @@ def slugify_model_name(model_name: str, pretrained: str) -> str:
     safe_model = model_name.replace("/", "-")
     safe_pretrained = pretrained.replace("/", "-")
     return f"open_clip_{safe_model}_{safe_pretrained}"
+
+
+def load_openclip_model_and_preprocess(model_name: str, pretrained: str, device: str):
+    LOGGER.info(
+        "Loading OpenCLIP model %s with weights %s on %s",
+        model_name,
+        pretrained,
+        device,
+    )
+    model, _, preprocess = open_clip.create_model_and_transforms(
+        model_name,
+        pretrained=pretrained,
+    )
+    model.eval()
+    model.to(device)
+    return model, preprocess
 
 
 # when indexed each element is (tensor, ImageRecord)
@@ -80,7 +101,6 @@ def extract_embeddings_in_batches(
     batch_size: int,
     num_workers: int,
     device: str,
-    normalize: bool,
 ) -> BatchExtractionResult:
     dataset = NutritionImageDataset(records, preprocess)
     dataloader = DataLoader(
@@ -105,8 +125,7 @@ def extract_embeddings_in_batches(
             images = images.to(device)
             with torch.autocast(device_type=autocast_device, enabled=autocast_enabled):
                 features = model.encode_image(images)
-            if normalize:
-                features = features / features.norm(dim=-1, keepdim=True)
+            features = features / features.norm(dim=-1, keepdim=True).clamp(min=1e-12)
 
             features_np = features.detach().cpu().numpy().astype(np.float32)
             all_embeddings.append(features_np)
@@ -201,58 +220,50 @@ def write_outputs(
         json.dump(metadata, handle, indent=2, sort_keys=True)
 
 
-def extract_embeddings_main(args) -> None:
-    configure_logging()
-
-    model_dir_name = slugify_model_name(args.model_name, args.pretrained)
-    output_base = args.output_root / "embeddings" / model_dir_name / args.image_source
-    device = resolve_device(args.device)
-    normalize = not args.no_normalize
-
-    LOGGER.info("Loading Nutrition5K records from %s", args.dataset_root)
-    records_by_split = build_image_records(args.dataset_root, args.image_source)
-
-    LOGGER.info(
-        "Loading OpenCLIP model %s with weights %s on %s",
-        args.model_name,
-        args.pretrained,
-        device,
-    )
-    model, _, preprocess = open_clip.create_model_and_transforms(
-        args.model_name,
-        pretrained=args.pretrained,
-    )
-    model.eval()
-    model.to(device)
+def export_dish_embeddings_with_encoder(
+    dish_records_by_split: dict[str, list[DishRecord]],
+    model,
+    preprocess,
+    output_base: Path,
+    image_source: str,
+    batch_size: int,
+    num_workers: int,
+    device: str,
+    metadata_overrides: dict[str, object] | None = None,
+) -> None:
+    metadata_overrides = metadata_overrides or {}
 
     for split in ("train", "test"):
-        split_records = records_by_split.get(split, [])
-        if not split_records:
+        split_dish_records = dish_records_by_split.get(split, [])
+        if not split_dish_records:
             LOGGER.warning("Skipping empty split: %s", split)
             continue
 
-        LOGGER.info("Extracting embeddings for %s split with %d images", split, len(split_records))
+        split_records = image_records_from_dish_records(split_dish_records)
+
+        LOGGER.info(
+            "Exporting finetuned embeddings for %s split with %d dishes / %d images",
+            split,
+            len(split_dish_records),
+            len(split_records),
+        )
         artifacts = extract_embeddings_in_batches(
             records=split_records,
             model=model,
             preprocess=preprocess,
-            batch_size=args.batch_size,
-            num_workers=args.num_workers,
+            batch_size=batch_size,
+            num_workers=num_workers,
             device=device,
-            normalize=normalize,
         )
         dish_embeddings, dish_manifest = aggregate_dish_embeddings(artifacts)
-
         metadata = {
             "split": split,
-            "model_name": args.model_name,
-            "pretrained": args.pretrained,
-            "image_source": args.image_source,
-            "normalize_embeddings": normalize,
+            "image_source": image_source,
             "embedding_dim": int(artifacts.embeddings.shape[1]),
             "num_images": int(artifacts.embeddings.shape[0]),
             "num_dishes": int(dish_embeddings.shape[0]),
             "device": device,
+            **metadata_overrides,
         }
         write_outputs(
             split_output_dir=output_base / split,
@@ -263,3 +274,34 @@ def extract_embeddings_main(args) -> None:
             metadata=metadata,
         )
         LOGGER.info("Wrote %s outputs to %s", split, output_base / split)
+
+
+def extract_embeddings_main(args) -> None:
+    configure_logging()
+
+    model_dir_name = slugify_model_name(args.model_name, args.pretrained)
+    output_base = args.output_root / "embeddings" / model_dir_name / args.image_source
+    device = resolve_device(args.device)
+
+    LOGGER.info("Loading Nutrition5K records from %s", args.dataset_root)
+
+    model, preprocess = load_openclip_model_and_preprocess(
+        model_name=args.model_name,
+        pretrained=args.pretrained,
+        device=device,
+    )
+    dish_records_by_split = build_dish_records_by_split(args.dataset_root, args.image_source)
+    export_dish_embeddings_with_encoder(
+        dish_records_by_split=dish_records_by_split,
+        model=model,
+        preprocess=preprocess,
+        output_base=output_base,
+        image_source=args.image_source,
+        batch_size=args.batch_size,
+        num_workers=args.num_workers,
+        device=device,
+        metadata_overrides={
+            "model_name": args.model_name,
+            "pretrained": args.pretrained,
+        },
+    )

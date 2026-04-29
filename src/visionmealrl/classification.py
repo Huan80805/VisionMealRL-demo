@@ -12,10 +12,26 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, Dataset
 
+from visionmealrl.artifacts import load_manifest_rows, write_split_manifest
+from visionmealrl.checkpointing import (
+    capture_rng_state,
+    epoch_checkpoint_path,
+    load_training_checkpoint,
+    restore_rng_state,
+    save_training_checkpoint,
+)
+from visionmealrl.constants import (
+    DEFAULT_INGREDIENT_MIN_FRACTION,
+    DEFAULT_INGREDIENT_MIN_MASS,
+    DEFAULT_INGREDIENT_TOP_K,
+    DEFAULT_RANKING_K,
+)
 from visionmealrl.embedding import resolve_device
+from visionmealrl.labels import build_ingredient_vocabulary, encode_multi_hot_ingredients
 from visionmealrl.logging_utils import configure_logging
 from visionmealrl.nutrition5k import DishAnnotation, load_dish_annotations
-from visionmealrl.regression import load_manifest_csv, set_seed, train_val_indices
+from visionmealrl.regression import set_seed, train_val_indices
+from visionmealrl.training_utils import predict_numpy, run_supervised_epoch
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,63 +65,6 @@ class LinearClassifier(nn.Module):
         return self.net(inputs)
 
 
-def filtered_ingredient_names(
-    annotation: DishAnnotation,
-    min_mass: float,
-    min_fraction: float,
-) -> set[str]:
-    dish_mass = max(annotation.targets.total_mass, 1e-6)
-    names = set()
-    for ingredient in annotation.ingredients:
-        if ingredient.mass < min_mass:
-            continue
-        if ingredient.mass < min_fraction * dish_mass:
-            continue
-        names.add(ingredient.name)
-    return names
-
-
-def build_ingredient_vocabulary(
-    dish_ids: Sequence[str],
-    annotations: dict[str, DishAnnotation],
-    top_k: int,
-    min_mass: float,
-    min_fraction: float,
-) -> list[str]:
-    counter: dict[str, int] = {}
-    for dish_id in dish_ids:
-        annotation = annotations.get(dish_id)
-        if annotation is None:
-            continue
-        for name in filtered_ingredient_names(annotation, min_mass=min_mass, min_fraction=min_fraction):
-            counter[name] = counter.get(name, 0) + 1
-
-    ranked = sorted(counter.items(), key=lambda item: (-item[1], item[0]))
-    return [name for name, _count in ranked[:top_k]]
-
-
-def build_multi_hot_targets(
-    dish_ids: Sequence[str],
-    annotations: dict[str, DishAnnotation],
-    labels: Sequence[str],
-    min_mass: float,
-    min_fraction: float,
-) -> np.ndarray:
-    label_to_index = {label: idx for idx, label in enumerate(labels)}
-    targets = np.zeros((len(dish_ids), len(labels)), dtype=np.float32)
-
-    for row_idx, dish_id in enumerate(dish_ids):
-        annotation = annotations.get(dish_id)
-        if annotation is None:
-            continue
-        for name in filtered_ingredient_names(annotation, min_mass=min_mass, min_fraction=min_fraction):
-            label_idx = label_to_index.get(name)
-            if label_idx is not None:
-                targets[row_idx, label_idx] = 1.0
-
-    return targets
-
-
 def load_classification_split(
     split_dir: Path,
     annotations: dict[str, DishAnnotation],
@@ -114,9 +73,9 @@ def load_classification_split(
     min_fraction: float,
 ) -> ClassificationSplit:
     features = np.load(split_dir / "dish_embeddings.npy")
-    manifest = load_manifest_csv(split_dir / "dish_manifest.csv")
+    manifest = load_manifest_rows(split_dir / "dish_manifest.csv")
     dish_ids = [row["dish_id"] for row in manifest]
-    targets = build_multi_hot_targets(
+    targets = encode_multi_hot_ingredients(
         dish_ids=dish_ids,
         annotations=annotations,
         labels=labels,
@@ -129,47 +88,6 @@ def load_classification_split(
         dish_ids=dish_ids,
         labels=list(labels),
     )
-
-
-def run_epoch(
-    model: nn.Module,
-    dataloader: DataLoader,
-    optimizer: torch.optim.Optimizer | None,
-    loss_fn: nn.Module,
-    device: str,
-) -> float:
-    is_train = optimizer is not None
-    model.train(is_train)
-
-    total_loss = 0.0
-    total_examples = 0
-
-    for features, targets in dataloader:
-        features = features.to(device)
-        targets = targets.to(device)
-
-        logits = model(features)
-        loss = loss_fn(logits, targets)
-
-        if is_train:
-            optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            optimizer.step()
-
-        batch_size = features.shape[0]
-        total_loss += float(loss.item()) * batch_size
-        total_examples += batch_size
-
-    return total_loss / max(total_examples, 1)
-
-
-def predict_logits(model: nn.Module, features: np.ndarray, device: str) -> np.ndarray:
-    model.eval()
-    with torch.inference_mode():
-        inputs = torch.from_numpy(features.astype(np.float32)).to(device)
-        logits = model(inputs).detach().cpu().numpy()
-    return logits.astype(np.float32)
-
 
 def _safe_divide(numerator: float, denominator: float) -> float:
     if denominator <= 0:
@@ -290,7 +208,6 @@ def write_predictions_csv(
                 }
             )
 
-
 def write_per_class_metrics_csv(
     path: Path,
     labels: Sequence[str],
@@ -310,15 +227,6 @@ def write_per_class_metrics_csv(
                     "average_precision": "" if ap_value is None else float(ap_value),
                 }
             )
-
-
-def write_split_manifest(path: Path, split_name: str, dish_ids: Sequence[str]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["split", "dish_id"])
-        writer.writeheader()
-        for dish_id in dish_ids:
-            writer.writerow({"split": split_name, "dish_id": dish_id})
 
 
 def compute_metrics(
@@ -348,34 +256,34 @@ def train_classifier_main(args) -> None:
     device = resolve_device(args.device)
     annotations = load_dish_annotations(args.dataset_root)
 
-    train_manifest = load_manifest_csv(args.embeddings_root / "train" / "dish_manifest.csv")
+    train_manifest = load_manifest_rows(args.embeddings_root / "train" / "dish_manifest.csv")
     train_dish_ids = [row["dish_id"] for row in train_manifest]
     labels = build_ingredient_vocabulary(
         dish_ids=train_dish_ids,
         annotations=annotations,
-        top_k=args.top_k,
-        min_mass=args.ingredient_min_mass,
-        min_fraction=args.ingredient_min_fraction,
+        top_k=DEFAULT_INGREDIENT_TOP_K,
+        min_mass=DEFAULT_INGREDIENT_MIN_MASS,
+        min_fraction=DEFAULT_INGREDIENT_MIN_FRACTION,
     )
 
     train_split = load_classification_split(
         split_dir=args.embeddings_root / "train",
         annotations=annotations,
         labels=labels,
-        min_mass=args.ingredient_min_mass,
-        min_fraction=args.ingredient_min_fraction,
+        min_mass=DEFAULT_INGREDIENT_MIN_MASS,
+        min_fraction=DEFAULT_INGREDIENT_MIN_FRACTION,
     )
     test_split = load_classification_split(
         split_dir=args.embeddings_root / "test",
         annotations=annotations,
         labels=labels,
-        min_mass=args.ingredient_min_mass,
-        min_fraction=args.ingredient_min_fraction,
+        min_mass=DEFAULT_INGREDIENT_MIN_MASS,
+        min_fraction=DEFAULT_INGREDIENT_MIN_FRACTION,
     )
 
     train_indices, val_indices = train_val_indices(
         num_rows=train_split.features.shape[0],
-        val_fraction=args.val_fraction,
+        validation_size=args.validation_size,
         seed=args.seed,
     )
 
@@ -403,6 +311,13 @@ def train_classifier_main(args) -> None:
     )
     loss_fn = nn.BCEWithLogitsLoss()
 
+    if getattr(args, "output_dir", None) is not None:
+        output_dir = args.output_dir
+    else:
+        output_dir = args.output_root / "classifiers" / "linear"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_dir = output_dir / "epoch_checkpoints"
+
     best_val_loss = float("inf")
     best_state = None
     history: List[Dict[str, Union[float, int]]] = []
@@ -415,8 +330,28 @@ def train_classifier_main(args) -> None:
     )
 
     for epoch in range(1, args.epochs + 1):
-        train_loss = run_epoch(model, train_loader, optimizer, loss_fn, device)
-        val_loss = run_epoch(model, val_loader, None, loss_fn, device)
+        checkpoint_path = epoch_checkpoint_path(checkpoint_dir, epoch)
+        if checkpoint_path.exists():
+            checkpoint = load_training_checkpoint(checkpoint_path, device=device)
+            model.load_state_dict(checkpoint["model_state_dict"])
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            history = list(checkpoint["history"])
+            best_val_loss = float(checkpoint["best_val_loss"])
+            checkpoint_best_state = checkpoint.get("best_state_dict")
+            best_state = (
+                None
+                if checkpoint_best_state is None
+                else {
+                    key: value.detach().cpu() if isinstance(value, torch.Tensor) else value
+                    for key, value in checkpoint_best_state.items()
+                }
+            )
+            restore_rng_state(checkpoint.get("rng_state"))
+            LOGGER.info("Loaded existing classification checkpoint for epoch %d/%d", epoch, args.epochs)
+            continue
+
+        train_loss = run_supervised_epoch(model, train_loader, optimizer, loss_fn, device)
+        val_loss = run_supervised_epoch(model, val_loader, None, loss_fn, device)
         history.append({"epoch": epoch, "train_loss": train_loss, "val_loss": val_loss})
 
         if val_loss < best_val_loss:
@@ -431,13 +366,26 @@ def train_classifier_main(args) -> None:
             val_loss,
         )
 
+        save_training_checkpoint(
+            checkpoint_path,
+            {
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "history": history,
+                "best_val_loss": best_val_loss,
+                "best_state_dict": best_state,
+                "rng_state": capture_rng_state(),
+            },
+        )
+
     if best_state is None:
         raise RuntimeError("Training did not produce a valid classifier checkpoint.")
 
     model.load_state_dict(best_state)
 
-    val_logits = predict_logits(model, x_val, device)
-    test_logits = predict_logits(model, test_split.features, device)
+    val_logits = predict_numpy(model, x_val, device)
+    test_logits = predict_numpy(model, test_split.features, device)
     val_probabilities = 1.0 / (1.0 + np.exp(-val_logits))
     test_probabilities = 1.0 / (1.0 + np.exp(-test_logits))
 
@@ -446,20 +394,14 @@ def train_classifier_main(args) -> None:
         probabilities=val_probabilities,
         targets=y_val,
         threshold=threshold,
-        ranking_k=args.ranking_k,
+        ranking_k=DEFAULT_RANKING_K,
     )
     test_metrics = compute_metrics(
         probabilities=test_probabilities,
         targets=test_split.targets,
         threshold=threshold,
-        ranking_k=args.ranking_k,
+        ranking_k=DEFAULT_RANKING_K,
     )
-
-    if getattr(args, "output_dir", None) is not None:
-        output_dir = args.output_dir
-    else:
-        output_dir = args.output_root / "classifiers" / "linear"
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     torch.save(
         {
@@ -467,19 +409,19 @@ def train_classifier_main(args) -> None:
             "input_dim": train_split.features.shape[1],
             "labels": labels,
             "head": "linear",
-            "ingredient_min_mass": args.ingredient_min_mass,
-            "ingredient_min_fraction": args.ingredient_min_fraction,
-            "top_k": args.top_k,
+            "ingredient_min_mass": DEFAULT_INGREDIENT_MIN_MASS,
+            "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
+            "top_k": DEFAULT_INGREDIENT_TOP_K,
         },
         output_dir / "best_model.pt",
     )
 
     label_payload = {
         "labels": labels,
-        "top_k": args.top_k,
-        "ingredient_min_mass": args.ingredient_min_mass,
-        "ingredient_min_fraction": args.ingredient_min_fraction,
-        "ranking_k": args.ranking_k,
+        "top_k": DEFAULT_INGREDIENT_TOP_K,
+        "ingredient_min_mass": DEFAULT_INGREDIENT_MIN_MASS,
+        "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
+        "ranking_k": DEFAULT_RANKING_K,
     }
     with (output_dir / "label_vocabulary.json").open("w", encoding="utf-8") as handle:
         json.dump(label_payload, handle, indent=2)
@@ -504,13 +446,13 @@ def train_classifier_main(args) -> None:
         "epochs": args.epochs,
         "learning_rate": args.learning_rate,
         "weight_decay": args.weight_decay,
-        "val_fraction": args.val_fraction,
+        "validation_size": args.validation_size,
         "seed": args.seed,
         "device": device,
-        "top_k": args.top_k,
-        "ingredient_min_mass": args.ingredient_min_mass,
-        "ingredient_min_fraction": args.ingredient_min_fraction,
-        "ranking_k": args.ranking_k,
+        "top_k": DEFAULT_INGREDIENT_TOP_K,
+        "ingredient_min_mass": DEFAULT_INGREDIENT_MIN_MASS,
+        "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
+        "ranking_k": DEFAULT_RANKING_K,
     }
     with (output_dir / "run_config.json").open("w", encoding="utf-8") as handle:
         json.dump(run_config, handle, indent=2)
@@ -521,7 +463,7 @@ def train_classifier_main(args) -> None:
         probabilities=test_probabilities,
         targets=test_split.targets,
         labels=labels,
-        ranking_k=args.ranking_k,
+        ranking_k=DEFAULT_RANKING_K,
     )
     write_per_class_metrics_csv(
         output_dir / "per_class_metrics.csv",
