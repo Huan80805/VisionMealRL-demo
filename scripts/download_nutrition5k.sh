@@ -96,7 +96,7 @@ if [[ "${METHOD}" == "gsutil" ]]; then
   fi
 
   echo "Downloading Nutrition5K from ${SOURCE_PATH} into ${OUTPUT_DIR}"
-  gsutil -m cp -r "${SOURCE_PATH}" "${`OUTPUT_DIR`}"
+  gsutil -m cp -r "${SOURCE_PATH}" "${OUTPUT_DIR}"
   exit 0
 fi
 

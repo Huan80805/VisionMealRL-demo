@@ -6,6 +6,19 @@ from agent.config import AgentConfig
 from agent.env import MealPlanningEnv
 
 
+class RandomPolicy:
+    """Uniform-random baseline matching SB3's ``predict`` interface."""
+
+    def __init__(self, env: MealPlanningEnv, seed: int = 0):
+        self.env = env
+        self.rng = np.random.default_rng(seed)
+
+    def predict(self, obs, deterministic: bool = True):
+        """Return one random discrete action."""
+        del obs, deterministic
+        return int(self.rng.integers(0, self.env.num_actions)), None
+
+
 class HealthGreedy:
     """Myopic health-only baseline.
 
@@ -75,11 +88,6 @@ class MultiObjectiveGreedy:
         """Match SB3's predict(obs, deterministic) interface."""
         daily_deficit, recent_emb, user_pref = self._parse_obs(obs)
 
-        # Mean of unit vectors is not itself a unit vector — normalize before
-        # computing cosine similarity (plan note: "mean of unit vecs is not unit").
-        norm = np.linalg.norm(recent_emb)
-        recent_emb_unit = recent_emb / norm if norm > 1e-8 else recent_emb
-
         best_action = 0
         best_score = -np.inf
 
@@ -98,7 +106,7 @@ class MultiObjectiveGreedy:
             )
 
             # Diversity component
-            diversity = 1.0 - float(np.dot(recent_emb_unit, embedding))
+            diversity = 1.0 - float(np.dot(recent_emb, embedding))
 
             # Preference component (no noise — deterministic baseline)
             pref_score = float(np.dot(user_pref, embedding))

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from pathlib import Path
+from typing import Callable, Optional, TYPE_CHECKING
 
 import numpy as np
 import gymnasium as gym
@@ -11,6 +12,27 @@ from agent.user import SimulatedUser
 
 if TYPE_CHECKING:
     from agent.config import AgentConfig
+
+EpisodeResampler = Callable[[SimulatedUser, np.random.Generator], None]
+
+
+def estimate_observed_meal_from_photo(
+    photo_path: str | Path,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Placeholder for the future CV photo-feedback API.
+
+    The CV/integration layer should replace this with a call that returns:
+      - nutrition: shape (4,), [calories, protein, carbs, fat]
+      - embedding: shape (embedding_dim,), in the same CLIP space as the catalog
+
+    The agent environment can already consume those arrays through
+    ``MealPlanningEnv.step(..., observed_nutrition=..., observed_embedding=...)``.
+    """
+    raise NotImplementedError(
+        "Photo-to-observed-meal inference is owned by the CV integration path. "
+        f"Expected to process photo_path={photo_path!s} and return "
+        "(nutrition[4], embedding[embedding_dim])."
+    )
 
 
 class MealPlanningEnv(gym.Env):
@@ -43,10 +65,15 @@ class MealPlanningEnv(gym.Env):
         w_diversity: float = 0.3,
         w_preference: float = 0.2,
         w_boundary: float = 0.5,
+        bootstrap_pool: Optional[tuple[np.ndarray, np.ndarray]] = None,
+        episode_resampler: Optional[EpisodeResampler] = None,
     ):
         super().__init__()
         self.catalog = catalog
         self.user = user
+        # optional callable that mutates self.user at each reset
+        # (random targets / fresh preference for training; no-op for eval).
+        self.episode_resampler = episode_resampler
         self.num_days = num_days
         self.meals_per_day = meals_per_day
         self.horizon = num_days * meals_per_day
@@ -74,10 +101,47 @@ class MealPlanningEnv(gym.Env):
             low=-np.inf, high=np.inf, shape=(obs_dim,), dtype=np.float32
         )
 
+        # User meal-history pool sampled at reset to (a) warm up the
+        # diversity context window with non-zero recent embeddings and
+        # (b) pre-consume part of the weekly nutrition budget — i.e.
+        # simulate a user starting the planning episode mid-week with
+        # some meals already eaten. Two row-aligned arrays:
+        #   embeddings: (N, emb_dim)
+        #   nutrition:  (N, 4) in [cal, protein, carbs, fat]
+        #
+        # This pool is prior user history and should come from the
+        # Nutrition5K-derived history artifact, not the recipe catalog.
+        # The catalog is only the action space for future recommendations.
+        # If omitted, the episode starts with no pre-consumed history.
+        if bootstrap_pool is None:
+            self.bootstrap_embeddings = np.empty((0, self.emb_dim), dtype=np.float32)
+            self.bootstrap_nutrition = np.empty((0, 4), dtype=np.float32)
+        else:
+            emb_pool, nut_pool = bootstrap_pool
+            emb_pool = np.asarray(emb_pool, dtype=np.float32)
+            nut_pool = np.asarray(nut_pool, dtype=np.float32)
+            if emb_pool.ndim != 2 or emb_pool.shape[1] != self.emb_dim:
+                raise ValueError(
+                    f"bootstrap embeddings shape {emb_pool.shape} incompatible "
+                    f"with embedding_dim {self.emb_dim}"
+                )
+            if nut_pool.ndim != 2 or nut_pool.shape[1] != 4:
+                raise ValueError(
+                    f"bootstrap nutrition shape {nut_pool.shape}; expected (N, 4)"
+                )
+            if emb_pool.shape[0] != nut_pool.shape[0]:
+                raise ValueError(
+                    f"bootstrap embedding rows ({emb_pool.shape[0]}) "
+                    f"!= nutrition rows ({nut_pool.shape[0]})"
+                )
+            self.bootstrap_embeddings = emb_pool
+            self.bootstrap_nutrition = nut_pool
+
         # Internal state (initialized in reset)
         self._step_count = 0
         self._daily_deficit = np.zeros(4)
         self._weekly_deficit = np.zeros(4)
+        self._episode_deficit = np.zeros(4)
         self._recent_embeddings: list[np.ndarray] = []
 
     @classmethod
@@ -86,6 +150,8 @@ class MealPlanningEnv(gym.Env):
         cfg: "AgentConfig",
         catalog: MealCatalog,
         user: SimulatedUser,
+        bootstrap_pool: Optional[tuple[np.ndarray, np.ndarray]] = None,
+        episode_resampler: Optional[EpisodeResampler] = None,
     ) -> "MealPlanningEnv":
         """Construct environment from an AgentConfig."""
         return cls(
@@ -99,7 +165,21 @@ class MealPlanningEnv(gym.Env):
             w_diversity=cfg.w_diversity,
             w_preference=cfg.w_preference,
             w_boundary=cfg.w_boundary,
+            bootstrap_pool=bootstrap_pool,
+            episode_resampler=episode_resampler,
         )
+
+    def set_user(self, user: SimulatedUser) -> None:
+        """Replace the env's user (eval harness uses this to cycle through
+        the held-out pool). Call before ``reset()`` — this method does
+        not handle mid-episode swaps.
+        """
+        if user.embedding_dim != self.emb_dim:
+            raise ValueError(
+                f"user.embedding_dim {user.embedding_dim} "
+                f"!= env.emb_dim {self.emb_dim}"
+            )
+        self.user = user
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -119,6 +199,52 @@ class MealPlanningEnv(gym.Env):
         """Current day index (0-based)."""
         return self._step_count // self.meals_per_day
 
+    def _recent_mean_embedding(self) -> np.ndarray:
+        """Mean-pooled recent meal embedding, normalised for cosine use."""
+        if not self._recent_embeddings:
+            return np.zeros(self.emb_dim, dtype=np.float32)
+        recent_mean = np.mean(self._recent_embeddings[-self.history_len:], axis=0)
+        norm = np.linalg.norm(recent_mean)
+        if norm <= 1e-8:
+            return np.zeros(self.emb_dim, dtype=np.float32)
+        return (recent_mean / norm).astype(np.float32)
+
+    def _coerce_observed_meal(
+        self,
+        observed_nutrition: Optional[np.ndarray],
+        observed_embedding: Optional[np.ndarray],
+    ) -> Optional[tuple[np.ndarray, np.ndarray]]:
+        """Validate optional CV-observed meal arrays.
+
+        Observed nutrition and embedding must be supplied together because
+        they represent the meal the user actually ate after a recommendation.
+        """
+        if observed_nutrition is None and observed_embedding is None:
+            return None
+        if observed_nutrition is None or observed_embedding is None:
+            raise ValueError(
+                "observed_nutrition and observed_embedding must be provided together"
+            )
+
+        nutrition = np.asarray(observed_nutrition, dtype=np.float32)
+        if nutrition.shape != (4,):
+            raise ValueError(
+                f"observed_nutrition shape {nutrition.shape}; expected (4,)"
+            )
+
+        embedding = np.asarray(observed_embedding, dtype=np.float32)
+        if embedding.shape != (self.emb_dim,):
+            raise ValueError(
+                f"observed_embedding shape {embedding.shape}; "
+                f"expected ({self.emb_dim},)"
+            )
+        norm = float(np.linalg.norm(embedding))
+        if norm <= 1e-8:
+            raise ValueError("observed_embedding must be non-zero")
+        embedding = embedding / norm
+
+        return nutrition, embedding.astype(np.float32)
+
     def _build_obs(self) -> np.ndarray:
         daily_norm = self._daily_deficit / (self.user.daily_target + 1e-8)
         weekly_norm = self._weekly_deficit / (self.user.weekly_target + 1e-8)
@@ -126,10 +252,7 @@ class MealPlanningEnv(gym.Env):
         slot_onehot = np.zeros(self.meals_per_day, dtype=np.float32)
         slot_onehot[self._get_meal_slot()] = 1.0
 
-        if self._recent_embeddings:
-            recent_mean = np.mean(self._recent_embeddings[-self.history_len:], axis=0)
-        else:
-            recent_mean = np.zeros(self.emb_dim, dtype=np.float32)
+        recent_mean = self._recent_mean_embedding()
 
         return np.concatenate([
             daily_norm.astype(np.float32),
@@ -145,25 +268,61 @@ class MealPlanningEnv(gym.Env):
 
     def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None):
         super().reset(seed=seed)
+
+        # per-episode user mutation (random targets, fresh preference).
+        # Runs BEFORE the deficit state is seeded so the new targets propagate.
+        if self.episode_resampler is not None:
+            self.episode_resampler(self.user, self.np_random)
+
         self._step_count = 0
         self._daily_deficit = self.user.daily_target.copy()
         self._weekly_deficit = self.user.weekly_target.copy()
-        self._recent_embeddings = []
+        self._episode_deficit = self.user.daily_target.copy() * self.num_days
+
+        # Bootstrap "user has been eating already this week": sample
+        # ``history_len`` rows from the pool, use their embeddings to
+        # warm up the diversity context (so the first few steps see a
+        # non-zero recent-mean), and subtract their nutrition from the
+        # weekly deficit (clipped to >= 0). Daily deficit is left fresh
+        # — today is a new day. Uses the env's seeded ``np_random`` so
+        # the same env-seed reproduces the same bootstrap.
+        pool_size = len(self.bootstrap_embeddings)
+        if pool_size > 0 and self.history_len > 0:
+            indices = self.np_random.integers(
+                low=0, high=pool_size, size=self.history_len
+            )
+            self._recent_embeddings = [
+                self.bootstrap_embeddings[int(i)].copy() for i in indices
+            ]
+            consumed = self.bootstrap_nutrition[indices].sum(axis=0)
+            self._weekly_deficit = np.maximum(
+                self._weekly_deficit - consumed, 0.0
+            )
+        else:
+            self._recent_embeddings = []
+
         return self._build_obs(), {}
 
-    def step(self, action: int, observed_nutrition: Optional[np.ndarray] = None):
-        """Take one meal-planning step.
+    def step(
+        self,
+        action: int,
+        observed_nutrition: Optional[np.ndarray] = None,
+        observed_embedding: Optional[np.ndarray] = None,
+    ):
+        """Take one catalog-indexed meal-planning step.
+
+        The supported training/evaluation path decodes ``action`` to a
+        catalog meal and portion, then indexes the catalog's pre-generated
+        embedding and nutrition metadata. For a future real-photo demo,
+        CV-observed nutrition and embedding can be supplied together to
+        update deficits and recent meal history with the meal the user
+        actually ate.
 
         Args:
             action: flat action index in [0, num_actions).
-            observed_nutrition: TODO hook for the CV module.  When real
-                photo-based inference is available, pass the observed
-                [cal, protein, carbs, fat] array here to override the
-                catalog lookup.  Must be None until the hook is wired up.
+            observed_nutrition: optional CV estimate [cal, protein, carbs, fat].
+            observed_embedding: optional CV meal embedding in catalog CLIP space.
         """
-        # TODO: CV hook — when observed_nutrition is provided (from vision
-        # module photo inference), use it instead of catalog.get_nutrition().
-        assert observed_nutrition is None, "CV hook not yet implemented"
 
         # Capture day/slot BEFORE incrementing step count so info dict
         # correctly reflects the step that was just taken.
@@ -171,8 +330,19 @@ class MealPlanningEnv(gym.Env):
         current_slot = self._get_meal_slot()
 
         meal_idx, portion = self._decode_action(action)
-        nutrition = self.catalog.get_nutrition(meal_idx, portion)
-        embedding = self.catalog.get_embedding(meal_idx)
+        catalog_nutrition = self.catalog.get_nutrition(meal_idx, portion)
+        catalog_embedding = self.catalog.get_embedding(meal_idx)
+
+        observed_meal = self._coerce_observed_meal(
+            observed_nutrition, observed_embedding
+        )
+        if observed_meal is None:
+            nutrition = catalog_nutrition
+            embedding = catalog_embedding
+            used_observed_meal = False
+        else:
+            nutrition, embedding = observed_meal
+            used_observed_meal = True
 
         # 1. Health: how much daily deficit was reduced (normalized)
         old_daily = np.abs(self._daily_deficit).sum()
@@ -182,9 +352,8 @@ class MealPlanningEnv(gym.Env):
 
         # 2. Diversity: dissimilarity from recent meals
         if self._recent_embeddings:
-            recent_stack = np.array(self._recent_embeddings[-self.history_len:])
-            sims = recent_stack @ embedding  # cosine sims (embeddings are unit-normed)
-            diversity = 1.0 - np.mean(sims)
+            recent_mean = self._recent_mean_embedding()
+            diversity = 1.0 - float(np.dot(embedding, recent_mean))
         else:
             diversity = 1.0
 
@@ -212,23 +381,26 @@ class MealPlanningEnv(gym.Env):
             self._daily_deficit = self.user.daily_target.copy()
 
         self._weekly_deficit -= nutrition
+        self._episode_deficit -= nutrition
         self._recent_embeddings.append(embedding.copy())
 
         self._step_count += 1
         terminated = (self._step_count >= self.horizon)
         truncated = False
 
-        # TODO: extend weekly bonus for >7-day horizons (provide bonus at end
-        # of each 7-day window, not just episode end).
-        if terminated and self.num_days > 1:
-            weekly_remaining = np.abs(self._weekly_deficit).sum()
-            weekly_target_sum = self.user.weekly_target.sum()
-            reward += self.w_boundary * max(0, 1.0 - weekly_remaining / weekly_target_sum)
+        if terminated:
+            episode_remaining = np.abs(self._episode_deficit).sum()
+            episode_target_sum = (self.user.daily_target * self.num_days).sum()
+            reward += self.w_boundary * max(
+                0, 1.0 - episode_remaining / (episode_target_sum + 1e-8)
+            )
 
         return self._build_obs(), reward, terminated, truncated, {
             "meal_idx": meal_idx,
             "portion": portion,
             "nutrition": nutrition,
+            "embedding": embedding.copy(),
+            "used_observed_meal": used_observed_meal,
             "day": current_day,
             "slot": current_slot,
         }
