@@ -174,3 +174,42 @@ artifacts/
 The finetuned embedding export uses the same split artifact format as the
 baseline extractor (`dish_embeddings.npy`, `dish_manifest.csv`, `metadata.json`,
 plus per-image files), so downstream code can reuse the same loading path.
+
+## Reconstruct Embedding Model From Cached Weights
+The exported weights for the embedding model is stored in `artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt`.
+```
+from pathlib import Path
+
+import numpy as np
+import torch
+from PIL import Image
+
+from visionmealrl.embedding import load_openclip_model_and_preprocess, resolve_device
+from visionmealrl.multitask.artifacts import load_checkpoint
+
+checkpoint_path = Path(
+    "artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt"
+)
+image_path = Path("/path/to/dish_image.png")
+
+device = resolve_device("auto")
+checkpoint = load_checkpoint(checkpoint_path, device=device)
+
+clip_model, preprocess = load_openclip_model_and_preprocess(
+    model_name=checkpoint["model_name"],
+    pretrained=checkpoint["pretrained"],
+    device=device,
+)
+clip_model.load_state_dict(checkpoint["clip_model_state_dict"])
+clip_model.eval()
+
+with Image.open(image_path) as image:
+    image_tensor = preprocess(image.convert("RGB")).unsqueeze(0).to(device)
+
+with torch.inference_mode():
+    embedding = clip_model.encode_image(image_tensor)
+    embedding = embedding / embedding.norm(dim=-1, keepdim=True).clamp(min=1e-12)
+
+embedding_np = embedding[0].detach().cpu().numpy().astype(np.float32)
+print(embedding_np)
+```

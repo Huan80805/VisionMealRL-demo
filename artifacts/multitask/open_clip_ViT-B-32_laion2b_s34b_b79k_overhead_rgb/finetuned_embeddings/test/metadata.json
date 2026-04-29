@@ -1,0 +1,12 @@
+{
+  "checkpoint": "artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_model.pt",
+  "device": "mps",
+  "embedding_dim": 512,
+  "image_source": "overhead_rgb",
+  "model_name": "ViT-B-32",
+  "num_dishes": 507,
+  "num_images": 507,
+  "pretrained": "laion2b_s34b_b79k",
+  "source": "multitask_finetuned_encoder",
+  "split": "test"
+}

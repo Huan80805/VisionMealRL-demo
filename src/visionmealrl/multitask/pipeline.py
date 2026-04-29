@@ -30,7 +30,11 @@ from visionmealrl.embedding import (
 )
 from visionmealrl.labels import IngredientLabelConfig, build_ingredient_vocabulary, encode_multi_hot_ingredients
 from visionmealrl.logging_utils import configure_logging
-from visionmealrl.multitask.artifacts import load_checkpoint, write_multitask_outputs
+from visionmealrl.multitask.artifacts import (
+    load_checkpoint,
+    save_embedding_model_checkpoint,
+    write_multitask_outputs,
+)
 from visionmealrl.multitask.data import build_multitask_dataloader
 from visionmealrl.multitask.model import (
     MultiTaskNutritionModel,
@@ -183,6 +187,7 @@ def _train_model(
         checkpoint_path = epoch_checkpoint_path(checkpoint_dir, epoch)
         if checkpoint_path.exists():
             checkpoint = load_training_checkpoint(checkpoint_path, device=device)
+            embedding_checkpoint_path = checkpoint_path.with_name(f"{checkpoint_path.stem}_embedding_model.pt")
             checkpoint_encoder_unfrozen = bool(checkpoint["encoder_unfrozen"])
             if checkpoint_encoder_unfrozen != encoder_unfrozen:
                 set_encoder_trainability(
@@ -214,6 +219,20 @@ def _train_model(
                 }
             )
             restore_rng_state(checkpoint.get("rng_state"))
+            if not embedding_checkpoint_path.exists():
+                save_embedding_model_checkpoint(
+                    path=embedding_checkpoint_path,
+                    model=model,
+                    model_name=args.model_name,
+                    pretrained=args.pretrained,
+                    image_source=args.image_source,
+                    embedding_dim=int(model.clip_model.visual.output_dim),
+                    checkpoint_source=str(checkpoint_path),
+                    unfreeze_last_n_blocks=args.unfreeze_last_n_blocks,
+                    unfreeze_projection=args.unfreeze_projection,
+                    best_epoch=best_epoch,
+                    best_val_loss=best_val_loss,
+                )
             LOGGER.info("Loaded existing multitask checkpoint for epoch %d/%d", epoch, args.epochs)
             continue
 
@@ -275,6 +294,19 @@ def _train_model(
                 "encoder_unfrozen": encoder_unfrozen,
                 "rng_state": capture_rng_state(),
             },
+        )
+        save_embedding_model_checkpoint(
+            path=checkpoint_path.with_name(f"{checkpoint_path.stem}_embedding_model.pt"),
+            model=model,
+            model_name=args.model_name,
+            pretrained=args.pretrained,
+            image_source=args.image_source,
+            embedding_dim=int(model.clip_model.visual.output_dim),
+            checkpoint_source=str(checkpoint_path),
+            unfreeze_last_n_blocks=args.unfreeze_last_n_blocks,
+            unfreeze_projection=args.unfreeze_projection,
+            best_epoch=best_epoch,
+            best_val_loss=best_val_loss,
         )
 
     if best_state is None:

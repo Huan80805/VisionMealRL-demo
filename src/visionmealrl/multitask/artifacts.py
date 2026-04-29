@@ -22,6 +22,8 @@ from visionmealrl.multitask.model import MultiTaskNutritionModel
 from visionmealrl.nutrition5k import DishRecord
 from visionmealrl.regression import write_predictions_csv as write_regression_predictions_csv
 
+CLIP_MODEL_PREFIX = "clip_model."
+
 
 def save_checkpoint(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -30,6 +32,101 @@ def save_checkpoint(path: Path, payload: dict[str, object]) -> None:
 
 def load_checkpoint(path: Path, device: str) -> dict[str, object]:
     return torch.load(path, map_location=device, weights_only=False)
+
+
+def extract_clip_model_state_dict(multitask_state_dict: dict[str, object]) -> dict[str, object]:
+    clip_state_dict: dict[str, object] = {}
+    for key, value in multitask_state_dict.items():
+        if key.startswith(CLIP_MODEL_PREFIX):
+            clip_state_dict[key.removeprefix(CLIP_MODEL_PREFIX)] = value
+    if not clip_state_dict:
+        raise ValueError("No clip_model weights found in multitask state_dict.")
+    return clip_state_dict
+
+
+def build_embedding_model_payload(
+    *,
+    clip_model_state_dict: dict[str, object],
+    model_name: str,
+    pretrained: str,
+    image_source: str,
+    embedding_dim: int,
+    checkpoint_source: str,
+    unfreeze_last_n_blocks: int | None = None,
+    unfreeze_projection: bool | None = None,
+    best_epoch: int | None = None,
+    best_val_loss: float | None = None,
+) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "export_type": "open_clip_image_embedding_model",
+        "clip_model_state_dict": clip_model_state_dict,
+        "model_name": model_name,
+        "pretrained": pretrained,
+        "image_source": image_source,
+        "embedding_dim": embedding_dim,
+        "normalize_embeddings": True,
+        "checkpoint_source": checkpoint_source,
+    }
+    if unfreeze_last_n_blocks is not None:
+        payload["unfreeze_last_n_blocks"] = unfreeze_last_n_blocks
+    if unfreeze_projection is not None:
+        payload["unfreeze_projection"] = unfreeze_projection
+    if best_epoch is not None:
+        payload["best_epoch"] = best_epoch
+    if best_val_loss is not None:
+        payload["best_val_loss"] = best_val_loss
+    return payload
+
+
+def save_embedding_model_checkpoint(
+    *,
+    path: Path,
+    model: MultiTaskNutritionModel,
+    model_name: str,
+    pretrained: str,
+    image_source: str,
+    embedding_dim: int,
+    checkpoint_source: str,
+    unfreeze_last_n_blocks: int | None = None,
+    unfreeze_projection: bool | None = None,
+    best_epoch: int | None = None,
+    best_val_loss: float | None = None,
+) -> None:
+    payload = build_embedding_model_payload(
+        clip_model_state_dict=model.clip_model.state_dict(),
+        model_name=model_name,
+        pretrained=pretrained,
+        image_source=image_source,
+        embedding_dim=embedding_dim,
+        checkpoint_source=checkpoint_source,
+        unfreeze_last_n_blocks=unfreeze_last_n_blocks,
+        unfreeze_projection=unfreeze_projection,
+        best_epoch=best_epoch,
+        best_val_loss=best_val_loss,
+    )
+    save_checkpoint(path, payload)
+
+
+def export_embedding_model_from_multitask_checkpoint(
+    *,
+    checkpoint_path: Path,
+    output_path: Path,
+    device: str,
+) -> None:
+    checkpoint_payload = load_checkpoint(checkpoint_path, device=device)
+    multitask_state_dict = checkpoint_payload["model_state_dict"]
+    clip_model_state_dict = extract_clip_model_state_dict(multitask_state_dict)
+    payload = build_embedding_model_payload(
+        clip_model_state_dict=clip_model_state_dict,
+        model_name=str(checkpoint_payload["model_name"]),
+        pretrained=str(checkpoint_payload["pretrained"]),
+        image_source=str(checkpoint_payload["image_source"]),
+        embedding_dim=int(checkpoint_payload["embedding_dim"]),
+        checkpoint_source=str(checkpoint_path),
+        unfreeze_last_n_blocks=int(checkpoint_payload.get("unfreeze_last_n_blocks", 0)),
+        unfreeze_projection=bool(checkpoint_payload.get("unfreeze_projection", False)),
+    )
+    save_checkpoint(output_path, payload)
 
 
 def export_finetuned_split_embeddings(
@@ -107,6 +204,19 @@ def write_multitask_outputs(
         "ingredient_min_fraction": DEFAULT_INGREDIENT_MIN_FRACTION,
     }
     save_checkpoint(output_dir / "best_model.pt", checkpoint_payload)
+    save_embedding_model_checkpoint(
+        path=output_dir / "best_embedding_model.pt",
+        model=model,
+        model_name=args.model_name,
+        pretrained=args.pretrained,
+        image_source=args.image_source,
+        embedding_dim=embedding_dim,
+        checkpoint_source=str(output_dir / "best_model.pt"),
+        unfreeze_last_n_blocks=args.unfreeze_last_n_blocks,
+        unfreeze_projection=args.unfreeze_projection,
+        best_epoch=best_epoch,
+        best_val_loss=best_val_loss,
+    )
 
     with (output_dir / "label_vocabulary.json").open("w", encoding="utf-8") as handle:
         json.dump(
