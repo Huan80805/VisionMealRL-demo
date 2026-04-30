@@ -36,6 +36,7 @@ class AgentConfig:
     exploration_fraction: float = 0.3
     learning_starts: int = 1000
     seed: int = 42
+    verbose: int = 0
 
     # --- Derived properties (not dataclass fields; not set manually) ---
 
