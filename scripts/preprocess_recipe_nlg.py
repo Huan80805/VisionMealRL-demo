@@ -1,8 +1,9 @@
 """
-Requirements:
-  pip install gsutil              # for downloading from Google Cloud Storage
-  pip install pandas tqdm         # data handling
-  pip install torch torchvision   # PyTorch (CPU or CUDA)
+Filters the recipes in data/recipes-with-nutrition.csv down to only those which contain the same subset of ingredients
+as the Nutrition5k dataset (with the exclusion of spices).
+
+Downloads just the metadata of Nutrition5k and filters the recipes by ingredient.
+It also applies some additional filters to remove desserts, sauces and other recipes of that type.
 """
 
 import os
@@ -23,7 +24,7 @@ from tqdm import tqdm
  
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Filter RecipeNLG recipes to Nutrition5k-compatible recipes."
+        description="Filter DataHiveAI recipes down to Nutrition5k-compatible meal recipes."
     )
     parser.add_argument(
         "--stats", type=bool, default=False,
@@ -39,8 +40,8 @@ def parse_args():
         help="Directory where results are saved (default: ./out)"
     )
     parser.add_argument(
-        "--recipe-dir", type=Path, default=None,
-        help="Path to RecipeNLG CSV (default: <data-dir>/recipe_nlg.csv)"
+        "--recipe-file", type=Path, default="recipes-with-nutrition.csv",
+        help="Path to recipes with nutrition CSV (default: recipes-with-nutrition.csv)"
     )
 
     return parser.parse_args()
@@ -55,40 +56,14 @@ METADATA_FILES = [
     "metadata/ingredients_metadata.csv"
 ]
 
-# Spice/seasoning allowlist — anything here is always permitted in recipes,
-# not considered to add substantial macronutrient value
-SPICE_ALLOWLIST = {
-    "salt", "pepper", "black pepper", "white pepper", "red pepper flakes",
-    "cayenne", "cayenne pepper", "paprika", "smoked paprika", "cumin", "coriander", "turmeric",
-    "cinnamon", "nutmeg", "cloves", "cardamom", "ginger", "garlic powder",
-    "onion powder", "chili powder", "oregano", "thyme", "rosemary", "basil",
-    "parsley", "bay leaf", "bay leaves", "bay leaf", "dill", "sage", "chive",
-    "marjoram", "tarragon", "allspice", "anise", "star anise", "fennel seeds", 
-    "celery seed", "mustard seeds", "mustard powder", "saffron", "sumac", "za'atar",
-    "five spice", "curry powder", "garam masala", "italian seasoning",
-    "herbs de provence", "old bay", "seasoning", "spice mix",
-    "salt and pepper", "kosher salt", "sea salt", "fleur de sel"
-}
-
-# List for filtering out recipes that are baking recipes, consisting entirely of 
-# baking ingredients
-BAKING_LIST = {
-    "flour", "baking soda", "baking powder", "white sugar", "powdered sugar", "sugar", "brown sugar",
-    "vanilla", "vanilla extract", "eggs", "egg whites", "egg yolks", "milk", "butter", "sour cream", 
-    "heavy cream", "cream", "lemon juice", "orange juice", "apple juice", "almonds", "cream cheese",
-    "yeast", "water", "corn starch", "arrowroot", "lime juice"
-}
-
-COMBINED_LIST = BAKING_LIST | SPICE_ALLOWLIST
-
 CLIP_MODEL_NAME = "ViT-B/32"   # fast; swap to "ViT-L/14" for higher quality
 
 # ──────────────────────────────────────────────────────────────────────────────
-# STEP 1 — Download Nutrition5k metadata (metadata CSVs only, not 190 GB videos)
+# STEP 1 — Download Nutrition5k metadata only
 # ──────────────────────────────────────────────────────────────────────────────
 
 def download_metadata(data_dir: Path):
-    """Download only the lightweight metadata CSVs from Google Cloud Storage."""
+    """Download only the metadata CSVs from Google Cloud Storage."""
     print("\n=== STEP 1: Downloading Nutrition5k metadata ===")
     meta_dir = data_dir / "nutrition5k"
     meta_dir.mkdir(parents=True, exist_ok=True)
@@ -127,7 +102,7 @@ def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
     """
     print("\n=== STEP 2: Extracting unique ingredients ===")
  
-    ingredients = {}   # id → canonical name
+    ingredients = {}   # {id: ingredient name}
  
     # --- Primary source: ingredient_metadata.csv ---
     ingr_meta = data_dir / "nutrition5k/metadata/ingredients_metadata.csv"
@@ -153,13 +128,7 @@ def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
         n5k_word_freq, n5k_word_to_phrases = build_multiword_index(ingredient_name_freq)
     
         # Save ingredient lists
-        ingr_csv  = output_dir / "nutrition5k_ingredients.csv"
         ingr_json = output_dir / "nutrition5k_ingredients.json"
-    
-        pd.DataFrame({
-            "ingredient_id":   list(ingredients.keys()),
-            "ingredient_name": list(ingredients.values()),
-        }).sort_values("ingredient_name").to_csv(ingr_csv, index=False)
     
         with open(ingr_json, "w") as f:
             json.dump({
@@ -167,7 +136,6 @@ def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
                 "ingredients":      all_ingredient_names,
             }, f, indent=2)
     
-        print(f"  Saved → {ingr_csv}")
         print(f"  Saved → {ingr_json}")
     
         # Save multi-word analysis
@@ -244,145 +212,182 @@ def save_multiword_analysis(
 # ──────────────────────────────────────────────────────────────────────────────
 # STEP 3 — Filter RecipeNLG for Nutrition5k-compatible recipes
 # ──────────────────────────────────────────────────────────────────────────────
+def normalise(raw: str) -> str:
+    """
+    Lowercase, strip numbers/punctuation, collapse whitespace to normalize.
 
-def normalise(text: str) -> str:
-    """Lowercase, strip numbers/punctuation, collapse whitespace."""
-    text = text.lower()
+    Remove common prefixes like fresh, ground, dried
+    """
+    text = raw.lower()
     text = re.sub(r"[^a-z\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
 
-    unit_words = {
-        "cup", "cups", "tablespoon", "tablespoons", "tbsp", "teaspoon",
-        "teaspoons", "tsp", "pound", "pounds", "lb", "lbs", "ounce", "ounces",
-        "oz", "gram", "grams", "g", "kg", "kilogram", "kilograms",
-        "liter", "liters", "milliliter", "milliliters", "ml", "l",
-        "pinch", "dash", "handful", "bunch", "can", "cans", "jar", "jars",
-        "package", "packages", "pkg", "slice", "slices", "piece", "pieces",
-        "clove", "cloves", "sprig", "sprigs", "stalk", "stalks", "head",
-        "medium", "large", "small", "extra", "fresh", "dried", "frozen",
-        "chopped", "diced", "minced", "sliced", "grated", "peeled",
-        "shredded", "cooked", "raw", "whole", "halved", "quartered",
-        "optional", "to taste", "or more", "about", "approximately",
-        "of", "ground", "drizzle", "lump", "knob", "lots", "rack", "drop",
-        "drops", "turns", "turn", "julienne", "washed", "julienned",
-        "grilled", "roast", "halves", "cold", "warm", "boiling", "very", "unsalted"
-    }
-
-    # keyword: ([exact matches], replacement phrase)
-    mappings = {"green onion": (["green onion"], "green onions"),
-                "onion": (["onion", "red onion", "yellow onion", "white onion", "brown onion",
-                           "sweet onion", "purple onion"], "onions"), 
-                "pepper": (["green pepper", "red pepper", "red bell pepper", "bell pepper",
-                            "green bell pepper", "yellow bell pepper", "yellow pepper",
-                            "orange bell pepper"], "bell peppers"),
-                "chicken breasts": (["chicken breasts"], "chicken breast"),
-                "chicken thigh": (["chicken thigh"], "chicken thighs"),
-                "egg white": (["egg white"], "egg whites"),
-                "egg yolk": (["egg yolk"], "egg yolks"), "egg": (["egg"], "eggs"),
-                "virgin olive oil": (["extra virgin olive oil", "virgin olive oil"], "olive oil"),
-                "oil": (["canola oil", "cooking oil", "corn oil", "sunflower oil", 
-                         "grapeseed oil"], "vegetable oil"),
-                "brown sugar": (["light brown sugar", "dark brown sugar"], "brown sugar"),
-                "sugar": (["white sugar", "granulated sugar"], "sugar"),
-                "tomato": (["tomato"], "tomatoes"), "vinegar": (["white vinegar"], "vinegar"),
-                "cream": (["heavy cream"], "cream"), "broth": (["chicken broth", "beef broth"], "broth"),
-                "mushroom": (["mushrooms"], "mushroom"), "carrot": (["carrots"], "carrot"),
-                "coconut": (["coconut"], "coconuts"), "cornstarch": (["cornstarch"], "corn starch"),
-                "beans": (["beans"], "black beans"), "kidney beans": (["red kidney beans"], "kidney beans"), 
-                "garbanzo beans": (["garbanzo beans"], "chickpeas"), 
-                "cannellini beans": (["cannellini beans"], "white beans"), "apples": (["apples"], "apple")}
+    prefixes = {"fresh", "ground", "dried", "canned", "diced", "coarse", "chopped", "can", "frozen", 
+                "crushed", "firm", "silken", "grated", "light", "skinless"}
     
-    tokens = [t for t in text.split() if t not in unit_words and len(t) > 1]
-    core = " ".join(tokens)
+    suffixes = {"leaves", "kernels", "florets", "root", "sprigs", "halves", "stick", "pods"}
+    
+    components = text.split(" ")
+    if components[0] in prefixes:
+        text = " ".join(components[1:])
 
-    for key, (matches, replacement) in mappings.items():
-        if key in core:
-            if core in matches:
-                return replacement
+    components = text.split(" ")
+    if components[-1] in suffixes:
+        text = " ".join(components[:-1])
 
-    return core
+    if text in EXCEPTIONS:
+        return EXCEPTIONS[text]
+    if text.endswith("es"):
+        if text[:-2] in EXCEPTIONS:
+            return EXCEPTIONS[text[:-2]]
+    if text.endswith("s"):
+        if text[:-1] in EXCEPTIONS:
+            return EXCEPTIONS[text[:-1]]
+    elif text + "s" in EXCEPTIONS:
+        return EXCEPTIONS[text + "s"]
+    elif text + "es" in EXCEPTIONS:
+        return EXCEPTIONS[text + "es"]
+    
+    return text
+    
 
-
-def ingredient_is_allowed(raw: str, allowed: set, spices: set) -> bool:
+def ingredient_is_allowed(text: str, allowed: set) -> bool:
     """
     Return True if the recipe ingredient string refers only to items in
     `allowed` (Nutrition5k names) or `spices` (allowlist).
- 
-    Strategy: strip quantities/units/prep notes, then check if the core
-    noun phrase is covered. Uses a generous substring match.
+
+    Allow for plural forms and manual exceptions.
     """
-    if not raw:
-        return True # empty after stripping - harmless
- 
+    # empty after stripping
+    if not text:
+        return False
+    
     # Direct match against allowed sets
-    if raw in allowed or raw in spices:
+    if text in allowed:
         return True
+    if text.endswith("es"): # plurals
+        if text[:-2] in allowed:
+            return True
+    if text.endswith("s"):
+        if text[:-1] in allowed:
+            return True
+    elif text + "s" in allowed:
+        return True
+    elif text + "es" in allowed:
+        return True
+    
+    # If it's just an adjective or some other descriptor before an allowed ingredient
+    components = text.split(" ")
+    if len(components) > 1:
+        last = components[-1]
+        return ingredient_is_allowed(last, allowed)
     
     return False
 
 
-def title_is_allowed(title: str):
-    title = title.lower()
-    disallowed = {"cake", "muffins", "muffin", "cookies", "cookie", "pie", "pudding", "punch", 
-    "cobbler", "brownies", "cider", "sauce", "dressing"}
-    return not any(item in title for item in disallowed)
+# Spice/seasoning allowlist — anything here is always permitted in recipes,
+# not considered to add substantial macronutrient value
+SPICE_ALLOWLIST = {
+    "salt", "pepper", "black pepper", "white pepper", "red pepper flakes",
+    "cayenne", "cayenne pepper", "paprika", "smoked paprika", "cumin", "coriander", "turmeric",
+    "cinnamon", "nutmeg", "cloves", "cardamom", "ginger", "garlic powder",
+    "onion powder", "chili powder", "oregano", "thyme", "rosemary", "basil",
+    "parsley", "bay leaf", "bay leaves", "bay leaf", "dill", "sage", "chive",
+    "marjoram", "tarragon", "allspice", "anise", "star anise", "fennel seeds", 
+    "celery seed", "mustard seeds", "mustard powder", "saffron", "sumac", "za'atar",
+    "five spice", "curry powder", "garam masala", "italian seasoning",
+    "herbs de provence", "old bay", "seasoning", "spice mix",
+    "salt and pepper", "kosher salt", "sea salt", "fleur de sel", "worcestershire sauce",
+    "mint", "sweet paprika", "chile powder", "chilli powder", "old bay seasoning", "five spice powder",
+    "fenugreek"
+}
+
+EXCEPTIONS = {"extra virgin olive oil": "olive oil", "virgin olive oil": "olive oil", "red onion": "onions", 
+                  "unsalted butter": "butter", "spinach": "spinach (cooked)", "all purpose flour": "flour", 
+                  "dijon mustard": "mustard", "lime juice": "lime juice", "chicken broth": "chicken stock",
+                  "scallions": "green onions", "yellow onion": "onions", "red bell pepper": "bell peppers", 
+                  "canola oil": "vegetable oil", "red wine vinegar": "vinegar", "chicken stock": "chicken stock",
+                  "parmesan": "parmesan cheese", "heavy cream": "cream", "green bell pepper": "bell pepper", 
+                  "apple cider vinegar": "vinegar", "vegetable broth": "vegetable stock", "dry white wine": "white wine",
+                  "cornstarch": "corn starch", "boneless skinless chicken breasts": "chicken breast",
+                  "vegetable stock": "vegetable stock", "red pepper": "bell pepper", "breadcrumbs": "bread crumbs",
+                  "mozzarella": "mozzarella cheese", "white wine vinegar": "vinegar", "white onion": "onions",
+                  "butternut squash": "squash", "tomato sauce": "tomato sauce", "low sodium soy sauce": "soy sauce",
+                  "beans": "black beans", "herbs": "herbs", "baking powder": "baking powder", "beef stock": "beef stock",
+                  "panko breadcrumbs": "bread crumbs", "baking soda": "baking soda", "crabmeat": "crab",
+                  "garbanzo beans": "chickpeas", "reduced sodium soy sauce": "soy sauce", "mayo": "mayonnaise",
+                  "cheddar": "cheddar cheese", "cannellini beans": "white beans", "marinara sauce": "marinara sauce",
+                  "feta": "feta cheese", "skinless boneless chicken breast": "chicken breast", 
+                  "panko bread crumbs": "bread crumbs", "panko": "bread crumbs", "low sodium chicken stock": "chicken stock",
+                  "yoghurt": "yogurt"}
+
+ALLOWED_DISH_TYPE = {"main course", "salad", "soup", "sandwiches", "starter"}
 
 
 def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: Path, stats: bool):
     """
-    Load RecipeNLG and keep recipes where every ingredient is either in
+    Load recipes-with-nutrition and keep recipes where every ingredient is either in
     nutrition5k_ingredients or SPICE_ALLOWLIST.
 
-    RecipeNLG CSV columns: (index), title, ingredients, directions, link, source, NER
-    We use a normalized version of the NER (Named Entity Recognition) column to determine compatibility
-    with the allowed ingredients.
+    The ingredients column of the recipe dataset comes in objects which come with the keys:
+    - food - food name
+    - text - raw text of the line of the recipe the ingredient was extracted from
+    - weight - the weight of the ingredient in the recipe
+    - measure - what sized measuring tool the ingredient is measured in
+    - quantity - how many of that measuring tool was requested
+
+    We just use the "food" key to filter our recipes.
+
+    The main dish_types that we want to accept are: 'main course', 'salad', 'soup', 'sandwiches', 'starter'.
     """
-    print("\n=== STEP 3: Filtering RecipeNLG recipes ===")
+    print("\n=== STEP 3: Filtering recipes-with-nutrition recipes ===")
 
     if not recipe_dir.exists():
-        print(f"RecipeNLG dataset not found at {recipe_dir}.")
+        print(f"recipes-with-nutrition dataset not found at {recipe_dir}.")
         return []
 
     print(f"  Loading {recipe_dir} …")
 
-    filtered = []
-    chunk_size = 10_000
+    filtered_indices = []
+    normalised_ingredients = []
     disallowed_ingr = dict()
-    total_seen = 0
+
+    dataset = pd.read_csv(recipe_dir)
+    dataset["cuisine_type"] = dataset["cuisine_type"].apply(json.loads)
+    dataset["dish_type"] = dataset["dish_type"].apply(json.loads)
+    dataset["ingredients"] = dataset["ingredients"].apply(json.loads)
+
+    for index, row in tqdm(dataset.iterrows(), total=dataset.shape[0]):
+        corr_dish_type = False
+        for dish_type in row["dish_type"]:
+            if dish_type in ALLOWED_DISH_TYPE:
+                corr_dish_type = True
+                break
+        
+        # skip recipes not of the correct dish type
+        if not corr_dish_type:
+            continue
+
+        ingredients_list = [item["food"] for item in row["ingredients"]]
+        cleaned_ingr = [normalise(item) for item in ingredients_list]
+        filtered_ingr = [item for item in cleaned_ingr if item not in SPICE_ALLOWLIST]
+
+        # Select only those recipes which have ingredients in the nutrition5k dataset
+        if (len(filtered_ingr) > 2) and all(ingredient_is_allowed(item, nutrition5k_ingredients) 
+                                            for item in filtered_ingr):
+            filtered_indices.append(index)
+            normalised_ingredients.append(filtered_ingr)
+        else:
+            for item in filtered_ingr:
+                if not ingredient_is_allowed(item, nutrition5k_ingredients):
+                    disallowed_ingr[item] = disallowed_ingr.setdefault(item, 0) + 1
+
+    print(f"  Scanned {dataset.shape[0]:,} recipes. {len(filtered_indices):,} recipes pass the filter:"
+        f"({100*len(filtered_indices)/dataset.shape[0]:.1f}%)")
     
-    for chunk in tqdm(pd.read_csv(recipe_dir, chunksize=chunk_size, on_bad_lines="skip")):
-        for _, row in chunk.iterrows():
-            # Parse NER field (pre-cleaned ingredient names as JSON list)
-            try:
-                ner_items = json.loads(str(row.get("NER", "[]")))
-                title = str(row.get("title", ""))
-            except (json.JSONDecodeError, TypeError):
-                ner_raw = str(row.get("NER", ""))
-                ner_items = [x.strip().strip("'\"") for x in ner_raw.strip("[]").split(",")]
-
-            # Check every NER item
-            cleaned_ingr = [item for item in [normalise(item) for item in ner_items] if item.strip()]
-            filtered_ingr = [item for item in cleaned_ingr if item not in COMBINED_LIST]
-            if (len(filtered_ingr) > 2) and title_is_allowed(title) and \
-                all(ingredient_is_allowed(item, nutrition5k_ingredients, SPICE_ALLOWLIST)
-                for item in cleaned_ingr) and not all(item in COMBINED_LIST for item in cleaned_ingr):
-                
-                filtered.append({
-                    "title":       title,
-                    "ner":         cleaned_ingr,
-                    "ingredients":  str(row.get("ingredients", "")),
-                    "directions":  str(row.get("directions", "")),
-                    "source_url":  str(row.get("link", "")),
-                })
-            else:
-                for item in cleaned_ingr:
-                    if not ingredient_is_allowed(item, nutrition5k_ingredients, SPICE_ALLOWLIST):
-                        disallowed_ingr[item] = disallowed_ingr.setdefault(item, 0) + 1
-            
-            total_seen += 1
-
-    print(f"  Scanned {total_seen:,} recipes → {len(filtered):,} pass the filter "
-          f"({100*len(filtered)/max(total_seen,1):.1f}%)")
+    if stats:
+        with open(output_dir / "disallowed_ingr.json", "w") as f:
+            json.dump(dict(sorted(disallowed_ingr.items(), key=lambda item: item[1], reverse=True)), f, indent=2)
     
     if stats:
         rnlg_word_freq, rnlg_word_to_phrases = build_multiword_index(disallowed_ingr)
@@ -395,23 +400,13 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
         )
 
     # Save
-    recipes_json = output_dir / "filtered_recipes.json"
     recipes_csv  = output_dir / "filtered_recipes.csv"
+    filtered_recipes = dataset.iloc[filtered_indices]
+    filtered_recipes["norm_ingredients"] = pd.Series(normalised_ingredients)
 
-    with open(recipes_json, "w") as f:
-        json.dump(filtered, f, indent=2)
-
-    pd.DataFrame([{
-        "title":       r["title"],
-        "ingredients":  r["ingredients"],
-        "directions":  r["directions"],
-        "ner":         ", ".join(r["ner"]),
-        "source_url":  r["source_url"],
-    } for r in filtered]).to_csv(recipes_csv, index=False)
-
-    print(f"  Saved → {recipes_json}")
-    print(f"  Saved → {recipes_csv}")
-    return filtered
+    filtered_recipes.to_csv(recipes_csv, index=False)
+    print(f"  Saved to {recipes_csv}")
+    return filtered_recipes
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN
@@ -422,7 +417,8 @@ if __name__ == "__main__":
  
     DATA_DIR   = args.data_dir
     OUTPUT_DIR = args.output_dir
-    RECIPE_NLG_CSV = args.recipe_dir or DATA_DIR / "recipe_nlg.csv"
+    RECIPE_FILE = args.recipe_file
+    RECIPE_PATH = DATA_DIR / RECIPE_FILE
     STATS = args.stats
  
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -434,7 +430,18 @@ if __name__ == "__main__":
     # --- Step 2: Extract ingredients ---
     nutrition5k_ingredients = extract_ingredients(DATA_DIR, OUTPUT_DIR, stats=STATS)
 
-    # # --- Step 3: Filter recipes ---
-    filtered_recipes = filter_recipes(nutrition5k_ingredients, OUTPUT_DIR, RECIPE_NLG_CSV, stats=STATS)
+    # --- Step 3: Filter recipes ---
+    filtered_recipes = filter_recipes(nutrition5k_ingredients, OUTPUT_DIR, RECIPE_PATH, stats=STATS)
 
-    print("\n✓ Recipe filtering complete. Outputs saved to:", OUTPUT_DIR.resolve())
+    print("\nRecipe filtering complete. Outputs saved to:", OUTPUT_DIR.resolve())
+
+    # Output recipe stats
+    cuisine_freq = {}
+    for cuisine_l in filtered_recipes.cuisine_type:
+        for cuisine in cuisine_l:
+            cuisine_freq[cuisine] = cuisine_freq.get(cuisine, 0) + 1
+        
+    sorted_freq = dict(sorted(cuisine_freq.items(), key=lambda item: item[1], reverse=True))
+    print("---- Cuisine Frequencies ----")
+    for cuisine, freq in sorted_freq.items():
+        print(f"{cuisine}: {freq}")
