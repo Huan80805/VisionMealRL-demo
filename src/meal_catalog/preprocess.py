@@ -9,11 +9,12 @@ It also applies some additional filters to remove desserts, sauces and other rec
 import os
 import re
 import csv
+import math
 import json
 import subprocess
 import argparse
 from pathlib import Path
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 import pandas as pd
 from tqdm import tqdm
@@ -25,6 +26,10 @@ from tqdm import tqdm
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Filter DataHiveAI recipes down to Nutrition5k-compatible meal recipes."
+    )
+    parser.add_argument(
+        "count", type=int, default=1000,
+        help="How many recipes to be selected for the final embedding"
     )
     parser.add_argument(
         "--stats", type=bool, default=False,
@@ -40,8 +45,20 @@ def parse_args():
         help="Directory where results are saved (default: ./out)"
     )
     parser.add_argument(
+        "--stats-dir", type=Path, default=Path("./stats"),
+        help="Directory where stats are saved (default: ./stats)"
+    )
+    parser.add_argument(
         "--recipe-file", type=Path, default="recipes-with-nutrition.csv",
         help="Path to recipes with nutrition CSV (default: recipes-with-nutrition.csv)"
+    )
+    parser.add_argument(
+        "--min_freq", type=int, default=5,
+        help="Minimum number of times an ingredient must appear"
+    )
+    parser.add_argument(
+        "--decay", type=float, default=1.0,
+        help="How rapidly the frequency of a given ingredient contributes to its deprioritization"
     )
 
     return parser.parse_args()
@@ -93,7 +110,7 @@ def download_metadata(data_dir: Path):
 # STEP 2 — Extract unique ingredient names from Nutrition5k
 # ──────────────────────────────────────────────────────────────────────────────
 
-def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
+def extract_ingredients(data_dir: Path, stats_dir: Path, stats: bool):
     """
     Parse ingredient_metadata.csv to collect
     every unique ingredient name that appears in the dataset.
@@ -128,7 +145,7 @@ def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
         n5k_word_freq, n5k_word_to_phrases = build_multiword_index(ingredient_name_freq)
     
         # Save ingredient lists
-        ingr_json = output_dir / "nutrition5k_ingredients.json"
+        ingr_json = stats_dir / "nutrition5k_ingredients.json"
     
         with open(ingr_json, "w") as f:
             json.dump({
@@ -142,8 +159,8 @@ def extract_ingredients(data_dir: Path, output_dir: Path, stats: bool):
         save_multiword_analysis(
             n5k_word_freq,
             n5k_word_to_phrases,
-            output_dir / "nutrition5k_multiword_word_freq.csv",
-            output_dir / "nutrition5k_multiword_word_to_phrases.json",
+            stats_dir / "nutrition5k_multiword_word_freq.csv",
+            stats_dir / "nutrition5k_multiword_word_to_phrases.json",
             label="Nutrition5k",
         )
  
@@ -210,7 +227,7 @@ def save_multiword_analysis(
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# STEP 3 — Filter RecipeNLG for Nutrition5k-compatible recipes
+# STEP 3 — Filter Recipes-With-Nutrition for Nutrition5k-compatible recipes
 # ──────────────────────────────────────────────────────────────────────────────
 def normalise(raw: str) -> str:
     """
@@ -324,7 +341,7 @@ EXCEPTIONS = {"extra virgin olive oil": "olive oil", "virgin olive oil": "olive 
 ALLOWED_DISH_TYPE = {"main course", "salad", "soup", "sandwiches", "starter"}
 
 
-def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: Path, stats: bool):
+def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: Path, stats: bool, stats_dir: Path):
     """
     Load recipes-with-nutrition and keep recipes where every ingredient is either in
     nutrition5k_ingredients or SPICE_ALLOWLIST.
@@ -363,9 +380,16 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
             if dish_type in ALLOWED_DISH_TYPE:
                 corr_dish_type = True
                 break
-        
         # skip recipes not of the correct dish type
         if not corr_dish_type:
+            continue
+
+        # skip recipes without an image
+        if row["image_url"] == None:
+            continue
+
+        # skip recipes with empty cuisine type
+        if not row["cuisine_type"]:
             continue
 
         ingredients_list = [item["food"] for item in row["ingredients"]]
@@ -386,7 +410,7 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
         f"({100*len(filtered_indices)/dataset.shape[0]:.1f}%)")
     
     if stats:
-        with open(output_dir / "disallowed_ingr.json", "w") as f:
+        with open(stats_dir / "disallowed_ingr.json", "w") as f:
             json.dump(dict(sorted(disallowed_ingr.items(), key=lambda item: item[1], reverse=True)), f, indent=2)
     
     if stats:
@@ -394,19 +418,203 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
         save_multiword_analysis(
             rnlg_word_freq,
             rnlg_word_to_phrases,
-            output_dir / "rnlg_multiword_word_freq.csv",
-            output_dir / "rnlg_multiword_word_to_phrases.json",
+            stats_dir / "rnlg_multiword_word_freq.csv",
+            stats_dir / "rnlg_multiword_word_to_phrases.json",
             label="Recipe_NLG",
         )
 
     # Save
     recipes_csv  = output_dir / "filtered_recipes.csv"
-    filtered_recipes = dataset.iloc[filtered_indices]
+    filtered_recipes = dataset.iloc[filtered_indices].reset_index()
     filtered_recipes["norm_ingredients"] = pd.Series(normalised_ingredients)
 
     filtered_recipes.to_csv(recipes_csv, index=False)
     print(f"  Saved to {recipes_csv}")
     return filtered_recipes
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# STEP 4 - Recipe Selection
+# ──────────────────────────────────────────────────────────────────────────────
+def select_recipes(
+    recipes: pd.DataFrame,
+    n: int,
+    min_ingredient_freq: int = 5,
+    decay: float = 1.0,
+) -> list:
+    """
+    Select a diverse, ingredient-balanced subset of N recipes from a larger
+    pool using log-frequency ingredient weights.
+
+    Also selects an equal amount of recipes from each cuisine_type, distributing the
+    excess to other cuisine types when not possible.
+
+    Algorithm:
+      1. Compute per-cuisine quotas: divide N as evenly as possible across
+         cuisine types; if a cuisine has fewer recipes than its quota, its
+         shortfall is redistributed to remaining cuisines proportionally.
+      2. Compute w(i) = log(1 + f(i)) for each ingredient i, where f(i) is
+         how many recipes in the pool contain i. Ingredients appearing in
+         fewer than `min_ingredient_freq` recipes get w(i) = 0. Weights are
+         computed once from the full pool and never recomputed.
+      3. Normalise all weights to [0, 1].
+      4. Score each recipe as the mean weight of its ingredients (length-
+         normalised to avoid penalising longer recipes).
+      5. Greedily pick the highest-scoring recipe, then re-score remaining
+         recipes discounting already-covered ingredients:
+              w_adjusted(i) = w(i) / (1 + decay * c(i))
+         where c(i) is how many times ingredient i appears in the selected
+         set so far. When a cuisine's quota is filled, all its remaining
+         recipes are dropped from the candidate pool and scores are
+         renormalised to sum to 1 across remaining candidates. Repeat
+         until N recipes are chosen.
+
+    Args:
+        recipes:              DataFrame of recipes (must have "ner" and
+                              "cuisine_type" columns)
+        n:                    number of recipes to select
+        min_ingredient_freq:  ingredients rarer than this are ignored (weight=0)
+        decay:                coverage decay rate. Higher → more diversity,
+                              lower → more popularity bias. Default 1.0.
+
+    Returns:
+        List of N selected recipe dicts, in selection order.
+    """
+    records = recipes.to_dict("records")
+
+    if n >= len(records):
+        print(f"  [select] Requested {n} >= pool size {len(records)}, returning all.")
+        return records
+
+    print(f"\n=== STEP 4: Selecting {n} recipes from {len(records):,} ===")
+
+    # Compute per-cuisine quotas
+    cuisine_indices = {}
+    for idx, r in enumerate(records):
+        r_cuisines = r.get("cuisine_type", [])
+        if r_cuisines:
+            first_cuisine = r_cuisines[0]
+            if first_cuisine in cuisine_indices:
+                cuisine_indices[first_cuisine].append(idx)
+            else:
+                cuisine_indices[first_cuisine] = [idx]
+
+    cuisines = list(cuisine_indices.keys())
+    n_cuisines = len(cuisines)
+    base_quota, remainder = divmod(n, n_cuisines)
+    # Give one extra slot to the first `remainder` cuisines (arbitrary but deterministic)
+    quotas = {c: base_quota + (1 if i < remainder else 0) for i, c in enumerate(cuisines)}
+
+    # Redistribute quotas for cuisines that don't have enough recipes
+    # Iterate until stable (redistribution may cascade)
+    changed = True
+    while changed:
+        changed = False
+        shortfall = 0
+        capped = set()
+        for c, quota in quotas.items():
+            available = len(cuisine_indices[c])
+            if available < quota:
+                shortfall += quota - available
+                quotas[c] = available
+                capped.add(c)
+                changed = True
+
+        if shortfall:
+            # Spread shortfall across uncapped cuisines, largest-remainder method
+            uncapped = [c for c in cuisines if c not in capped]
+            if not uncapped:
+                break
+            per, leftover = divmod(shortfall, len(uncapped))
+            for i, c in enumerate(uncapped):
+                quotas[c] += per + (1 if i < leftover else 0)
+
+    print(f"  Cuisine quotas: { {c: quotas[c] for c in cuisines} }")
+
+    # Build ingredient frequency table from the full pool
+    freq = Counter()
+    ingredients_lists = []
+    for r in tqdm(records):
+        items = r["norm_ingredients"]
+        ingredients_lists.append(items)
+        freq.update(items)
+
+    # Compute log-frequency weights, zero out rare ingredients
+    raw_w = {}
+    for ingr, f in freq.items():
+        raw_w[ingr] = math.log(1 + f) if f >= min_ingredient_freq else 0.0
+
+    max_w = max(raw_w.values()) or 1.0
+    w = {ingr: v / max_w for ingr, v in raw_w.items()} # normalized weights
+
+    def recipe_score(recipe_ingredients: list[str], coverage: Counter) -> float:
+        if not recipe_ingredients:
+            return 0.0
+        total = sum(
+            w.get(ingr, 0.0) / (1.0 + decay * coverage[ingr])
+            for ingr in recipe_ingredients
+        )
+        return total / len(recipe_ingredients)
+
+    def renormalise(scores: dict[int, float]) -> dict[int, float]:
+        """Rescale scores so they sum to 1 over current candidates."""
+        total = sum(scores.values())
+        if total <= 0:
+            # Uniform fallback if all scores collapse to zero
+            n_remaining = len(scores)
+            return {idx: 1.0 / n_remaining for idx in scores} if n_remaining else {}
+        return {idx: s / total for idx, s in scores.items()}
+
+    # --- Greedy selection with per-cuisine quota enforcement ---
+    remaining = set(range(len(records)))
+    selected_indices = []
+    coverage = Counter()
+    cuisine_selected = Counter()
+
+    scores = {idx: recipe_score(ingredients_lists[idx], coverage) for idx in remaining}
+    scores = renormalise(scores)
+
+    from tqdm import tqdm as _tqdm
+    for step in _tqdm(range(n), desc="  Selecting recipes"):
+        best_idx = max(remaining, key=lambda idx: scores[idx])
+        selected_indices.append(best_idx)
+        remaining.remove(best_idx)
+
+        cuisine = records[best_idx].get("cuisine_type", [])[0]
+        cuisine_selected[cuisine] += 1
+        coverage.update(ingredients_lists[best_idx])
+
+        # Drop entire cuisine from pool if its quota is now filled
+        quota_filled = cuisine_selected[cuisine] >= quotas[cuisine]
+        if quota_filled:
+            evicted = {idx for idx in remaining
+                       if (cuisine in records[idx].get("cuisine_type", []))}
+            remaining -= evicted
+
+        if not remaining:
+            break
+
+        # Re-score recipes that share an ingredient with the just-selected one
+        touched_ingrs = set(ingredients_lists[best_idx])
+        for idx in remaining:
+            if touched_ingrs & set(ingredients_lists[idx]):
+                scores[idx] = recipe_score(ingredients_lists[idx], coverage)
+
+        # Prune scores dict to match remaining, then renormalise
+        scores = {idx: scores[idx] for idx in remaining}
+        scores = renormalise(scores)
+
+    selected = [records[i] for i in selected_indices]
+
+    # --- Report ---
+    all_ingrs = {ingr for r in selected for ingr in r.get("norm_ingredients", [])}
+    print(f"  Selected {len(selected):,} recipes covering {len(all_ingrs):,} unique ingredients")
+    print(f"  Per-cuisine counts: {dict(cuisine_selected)}")
+    top_covered = coverage.most_common(10)
+    print(f"  Top covered ingredients: {', '.join(f'{i}({c})' for i, c in top_covered)}")
+
+    return pd.DataFrame(selected)
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN
@@ -414,34 +622,31 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
 
 if __name__ == "__main__":
     args = parse_args()
- 
+
+    COUNT = args.count
+    MIN_FREQ = args.min_freq
+    DECAY = args.decay
     DATA_DIR   = args.data_dir
     OUTPUT_DIR = args.output_dir
+    STATS_DIR = args.stats_dir
     RECIPE_FILE = args.recipe_file
     RECIPE_PATH = DATA_DIR / RECIPE_FILE
     STATS = args.stats
  
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    STATS_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # --- Step 1: Download metadata CSVs ---
     download_metadata(DATA_DIR)
 
     # --- Step 2: Extract ingredients ---
-    nutrition5k_ingredients = extract_ingredients(DATA_DIR, OUTPUT_DIR, stats=STATS)
+    nutrition5k_ingredients = extract_ingredients(DATA_DIR, STATS_DIR, stats=STATS)
 
     # --- Step 3: Filter recipes ---
-    filtered_recipes = filter_recipes(nutrition5k_ingredients, OUTPUT_DIR, RECIPE_PATH, stats=STATS)
+    filtered_recipes = filter_recipes(nutrition5k_ingredients, OUTPUT_DIR, RECIPE_PATH, stats=STATS, stats_dir=STATS_DIR)
 
     print("\nRecipe filtering complete. Outputs saved to:", OUTPUT_DIR.resolve())
 
-    # Output recipe stats
-    cuisine_freq = {}
-    for cuisine_l in filtered_recipes.cuisine_type:
-        for cuisine in cuisine_l:
-            cuisine_freq[cuisine] = cuisine_freq.get(cuisine, 0) + 1
-        
-    sorted_freq = dict(sorted(cuisine_freq.items(), key=lambda item: item[1], reverse=True))
-    print("---- Cuisine Frequencies ----")
-    for cuisine, freq in sorted_freq.items():
-        print(f"{cuisine}: {freq}")
+    final_recipes = select_recipes(filtered_recipes, COUNT, MIN_FREQ, DECAY)
+    final_recipes.to_csv(OUTPUT_DIR / "final_recipes.csv", index=False)
