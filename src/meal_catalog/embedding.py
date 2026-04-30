@@ -10,6 +10,8 @@ Then, downloads all the images to the appropriate paths
 import argparse
 from pathlib import Path
 import pandas as pd
+import numpy as np
+import torch
 import os
 import json
 from tqdm import tqdm
@@ -17,6 +19,9 @@ import ast
 import requests
 from PIL import Image
 from io import BytesIO
+
+from visionmealrl.embedding import load_openclip_model_and_preprocess, resolve_device
+from visionmealrl.multitask.artifacts import load_checkpoint
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -106,6 +111,43 @@ def download_resize_image(image_url: str, image_width: int, image_height: int, o
     padded.paste(img, (x, y))
     
     padded.save(output_fp)
+
+
+def embed_catalog_images(manifest: pd.DataFrame, output_root: Path):
+    checkpoint_path = Path(
+        "artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt"
+    )
+    image_paths = manifest.image_path
+
+    device = resolve_device("auto")
+    checkpoint = load_checkpoint(checkpoint_path, device=device)
+
+    clip_model, preprocess = load_openclip_model_and_preprocess(
+        model_name=checkpoint["model_name"],
+        pretrained=checkpoint["pretrained"],
+        device=device,
+    )
+    clip_model.load_state_dict(checkpoint["clip_model_state_dict"])
+    clip_model.eval()
+
+    def load_image_tensor(image_path: Path) -> torch.Tensor:
+        with Image.open(image_path) as image:
+            return preprocess(image.convert("RGB")).unsqueeze(0).to(device)
+        
+    image_tensors = torch.stack([load_image_tensor(p) for p in image_paths]).to(device)
+
+    with torch.inference_mode():
+        embeddings = clip_model.encode_image(image_tensors)
+        embeddings = embeddings / embeddings.norm(dim=-1, keepdim=True).clamp(min=1e-12)
+
+    embeddings_np = embeddings.detach().cpu().numpy().astype(np.float32)
+    print("Catalog embeddings of shape: ")
+    print(embeddings_np.shape)
+
+    output_fp = os.path.join(output_root, "catalog_embeddings.npy")
+    np.save(output_fp, embeddings_np)
+
+    print(f"Catalog embeddings saved to: {output_fp}")
 
 
 def main():
