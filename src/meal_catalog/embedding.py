@@ -163,6 +163,7 @@ def main():
 
     manifest_df = create_manifest_download_images(RECIPE_FILE, IMAGE_ROOT, IMAGE_WIDTH, IMAGE_HEIGHT)
     write_manifest(manifest_df, os.path.join(OUTPUT_ROOT, "catalog_manifest.csv"))
-
+    embed_catalog_images(manifest_df, OUTPUT_ROOT)
+    
 if __name__ == "__main__":
     main()
