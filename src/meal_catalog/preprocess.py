@@ -425,7 +425,7 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
 
     # Save
     recipes_csv  = output_dir / "filtered_recipes.csv"
-    filtered_recipes = dataset.iloc[filtered_indices].reset_index()
+    filtered_recipes = dataset.iloc[filtered_indices].reset_index(drop=True)
     filtered_recipes["norm_ingredients"] = pd.Series(normalised_ingredients)
 
     filtered_recipes.to_csv(recipes_csv, index=False)
