@@ -41,8 +41,8 @@ def parse_args():
         help="Directory where nutrition50k/metadata will be deposited (default: ./data)"
     )
     parser.add_argument(
-        "--output-dir", type=Path, default=Path("./out"),
-        help="Directory where results are saved (default: ./out)"
+        "--output-dir", type=Path, default=Path("./data"),
+        help="Directory where results are saved (default: ./data)"
     )
     parser.add_argument(
         "--stats-dir", type=Path, default=Path("./stats"),
@@ -374,6 +374,8 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
     dataset["dish_type"] = dataset["dish_type"].apply(json.loads)
     dataset["ingredients"] = dataset["ingredients"].apply(json.loads)
 
+    dataset = dataset.drop_duplicates(subset=["image_url"], keep=False).reset_index(drop=True)
+
     for index, row in tqdm(dataset.iterrows(), total=dataset.shape[0]):
         corr_dish_type = False
         for dish_type in row["dish_type"]:
@@ -423,11 +425,31 @@ def filter_recipes(nutrition5k_ingredients: set, output_dir: Path, recipe_dir: P
             label="Recipe_NLG",
         )
 
-    # Save
     recipes_csv  = output_dir / "filtered_recipes.csv"
     filtered_recipes = dataset.iloc[filtered_indices].reset_index(drop=True)
     filtered_recipes["norm_ingredients"] = pd.Series(normalised_ingredients)
 
+    # Consolidate food classes
+    for index, row in filtered_recipes.iterrows():
+        cuisines = row["cuisine_type"]
+        if "mediterranean" in cuisines: # if mediterranean and greek or italian or middle eastern, remove mediterranean
+            if ("greek" in cuisines) or ("italian" in cuisines) or ("middle eastern" in cuisines):
+                cuisines.remove("mediterranean")
+                filtered_recipes.loc[index, "cuisine_type"] = cuisines
+        if "asian" in cuisines: # if asian and any asian cuisine, remove asian
+            if ("indian" in cuisines) or ("chinese" in cuisines) or ("south east asian" in cuisines) or \
+                ("japanese" in cuisines) or ("korean" in cuisines):
+                cuisines.remove("asian")
+                filtered_recipes.loc[index, "cuisine_type"] = cuisines
+        if "world" in cuisines: # if world and any other cuisine, remove world
+            if len(cuisines) > 1:
+                cuisines.remove("world")
+                filtered_recipes.loc[index, "cuisine_type"] = cuisines
+
+    # Make cuisine a single value
+    filtered_recipes["cuisine_type"] = filtered_recipes["cuisine_type"].apply(lambda x: x[0])
+
+    # Save
     filtered_recipes.to_csv(recipes_csv, index=False)
     print(f"  Saved to {recipes_csv}")
     return filtered_recipes
@@ -491,13 +513,11 @@ def select_recipes(
     # Compute per-cuisine quotas
     cuisine_indices = {}
     for idx, r in enumerate(records):
-        r_cuisines = r.get("cuisine_type", [])
-        if r_cuisines:
-            first_cuisine = r_cuisines[0]
-            if first_cuisine in cuisine_indices:
-                cuisine_indices[first_cuisine].append(idx)
-            else:
-                cuisine_indices[first_cuisine] = [idx]
+        cuisine = r["cuisine_type"]
+        if cuisine in cuisine_indices:
+            cuisine_indices[cuisine].append(idx)
+        else:
+            cuisine_indices[cuisine] = [idx]
 
     cuisines = list(cuisine_indices.keys())
     n_cuisines = len(cuisines)
@@ -580,7 +600,7 @@ def select_recipes(
         selected_indices.append(best_idx)
         remaining.remove(best_idx)
 
-        cuisine = records[best_idx].get("cuisine_type", [])[0]
+        cuisine = records[best_idx]["cuisine_type"]
         cuisine_selected[cuisine] += 1
         coverage.update(ingredients_lists[best_idx])
 
@@ -588,7 +608,7 @@ def select_recipes(
         quota_filled = cuisine_selected[cuisine] >= quotas[cuisine]
         if quota_filled:
             evicted = {idx for idx in remaining
-                       if (cuisine in records[idx].get("cuisine_type", []))}
+                       if (cuisine == records[idx]["cuisine_type"])}
             remaining -= evicted
 
         if not remaining:

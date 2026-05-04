@@ -28,8 +28,8 @@ def parse_args():
         description="Generate the dish manifest using the original data format of recipes-with-nutrition."
     )
     parser.add_argument(
-        "--recipe-file", type=Path, default=Path("./out/final_recipes.csv"),
-        help="Path to the final recipe catalog (default: ./out/final_recipes.csv)"
+        "--recipe-file", type=Path, default=Path("./data/meal_catalog.csv"),
+        help="Path to the final recipe catalog (default: ./data/meal_catalog.csv)"
     )
     parser.add_argument(
         "--output-root", type=Path, default=Path("./artifacts/catalog/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train"),
@@ -54,24 +54,24 @@ def parse_args():
 def create_manifest_download_images(recipes_fp: Path, image_root: Path, image_width: int, image_height: int) -> pd.DataFrame:
     recipes_df = pd.read_csv(recipes_fp)
     recipes_df["daily_values"] = recipes_df["daily_values"].apply(json.loads)
-    recipes_df["cuisine_type"] = recipes_df["cuisine_type"].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
     
     catalog_id = pd.Series([f"catalog_{i}" for i in range(recipes_df.shape[0])])
     names = recipes_df.recipe_name.reset_index(drop=True)
-    style = recipes_df.cuisine_type.apply(lambda x: x[0]).reset_index(drop=True)
-    total_calories = recipes_df.calories.reset_index(drop=True)
+    style = recipes_df.cuisine_type.reset_index(drop=True)
     image_path = []
-    total_calories = recipes_df.calories.reset_index(drop=True)
-    total_mass = recipes_df.total_weight_g.reset_index(drop=True)
-    total_fat = recipes_df.daily_values.apply(lambda x: x["FAT"]["quantity"]).reset_index(drop=True)
-    total_carb = recipes_df.daily_values.apply(lambda x: x["CHOCDF"]["quantity"]).reset_index(drop=True)
-    total_protein = recipes_df.daily_values.apply(lambda x: x["PROCNT"]["quantity"]).reset_index(drop=True)
+    servings = recipes_df.servings.reset_index(drop=True)
+    total_calories = recipes_df.calories.reset_index(drop=True) / servings
+    total_mass = recipes_df.total_weight_g.reset_index(drop=True) / servings
+    total_fat = recipes_df.daily_values.apply(lambda x: x["FAT"]["quantity"]).reset_index(drop=True) / servings
+    total_carb = recipes_df.daily_values.apply(lambda x: x["CHOCDF"]["quantity"]).reset_index(drop=True) / servings
+    total_protein = recipes_df.daily_values.apply(lambda x: x["PROCNT"]["quantity"]).reset_index(drop=True) / servings
 
     for index, row in tqdm(recipes_df.iterrows(), total=recipes_df.shape[0]):
         image_url = row["image_url"]
         image_fp = Path(os.path.join(image_root, f"catalog_{index}", "rgb.png"))
         image_path.append(image_fp)
-        download_resize_image(image_url, image_width, image_height, image_fp)
+        if not image_fp.exists():
+            download_resize_image(image_url, image_width, image_height, image_fp)
 
     manifest = pd.DataFrame({
         "catalog_id": catalog_id,
@@ -134,7 +134,7 @@ def embed_catalog_images(manifest: pd.DataFrame, output_root: Path):
         with Image.open(image_path) as image:
             return preprocess(image.convert("RGB")).unsqueeze(0).to(device)
         
-    image_tensors = torch.stack([load_image_tensor(p) for p in image_paths]).to(device)
+    image_tensors = torch.cat([load_image_tensor(p) for p in image_paths], dim=0).to(device)
 
     with torch.inference_mode():
         embeddings = clip_model.encode_image(image_tensors)

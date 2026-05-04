@@ -1,0 +1,1001 @@
+catalog_id,recipe_name,style,image_path,total_calories,total_mass,total_fat,total_carb,total_protein
+catalog_0,Steak Frites with Rosemary Duck Fat Fries,french,data/catalog/images/catalog_0/rgb.png,257.09800000029276,47.36853893826162,38.928676923082776,2.8540066666915527,3.266600000024265
+catalog_1,Basil Noodles Recipe 5,asian,data/catalog/images/catalog_1/rgb.png,204.49125,77.11672798824999,4.833634615384616,11.993700000000002,13.956
+catalog_2,Slow Cooker Breakfast Casserole recipes,italian,data/catalog/images/catalog_2/rgb.png,1040.5811789722222,633.804434861111,116.06430543463678,12.91349839847685,101.29376932736112
+catalog_3,Recipe: Carla Hall’s Salmon Patties,nordic,data/catalog/images/catalog_3/rgb.png,212.36129916434166,88.54520423289769,23.34711138994122,0.7155420750130679,31.63712843313645
+catalog_4,Classic Slaw recipes,american,data/catalog/images/catalog_4/rgb.png,474.358941419993,292.82037635204927,67.9796591642094,6.11139939350597,7.919830149999885
+catalog_5,Cucumber Dill Salsa Cruda,mexican,data/catalog/images/catalog_5/rgb.png,45.5056875,195.35096246842784,0.699569230769231,3.867932916666667,3.8176925
+catalog_6,Quick Lemon Balsamic Basil Chicken Pasta recipes,italian,data/catalog/images/catalog_6/rgb.png,226.2220000001815,143.0154513890597,5.612410256410258,9.97127222223862,35.88305750000035
+catalog_7,Lime and Cilantro Cauliflower with Avocado,american,data/catalog/images/catalog_7/rgb.png,207.96400000000003,215.35416666666666,20.973369230769233,3.872464583333333,25.389
+catalog_8,Chicken Ham & Swiss Waffles (low carb) recipes,french,data/catalog/images/catalog_8/rgb.png,123.98596073125,49.57956828125,13.931296359615384,0.277684651203125,18.978635419375
+catalog_9,Cloud Eggs on Toast,american,data/catalog/images/catalog_9/rgb.png,181.86978515781774,86.669921875389,13.265821514622376,4.797825455733536,22.31882421892817
+catalog_10,Kicked-Up Western Mac,american,data/catalog/images/catalog_10/rgb.png,597.9324913820313,228.184221484375,44.93056365399039,18.489050738635413,58.04354643535939
+catalog_11,Chipped Beef Log Recipe,american,data/catalog/images/catalog_11/rgb.png,168.10155908203126,56.6915616015625,24.53143947995794,0.9614144992239585,8.842939466250002
+catalog_12,Tony's Stuffed Mushrooms,french,data/catalog/images/catalog_12/rgb.png,500.794326003125,297.6699928125,70.1279972810577,3.1004928457708325,34.9946513455
+catalog_13,Arugula Salad with Bacon and Butternut Squash,american,data/catalog/images/catalog_13/rgb.png,243.2306160509601,171.8870231251426,29.39928366072704,2.520345833339562,24.34554855628908
+catalog_14,Green Bean and Butternut Casserole,south east asian,data/catalog/images/catalog_14/rgb.png,156.74889745001053,136.06296444444772,16.408888698034477,4.58809413550076,9.13110484588958
+catalog_15,Green Beans With Sesame,chinese,data/catalog/images/catalog_15/rgb.png,85.068408675,128.14809250000002,7.356270466923077,3.1170823490833324,7.0457701855
+catalog_16,Grilled Peppers and Zucchini Recipe 3,mediterranean,data/catalog/images/catalog_16/rgb.png,57.203,163.70000000000002,5.1501230769230775,2.1183,3.96412
+catalog_17,White Asparagus Soup,central europe,data/catalog/images/catalog_17/rgb.png,428.8510789990383,174.6236167347805,57.877400216406265,6.95561521971059,9.352127379945582
+catalog_18,Stir Fried Broccoli Recipe,chinese,data/catalog/images/catalog_18/rgb.png,169.3035,313.55,12.49969230769231,7.078533333333335,17.1456
+catalog_19,South African “Slap” Chips (French Fries),french,data/catalog/images/catalog_19/rgb.png,787.3990336809975,487.192508680939,98.06586677358118,14.80278518518518,10.484097777777777
+catalog_20,Black Eyed Pea and Leek Salad,south american,data/catalog/images/catalog_20/rgb.png,400.1957167484375,448.146825052114,27.048087958774026,14.945849124583335,37.6229446399375
+catalog_21,Easy Avocado Taco Salad,mexican,data/catalog/images/catalog_21/rgb.png,871.294033021875,715.9247615625,91.5912412438942,13.823561806458335,100.8830762444375
+catalog_22,Sticks' Egg White and Salsa Eggs,mexican,data/catalog/images/catalog_22/rgb.png,177.47,447.5,1.204769230769231,4.43465,58.2372
+catalog_23,Tracie's Couscous Salad,middle eastern,data/catalog/images/catalog_23/rgb.png,383.2764325000001,278.5672789841323,21.7874153076923,17.94876555555555,25.329171000000002
+catalog_24,Maple Kale Crisps Recipe,american,data/catalog/images/catalog_24/rgb.png,48.94833333333333,42.62295303264605,4.235615384615385,1.982455555555555,1.9617333333333333
+catalog_25,Shrimp Scampi Sweet Potato Noodles with Kale and Walnuts,asian,data/catalog/images/catalog_25/rgb.png,240.2867119583333,226.675177489876,11.103174777051285,6.4876499999999995,52.20576651833333
+catalog_26,Fusilli with Blue Cheese and Toasted Walnuts,american,data/catalog/images/catalog_26/rgb.png,794.3058513227105,281.6901718693215,47.71357710171665,33.29494334780575,60.694741063207374
+catalog_27,Lentil patties,nordic,data/catalog/images/catalog_27/rgb.png,44.93929166666667,33.75,0.45458461538461536,2.8993491666666666,4.054449166666665
+catalog_28,Apple Carrot Pineapple Salad,american,data/catalog/images/catalog_28/rgb.png,90.1919999998643,178.22499999994506,1.1954942307681824,7.242729166651905,2.561654999995616
+catalog_29,Fresh summer salad,south american,data/catalog/images/catalog_29/rgb.png,203.5395,610.35,4.995292307692307,14.199926666666665,12.73394
+catalog_30,Avocado Tomato Salad with Cucumbers,american,data/catalog/images/catalog_30/rgb.png,339.877875,330.233680555576,46.22375256410259,6.671602777777778,8.799100000000001
+catalog_31,Yummy Mustard Chicken,american,data/catalog/images/catalog_31/rgb.png,258.7697176218106,127.852686901901,26.169022785576914,2.915544859109439,33.9473842093749
+catalog_32,Schuster's German Potato Salad,central europe,data/catalog/images/catalog_32/rgb.png,381.1682198832475,326.04618499997747,22.292094222435882,17.721428437493135,20.55062876916655
+catalog_33,Clean Eating Coconut Cauliflower Chicken With Green Onions recipes,mediterranean,data/catalog/images/catalog_33/rgb.png,249.7167927161458,364.85070932291677,16.31040808852564,3.751383714756945,51.245548921875
+catalog_34,1. Pesto Marinara Crockpot Chicken recipes,italian,data/catalog/images/catalog_34/rgb.png,830.4556746576545,864.4661778125,52.73377386025768,13.071524474282185,171.67383088243753
+catalog_35,Chicken Packets,south american,data/catalog/images/catalog_35/rgb.png,485.454449,628.2198899975565,18.84662883076923,5.925095333333335,128.7337592
+catalog_36,Oven Roasted Vegetables,mediterranean,data/catalog/images/catalog_36/rgb.png,265.1195903240742,423.31613310187254,8.220266146901713,17.03169513452932,12.462883884953717
+catalog_37,Spaghetti Salad,italian,data/catalog/images/catalog_37/rgb.png,272.2364552900914,106.8988555000298,15.44763712723422,13.212080121006512,12.96231472060571
+catalog_38,Lettuce Wrap w. Cottage Cheese and Kidney Beans,american,data/catalog/images/catalog_38/rgb.png,916.528,475.4,23.44930769230769,46.2601,124.93304
+catalog_39,Orange Romaine Salad,eastern europe,data/catalog/images/catalog_39/rgb.png,235.93634375313863,181.603125000355,32.86256634670008,3.824440625,3.4807875
+catalog_40,Jack-o'-lantern Quesadillas,american,data/catalog/images/catalog_40/rgb.png,578.4933333361232,168.66666666698225,49.373948718434264,16.254266666666663,48.0396
+catalog_41,Warm Roasted Root Vegetable and Chicken Salad #RSC,american,data/catalog/images/catalog_41/rgb.png,593.3178091025045,587.5919432277492,38.8023504343259,22.547132540343856,56.314499136299574
+catalog_42,Easy Layered Creamed Spinach,american,data/catalog/images/catalog_42/rgb.png,283.939419558289,183.24985289921875,26.26312783639255,2.608258312015625,47.833124918975
+catalog_43,Buttermilk Baked Tomatoes,american,data/catalog/images/catalog_43/rgb.png,48.03320825260419,109.31447187298654,2.9878524596955134,1.5252696840277775,7.298960820833333
+catalog_44,Stuffed Cabbage With Sauerkraut and Pork Chops,central europe,data/catalog/images/catalog_44/rgb.png,681.0499319563834,594.5788520856864,57.42162156522,9.603441653733336,114.68306390944001
+catalog_45,Summer Orzo Salad,italian,data/catalog/images/catalog_45/rgb.png,469.504824918586,263.0915474007812,27.426722319395676,21.823270290334513,27.950846752077336
+catalog_46,Glazed Salmon With Mint and Cucumber Slaw,nordic,data/catalog/images/catalog_46/rgb.png,484.4320173491265,316.5966179164675,41.130288667948726,7.763886805480403,72.0159242766661
+catalog_47,Balsamic Roasted Brussels Sprouts with Pomegranate // Cavolini di Bruxelles arrostiti all'aceto balsamico con melagrana,italian,data/catalog/images/catalog_47/rgb.png,113.6076895,153.4369717972835,7.882892723076925,5.223376,9.2389116
+catalog_48,Strawberry Balsamic Salad,american,data/catalog/images/catalog_48/rgb.png,78.07457875,184.426625,0.729204576923077,5.81513,2.463913
+catalog_49,Balsamic Pork Chops,american,data/catalog/images/catalog_49/rgb.png,148.34963554275004,116.173569375,13.019526381807696,1.004125,26.929276340325
+catalog_50,Sage Breakfast Patties Recipe,american,data/catalog/images/catalog_50/rgb.png,71.93406523061867,38.55580073761294,7.151576575103661,0.10090895062133827,14.296566443152399
+catalog_51,Twice-Baked Potatoes for the Freezer,american,data/catalog/images/catalog_51/rgb.png,225.03615073337969,241.3688933333518,7.773913702052208,13.82640482833727,10.35798171800384
+catalog_52,Peanut Butter Breakfast Quinoa recipes,american,data/catalog/images/catalog_52/rgb.png,107.65,91.125,6.525673076923077,4.508958333333332,9.3155
+catalog_53,Midwest Macaroni & Cheese,american,data/catalog/images/catalog_53/rgb.png,245.8741804109375,96.16142703125,18.237704765889426,7.42098860559375,24.65047517625
+catalog_54,Emoji Pizza,italian,data/catalog/images/catalog_54/rgb.png,221.15999999999997,88.25,18.410961538461535,5.883316666666667,22.9617
+catalog_55,Muffuletta,italian,data/catalog/images/catalog_55/rgb.png,263.781419028125,80.69904625,26.380315154326926,4.162401403947917,28.524356578125
+catalog_56,Serious Salsa: Watermelon Pico de Gallo Recipe,mexican,data/catalog/images/catalog_56/rgb.png,108.321274,227.2330009900825,4.30062036923077,5.655478666666665,12.2115392
+catalog_57,Goat Cheese and Mango Quesadillas,mexican,data/catalog/images/catalog_57/rgb.png,180.47970385833338,110.21642822916668,9.21590977900641,8.846530555555553,12.149511778125001
+catalog_58,Festive Goat Cheese,mediterranean,data/catalog/images/catalog_58/rgb.png,439.2672454496095,143.9980924998732,47.67064714230557,5.983774374965,46.561045474999574
+catalog_59,Portobello Mushroom with Goat Cheese (BC),mediterranean,data/catalog/images/catalog_59/rgb.png,169.14,207.5,19.18923076923077,2.1672,20.0396
+catalog_60,Creepy Halloween Pumpkin Treats In Just 3 Steps!,american,data/catalog/images/catalog_60/rgb.png,95.21624999973392,52.6749999997559,11.667013461536623,0.861,8.962074999880883
+catalog_61,Crustless Quiche Lorraine,french,data/catalog/images/catalog_61/rgb.png,590.4280946070312,184.93261876953125,87.56565411878005,1.3111989719628911,34.30471855144531
+catalog_62,"Shrimp, Egg, and Dill Smorrebrod",nordic,data/catalog/images/catalog_62/rgb.png,88.08361128124997,59.355659375,6.328545377884615,1.6131093125,14.9400409
+catalog_63,Tahini Dijon Noodles,asian,data/catalog/images/catalog_63/rgb.png,1187.0136472396664,469.23750609775,54.87157498553936,60.17808221955093,82.32574622862776
+catalog_64,Crock Pot Refried Beans recipes,mexican,data/catalog/images/catalog_64/rgb.png,200.674140415625,72.1744291237087,1.2060501924519231,12.104459828125002,24.5624333615
+catalog_65,"Sticky Rice Cake with Coconut, Ginger & Condensed Coconut Milk",south east asian,data/catalog/images/catalog_65/rgb.png,475.34264232999993,175.0836139364583,49.92563898701922,14.48347191101736,11.382751101375
+catalog_66,Apple Iceberg Salad,american,data/catalog/images/catalog_66/rgb.png,262.90849999991076,153.91249999993337,34.92407692306919,4.968818333331115,1.9541374999909324
+catalog_67,Cabbage Slaw,american,data/catalog/images/catalog_67/rgb.png,37.47876666666666,114.50720953986249,0.3026733333333333,2.877652944444444,2.869430666666666
+catalog_68,Mom's Carrot and Raisin Salad,american,data/catalog/images/catalog_68/rgb.png,87.85363459157823,137.1064258331368,0.5009442389737543,7.21820686493763,3.0694545204972474
+catalog_69,Mediterranean Turkey Pinwheels recipes,american,data/catalog/images/catalog_69/rgb.png,1163.072,559.2,66.38584615384616,47.39022666666667,106.05156
+catalog_70,Stuffed Mushroom Eyeballs recipes,french,data/catalog/images/catalog_70/rgb.png,232.98870315,139.02725916666665,31.16788697384615,1.8940992041111118,18.101873203500002
+catalog_71,Low Carb Hand Pies Stuffed with Chili [Recipe] recipes,american,data/catalog/images/catalog_71/rgb.png,330.707625,128.46875,39.2091217948718,2.630826041666667,38.1331
+catalog_72,Baked Pesto Chicken,italian,data/catalog/images/catalog_72/rgb.png,386.5539641853932,241.234375,34.35151609766638,1.6612987886235955,79.31525
+catalog_73,Lasagna Quesadillas,italian,data/catalog/images/catalog_73/rgb.png,212.651765525,141.3826975,18.76414279102565,4.703281024444443,24.72371769
+catalog_74,"Pizza with Swiss Chard, Sausage, and Mozzarella",italian,data/catalog/images/catalog_74/rgb.png,614.4551414492925,406.5599135206325,51.81006432176585,16.00596849394338,62.501045207291575
+catalog_75,Teriyaki Cocktail Meatballs (grain and soy,japanese,data/catalog/images/catalog_75/rgb.png,128.75818481732,77.5362956788692,21.01942584698846,0.6201831076491665,0.620638475315
+catalog_76,Beef and Mushroom Carbonara,italian,data/catalog/images/catalog_76/rgb.png,621.1875059750002,670.32987,63.08790712576923,10.872131525083333,62.006673072
+catalog_77,Jump On The Spring Bandwagon With This Super Easy Lamb Recipe,mediterranean,data/catalog/images/catalog_77/rgb.png,272.06778447220006,166.787711,28.45236461464615,0.385849,39.462199394600006
+catalog_78,Easy Deviled Eggs,american,data/catalog/images/catalog_78/rgb.png,177.26608333333334,100.8875,21.627134615384616,0.6043430555555557,20.963075
+catalog_79,Grilled Summer Veggies,south american,data/catalog/images/catalog_79/rgb.png,330.74229543868836,233.0013464228704,51.535165986448355,2.930633442412809,4.3022
+catalog_80,Greek-Style Vegetable Kebabs with Orzo and Feta,greek,data/catalog/images/catalog_80/rgb.png,246.97349999999997,403.65000000000003,21.974248717948715,9.017796666666667,13.294186666666667
+catalog_81,"""Apres-Ski"" Soup Recipe 5",american,data/catalog/images/catalog_81/rgb.png,92.7611121526042,290.86945932291667,3.4281403846153835,4.73738034292014,9.544670960250002
+catalog_82,Hasselback Potatoes,american,data/catalog/images/catalog_82/rgb.png,193.8505941888289,180.23547733590297,10.63257952429866,10.193145762547337,7.412435103325968
+catalog_83,Creamed Mushrooms (Eastern European),american,data/catalog/images/catalog_83/rgb.png,253.05197710766876,225.2501110425962,34.90081867293288,3.2405315144541675,11.82267321901
+catalog_84,Grilled Grits from Platter Talk recipes,mediterranean,data/catalog/images/catalog_84/rgb.png,715.362796,495.2850628768247,38.3971307076923,33.58352133333332,43.455556799999975
+catalog_85,Blueberries with Walnuts & Cheese,american,data/catalog/images/catalog_85/rgb.png,287.22857819375,122.349523125,34.96090953942308,4.808459643104167,20.15928159125
+catalog_86,RITZ Horseradish Roast Beef Topper,american,data/catalog/images/catalog_86/rgb.png,85.25088011092593,35.21172468518519,7.687064880028493,2.054911213469753,7.716831535444446
+catalog_87,Crunchy Napa Cabbage Slaw,middle eastern,data/catalog/images/catalog_87/rgb.png,172.7621511625,293.7799952083333,14.628656395512818,5.579437356993058,17.769729326666667
+catalog_88,Apple-Cinnamon Quinoa Bowl,south american,data/catalog/images/catalog_88/rgb.png,163.88858333473135,155.38229166695066,6.393930769380035,8.58905833337193,14.010395416749645
+catalog_89,Bacon Wrapped Dates With Almonds,american,data/catalog/images/catalog_89/rgb.png,183.478113665,49.8951607,19.05785788415385,4.8625102064,10.037091963360005
+catalog_90,Chicken Salad with Bacon and Dates,american,data/catalog/images/catalog_90/rgb.png,333.30226,75.55933333333333,42.79348220512821,2.6871438888888886,26.332991333333336
+catalog_91,Egg salad with Mustard Sprouts,american,data/catalog/images/catalog_91/rgb.png,113.20972222222225,31.381944444444446,18.07241452991453,0.4549074074074074,1.8541666666666665
+catalog_92,Grilled Salmon Sandwiches With Heirloom Tomatoes & Chive-Cashew Pesto,nordic,data/catalog/images/catalog_92/rgb.png,621.4274301,437.79618500000004,43.01396349307692,11.08066458333333,113.71682692
+catalog_93,Salt and Vinegar Potato Chip Crusted Cod,american,data/catalog/images/catalog_93/rgb.png,241.6750701636321,140.6330919010711,16.997366883753415,4.453523781482135,43.54430177012542
+catalog_94,Fried Fish Tacos,mexican,data/catalog/images/catalog_94/rgb.png,801.328206505,333.430404534585,72.4880478380769,21.138816666666663,56.92970093
+catalog_95,Golden Persian Rice,middle eastern,data/catalog/images/catalog_95/rgb.png,313.8805665008369,85.55926335218533,9.726391489761046,19.273114558750002,12.00361391425
+catalog_96,Le Bernardin's Crispy-Skinned Fish,french,data/catalog/images/catalog_96/rgb.png,205.05877077245,177.72743890384325,9.91348495354269,0.7943226412070833,69.0619809213425
+catalog_97,Cajun Fried Okra,american,data/catalog/images/catalog_97/rgb.png,205.51311307015592,215.62263543543637,2.535958571691835,13.997794321897507,15.490433490389302
+catalog_98,KIDNEY BEAN BURGERS recipes,mexican,data/catalog/images/catalog_98/rgb.png,129.79057327480768,112.55606937494717,6.511076794229974,5.915209186444896,12.174458642739118
+catalog_99,Ground Pork Cutlets with Tomato Gravy,american,data/catalog/images/catalog_99/rgb.png,12.151499999990556,40.762499999947515,0.1462641025639411,1.011400694443764,0.6987683333324096
+catalog_100,Chicken Pesto Panini recipes,italian,data/catalog/images/catalog_100/rgb.png,2130.010475842697,957.865,66.99586708729476,98.23442621722845,274.41432000000003
+catalog_101,Teriyaki Chicken Skewers,japanese,data/catalog/images/catalog_101/rgb.png,168.11771100000004,149.39809250000002,4.581892343846155,1.8719999999999997,55.298741625
+catalog_102,Easy Dairy-Free Paleo Curry Chicken Salad,indian,data/catalog/images/catalog_102/rgb.png,368.87464061308776,250.91208229524375,34.5103175080427,4.65894527920003,61.67861577222003
+catalog_103,Summer Succotash,american,data/catalog/images/catalog_103/rgb.png,222.32866329166666,403.0747110761682,7.7776889491453,13.53951758333333,18.582364522222225
+catalog_104,Tofu Stir Fry,asian,data/catalog/images/catalog_104/rgb.png,194.655,175.425925925926,8.527732193732195,8.652118518518519,26.13196296296297
+catalog_105,Marinated Tofu,asian,data/catalog/images/catalog_105/rgb.png,140.93488804848002,102.36386437200002,12.384498947692308,2.0740857158888883,27.95028333666667
+catalog_106,Bacon-Wrapped Ginger Soy Scallops Recipe,mediterranean,data/catalog/images/catalog_106/rgb.png,35.981806358683,17.40453663043145,4.3600318632441475,0.3277762192380413,3.1772404968695565
+catalog_107,Grilled Jalapenos Recipe 3,south american,data/catalog/images/catalog_107/rgb.png,203.7366266,85.349523125,27.52812574615385,0.6945501883541666,17.1872531225
+catalog_108,Bacon Wrapped Zucchini-Halibut,american,data/catalog/images/catalog_108/rgb.png,166.02234081015627,149.980594296875,17.756987544843753,1.2816999999999998,24.462581078437502
+catalog_109,Sugar Snap Pea Salad with Lemon and Dill,american,data/catalog/images/catalog_109/rgb.png,79.6414490342032,86.86994468743518,8.069427413920863,2.243345554582495,5.348848621231587
+catalog_110,Indian Fried Cabbage,indian,data/catalog/images/catalog_110/rgb.png,51.25570833333333,93.3456475399485,3.994269230769231,2.180905555555556,3.2801983333333324
+catalog_111,"Baked Sweet Potato ""Fries"" with La Boite Spice Mix",american,data/catalog/images/catalog_111/rgb.png,149.6999999998732,82.9741839558775,12.124569230769623,6.46511874998875,4.30739125000219
+catalog_112,Slow Cooker Mashed Sweet Potatoes with Parmesan,italian,data/catalog/images/catalog_112/rgb.png,385.557914325,239.781904375,36.792897077884625,12.086163322291668,15.398234844250002
+catalog_113,Grilled Tilapia with Smoked Paprika and Parmesan Polenta,mediterranean,data/catalog/images/catalog_113/rgb.png,280.252375,299.0171875,6.50695673076923,14.514342812500002,31.25015625
+catalog_114,Bacon Jalapeno Popcorn,american,data/catalog/images/catalog_114/rgb.png,309.540188675,77.74545791666667,35.70844237435899,5.151504739583333,19.268828906666666
+catalog_115,Easy Lettuce and Herb Salad,french,data/catalog/images/catalog_115/rgb.png,126.16305346875002,60.757582546121306,19.02840530977565,1.1597615490069446,2.9935736956666665
+catalog_116,Coconut Rice and Beans,mediterranean,data/catalog/images/catalog_116/rgb.png,223.9742791927606,134.9971188878829,18.65057537900682,8.44189194445011,10.334664375001719
+catalog_117,Tilapia with Sundried Tomato Pesto- The Su,italian,data/catalog/images/catalog_117/rgb.png,146.41784375083046,127.11562500014978,5.6128259616530025,1.5931489583459655,49.48854375004137
+catalog_118,Roasted Parsnips With Shallots,british,data/catalog/images/catalog_118/rgb.png,206.75074322656286,212.45394505212963,6.852660279407058,13.967792166666696,7.166171404166695
+catalog_119,Stuffed Artichokes with Capers and Pecorino Cheese,mediterranean,data/catalog/images/catalog_119/rgb.png,566.3225,384.925,38.179923076923075,20.948890000000002,38.81978
+catalog_120,Roasted Grape Chutney,indian,data/catalog/images/catalog_120/rgb.png,83.7826875,83.52361665270618,5.415821153846155,4.650435833333335,1.17343
+catalog_121,Fennel Salad with Citrus,mediterranean,data/catalog/images/catalog_121/rgb.png,249.12848605555556,298.7929973011815,28.528220234188026,7.19764251851852,6.2665921777777776
+catalog_122,Homemade Turkey Sausage,american,data/catalog/images/catalog_122/rgb.png,934.991519097226,736.3664496527789,62.50835528178429,3.323247815393804,250.68248038194463
+catalog_123,Israeli Couscous and Tomato Salad with Arugula Pesto,middle eastern,data/catalog/images/catalog_123/rgb.png,344.131203125,146.2408203125,27.776065504807686,12.426034804687502,17.48423984375
+catalog_124,Buttery Oven Roasted Cauliflower recipes,british,data/catalog/images/catalog_124/rgb.png,196.62004271006944,165.41076954168722,25.0103907928953,2.504776927372685,14.508479409375
+catalog_125,Broccoli Cauliflower Greek Salad,mediterranean,data/catalog/images/catalog_125/rgb.png,314.5643055555556,298.03472222222223,44.2712264957265,5.103641898148148,9.104533333333334
+catalog_126,Basil Pesto Tortellini Salad,italian,data/catalog/images/catalog_126/rgb.png,239.46588834269662,130.953125,13.59639026037165,10.30505538389513,19.23369375
+catalog_127,PM's Tuna Salad,american,data/catalog/images/catalog_127/rgb.png,658.4337424875,465.2602316653129,5.656534059615384,37.8204839495625,84.59487982099998
+catalog_128,Cucumber Raita,indian,data/catalog/images/catalog_128/rgb.png,27.730375,76.16875,1.8152019230769234,1.1173833333333334,2.9313125
+catalog_129,Barley+ Sweet Potato Toast,american,data/catalog/images/catalog_129/rgb.png,411.7200000000001,279.75,12.225653846153845,23.92258333333333,30.77275
+catalog_130,Sweet Potato Casserole Recipe,south american,data/catalog/images/catalog_130/rgb.png,276.9643733770834,114.77501576389399,37.36755990961539,4.818788844736111,6.216582349958333
+catalog_131,Grilled Chocolate Peanut Butter Sandwich,american,data/catalog/images/catalog_131/rgb.png,181.8535,93.95,11.173392307692305,8.989686666666666,7.58783
+catalog_132,Shepherd Pies recipes,british,data/catalog/images/catalog_132/rgb.png,563.0652075,478.651625,49.82783019230767,13.633335833333335,55.95723325
+catalog_133,Celery Black Grape and Blue Cheese Potato Salad,american,data/catalog/images/catalog_133/rgb.png,207.1058449410495,246.0105554751552,10.98344031139539,9.513614596279211,18.67302982285044
+catalog_134,Dill Pickle Potato Salad Recipe,mediterranean,data/catalog/images/catalog_134/rgb.png,284.59327600002933,265.01817500002863,20.7751173929499,11.635534652779286,14.018169029171887
+catalog_135,Cole Slaw Dressing,american,data/catalog/images/catalog_135/rgb.png,281.44545,48.635000000000005,41.09508461538462,3.5148040000000007,0.19652
+catalog_136,Oyster Po’boy,american,data/catalog/images/catalog_136/rgb.png,2128.060724999837,921.018905182681,215.38609807689465,47.53239166666665,149.77248874999998
+catalog_137,South African Yellow Rice,chinese,data/catalog/images/catalog_137/rgb.png,318.9721812402193,216.31249999994898,8.001665437844872,20.968017528942465,9.90197810906821
+catalog_138,Crockpot Caramel Apple Cider,american,data/catalog/images/catalog_138/rgb.png,354.0549818641407,653.8340185452331,1.3944193191417487,29.356492476314898,1.9863080370904667
+catalog_139,Brown Sugar and Dijon Glazed Corned Beef and Cabbage with Red Potatoes,american,data/catalog/images/catalog_139/rgb.png,938.9360562183334,840.6315771666666,84.70653928415388,17.080266982666668,119.12360423110002
+catalog_140,Reuben Burgers Recipe,american,data/catalog/images/catalog_140/rgb.png,508.8038276859375,196.67273484375,49.86959190240385,7.746954116583335,58.834712130625
+catalog_141,Pulled Pork Potato Skins,american,data/catalog/images/catalog_141/rgb.png,489.77588888888874,378.19555555555564,31.06649606837606,20.59665718518518,33.25721777777778
+catalog_142,Stuffed Baked Potatoes Deconstructed,italian,data/catalog/images/catalog_142/rgb.png,490.1205,459.05,26.886215384615376,23.83618333333333,29.31975
+catalog_143,Taco Hand Pies,mexican,data/catalog/images/catalog_143/rgb.png,220.00605165000002,66.66603083333334,23.983819743589745,3.4364861111111105,18.519691273333333
+catalog_144,Meatballs,middle eastern,data/catalog/images/catalog_144/rgb.png,194.62066080836325,74.82196291675913,19.0887933974361,2.6720871527800725,23.8193698266685
+catalog_145,Baked Zucchini Fries,mediterranean,data/catalog/images/catalog_145/rgb.png,163.0335,138.6125,12.08182307692308,5.742316666666665,16.470350000000003
+catalog_146,Wild Mushroom Stuffing,french,data/catalog/images/catalog_146/rgb.png,122.82341738756844,132.12683406590963,5.269929060549244,6.010608692636302,12.077648287671163
+catalog_147,Tomato-Basil Pita Pizzas Recipe,italian,data/catalog/images/catalog_147/rgb.png,244.78606250000004,133.08828125,15.49303125,9.592447552083335,23.542409375
+catalog_148,Citrus Scallops With Bulgur recipes,mediterranean,data/catalog/images/catalog_148/rgb.png,249.339138961525,278.9825367775,12.144774671840773,10.401967893033332,35.55970279472
+catalog_149,Chicken Fried Rice Recipe,chinese,data/catalog/images/catalog_149/rgb.png,599.3029375023425,388.74375000093323,29.033098076969875,25.943992916865774,75.58598750019412
+catalog_150,Fiesta Egg Casserole With Peppers and Cheese,italian,data/catalog/images/catalog_150/rgb.png,281.4877155,166.83137923538783,31.903586195,1.5362476624375,38.038872164875
+catalog_151,Spaghetti Skillet Supper,italian,data/catalog/images/catalog_151/rgb.png,215.248033856875,150.13593054999998,16.33463692449039,5.966033913475,22.592086731775
+catalog_152,House Roasted Nuts,british,data/catalog/images/catalog_152/rgb.png,292.50375,50.89149353118125,41.15269230769231,3.147375,17.427575
+catalog_153,"Flank Steak Pinwheels with Spinach, Gorgonzola and Asiago",british,data/catalog/images/catalog_153/rgb.png,541.9514028944445,307.71751451190676,46.6592083371127,0.9911451086116897,122.21000115664583
+catalog_154,Cheesy Spinach Quesadillas,mexican,data/catalog/images/catalog_154/rgb.png,98.643375,34.4,5.86160576923077,4.112645416666665,7.61535
+catalog_155,Vegetable Tortilla Cups recipes,mexican,data/catalog/images/catalog_155/rgb.png,319.29175000000004,135.84166666666667,11.582388461538462,16.808997222222217,28.281766666666666
+catalog_156,Smoked Salmon Black Bean Egg Rolls,nordic,data/catalog/images/catalog_156/rgb.png,260.67625,92.375,11.536961538461538,12.464166666666667,22.2036
+catalog_157,Bake or Bust,mexican,data/catalog/images/catalog_157/rgb.png,297.3463263069819,316.783855529696,1.569934657858135,18.82325176898833,32.513115528085514
+catalog_158,Wasabi Shrimp Sushi Cups,japanese,data/catalog/images/catalog_158/rgb.png,109.29870000005462,53.1165000000097,1.2618826923149662,7.229552750000751,6.916410600003374
+catalog_159,"Kale, Peach, and Avocado Salad",mediterranean,data/catalog/images/catalog_159/rgb.png,254.15,234.95833333333334,31.004666666666676,6.662204166666667,9.017816666666668
+catalog_160,The Only Guacamole Recipe You'll Ever Need,mexican,data/catalog/images/catalog_160/rgb.png,277.1525,273.71354166672825,34.343730769230774,7.255183333333332,8.10615
+catalog_161,Organic Lime Fruit Salad,south american,data/catalog/images/catalog_161/rgb.png,245.88332,299.87591666666674,13.304837217948723,14.783591808333336,8.379901983333333
+catalog_162,Yakitori Sauce recipes,japanese,data/catalog/images/catalog_162/rgb.png,122.33374999974235,164.34068637493237,0.5621153846153325,3.975291666646085,10.50254999999965
+catalog_163,Crockpot Fondue,mediterranean,data/catalog/images/catalog_163/rgb.png,297.71580710492157,103.14553419436366,33.37602268068455,1.535234521185451,38.56925785205493
+catalog_164,Beet Wild Rice Salad with Pistachios recipes,mediterranean,data/catalog/images/catalog_164/rgb.png,471.11235955,330.03995834534487,36.178813099230766,19.201946762,25.773212157
+catalog_165,Beet-Cured Salmon,nordic,data/catalog/images/catalog_165/rgb.png,301.9629206,195.2670795658,13.612755631538464,13.897206231333337,29.567742632999998
+catalog_166,Baked Salmon Topped With Crab,nordic,data/catalog/images/catalog_166/rgb.png,532.1839447427084,256.2541209375,53.0343942386859,0.39271480235416667,101.97840611604165
+catalog_167,Salmon Salad With Bright Spring Vegetables,nordic,data/catalog/images/catalog_167/rgb.png,382.9003722,384.03785166666665,33.30198359076923,3.4907102197777764,73.74370636666667
+catalog_168,"Steak, Chicken, Salmon, or Shrimp Caesar S",nordic,data/catalog/images/catalog_168/rgb.png,159.78214626250002,89.617736640625,16.28390144158654,0.4362526639114585,28.1791381465625
+catalog_169,Greek Yogurt Carbonara,mediterranean,data/catalog/images/catalog_169/rgb.png,237.3305488899636,94.9403222917802,14.657219621828608,7.607446526410422,28.423478012115
+catalog_170,Cheesy Pepperoni Strata recipes,italian,data/catalog/images/catalog_170/rgb.png,836.587977803125,426.390411875,78.00956458418267,17.205391300760418,85.44610059425
+catalog_171,Pepperoni Pizza Bake Recipe 4,italian,data/catalog/images/catalog_171/rgb.png,419.8330515476562,185.04978912109374,26.073651059320927,16.059206711552086,36.87709450676562
+catalog_172,Cheesy Italian Potatoes and Gnocchi,italian,data/catalog/images/catalog_172/rgb.png,333.30715059069183,208.83479770833333,17.738782497897866,14.223510781605379,30.788792803863867
+catalog_173,Spaghetti Squash Caprese,italian,data/catalog/images/catalog_173/rgb.png,195.725957890625,194.84574835696438,19.496171377403847,3.4239941145833326,23.269192875
+catalog_174,Eggplant and Tomato Napoleons,italian,data/catalog/images/catalog_174/rgb.png,350.8584065555555,416.0752371333025,35.90653592136753,7.456911981481483,31.94258204444445
+catalog_175,Quick braised lettuce & peas,french,data/catalog/images/catalog_175/rgb.png,146.7175,182.49999999999994,11.076384615384615,5.570908333333333,10.25025
+catalog_176,Pineapple Beef Stir Fry recipes,caribbean,data/catalog/images/catalog_176/rgb.png,470.9950613826142,453.71690934300585,37.42903763286117,10.47852832242237,65.34831413853408
+catalog_177,Roasted Curry Chickpeas recipes,indian,data/catalog/images/catalog_177/rgb.png,825.2257011569,180.69918129905614,67.6699243478048,28.022257794270825,66.43074180468753
+catalog_178,Sweet + Spicy Roasted Nuts,south american,data/catalog/images/catalog_178/rgb.png,319.4828949174224,52.80111702370238,43.019089771978024,4.241181817104213,19.000615460714283
+catalog_179,Pan-Fried Sage Pork Chops,british,data/catalog/images/catalog_179/rgb.png,268.6217500000568,105.61708333337599,32.07185897436253,0.7642655555592046,34.42641333333715
+catalog_180,Easy Coconut Jasmine Rice,south east asian,data/catalog/images/catalog_180/rgb.png,336.199829376987,136.24344263027726,31.764395671513427,11.687865966429666,9.636301228079812
+catalog_181,Tropical Quinoa Salad recipes,caribbean,data/catalog/images/catalog_181/rgb.png,408.82060986562504,328.763010625,32.40141797735577,17.975512775034716,14.50476078410417
+catalog_182,Cinnamon-Quinoa Breakfast Bowl,south american,data/catalog/images/catalog_182/rgb.png,390.419624999709,221.6687499999234,26.32045,17.139202083308284,24.879509999999815
+catalog_183,Sauerkraut for Hot Dogs,central europe,data/catalog/images/catalog_183/rgb.png,41.25275838313925,91.59664499994894,0.40922867128205137,3.340242899205522,1.7220010223332116
+catalog_184,Honey-Mustard Chicken (Crock Pot),french,data/catalog/images/catalog_184/rgb.png,839.35075,405.954449378866,78.48642307692307,12.7467325,113.90355
+catalog_185,Potato-Celery Root Mash,caribbean,data/catalog/images/catalog_185/rgb.png,173.39519693333332,221.17150291666667,8.291615663333332,9.631613870833332,8.013129104999999
+catalog_186,To Die For Fettuccini Alfredo,italian,data/catalog/images/catalog_186/rgb.png,935.0823177965109,259.89462724294026,116.3561760852604,16.18060323224275,35.67611037152941
+catalog_187,Cracker Crumb Peas,british,data/catalog/images/catalog_187/rgb.png,98.4560937512899,124.7968750001799,5.414947115609078,4.443376041666703,7.456296875003058
+catalog_188,Silken Turnip And Potato Soup,french,data/catalog/images/catalog_188/rgb.png,215.34956060821,494.4295047612193,13.883342532119226,10.5946979324475,8.251472692695001
+catalog_189,Sausage & lentil traybake,indian,data/catalog/images/catalog_189/rgb.png,305.061625,120.5875,8.220384615384617,15.763737083333337,37.11297
+catalog_190,Lightning Quick Pickled Purple Cabbage,mediterranean,data/catalog/images/catalog_190/rgb.png,39.580722222222214,130.35555555555555,0.2824239316239315,2.5982309259259266,2.102848888888888
+catalog_191,"Autumn Salad with Lamb's Lattuce, Pears and Blue Cheese",french,data/catalog/images/catalog_191/rgb.png,421.93002078125,261.438501616738,48.15401071634615,9.327725312499998,22.715338499999998
+catalog_192,Salsa Tuna Salad,mexican,data/catalog/images/catalog_192/rgb.png,88.64905477500001,136.36154625,1.2679936061538464,2.7415833333333333,26.510879945
+catalog_193,Lentil Veggie Burgers,nordic,data/catalog/images/catalog_193/rgb.png,101.8189,56.414762044329905,1.108851538461539,6.65149166666667,8.963899000000001
+catalog_194,Wild West Coast Seafood Shrimp Cocktail Sauce,japanese,data/catalog/images/catalog_194/rgb.png,22.321125000000002,24.1125,0.28832884615384624,1.8986374999999998,0.7892175
+catalog_195,Red Lentils with Vegetables,italian,data/catalog/images/catalog_195/rgb.png,277.8283333333333,226.33333333333334,1.3684358974358977,17.964022222222216,32.92303333333333
+catalog_196,Spicy fennel-carrot salad – Cafe Liz,south american,data/catalog/images/catalog_196/rgb.png,67.705,207.39478655927834,0.7806923076923075,5.621329166666665,5.024025
+catalog_197,"Beet, Fennel and Carrot Salad",french,data/catalog/images/catalog_197/rgb.png,73.27211069375001,95.62142803577892,7.236106568293266,2.600172911494792,2.2707718061354165
+catalog_198,Roasted Baby Potatoes with Broccoli recipes,nordic,data/catalog/images/catalog_198/rgb.png,116.04743208333333,126.58695833333333,7.3592523205128195,5.621292777777776,5.887710666666667
+catalog_199,July's Bounty Pasta,italian,data/catalog/images/catalog_199/rgb.png,335.9230279430557,280.27015576388885,2.5941919443162402,23.064876938090283,25.901215378333333
+catalog_200,"Soba Salad With Seaweed, Cucumbers, and Asparagus Recipe",japanese,data/catalog/images/catalog_200/rgb.png,416.465132358941,313.8362273350695,20.499145366981836,22.37400859672772,31.5571095600573
+catalog_201,Sesame Pea Pods,chinese,data/catalog/images/catalog_201/rgb.png,50.72233333333333,67.43333333333334,4.83476923076923,1.5921777777777777,2.9803333333333337
+catalog_202,bulgur and black bean salad,mexican,data/catalog/images/catalog_202/rgb.png,267.4011562500001,107.609375,18.198648076923075,11.680012291666669,17.26232125
+catalog_203,Mediterranean Pasta with Tomatoes and Arugula,mediterranean,data/catalog/images/catalog_203/rgb.png,509.75988359361327,287.04986802224875,22.059161134972694,26.755813902770974,33.34225319480728
+catalog_204,Watermelon and Feta Salad Recipe,greek,data/catalog/images/catalog_204/rgb.png,207.46701581640625,332.268213515625,16.352562932091345,8.103152228135414,14.5348726384375
+catalog_205,Apricot Ricotta Stuffed Chicken with Honey Mustard Glaze,mediterranean,data/catalog/images/catalog_205/rgb.png,542.07139069375,341.987023125,33.98504800096155,4.6795992264375,140.09289409125
+catalog_206,Chicken With Pesto Potatoes,italian,data/catalog/images/catalog_206/rgb.png,760.4291608562265,427.5654664787667,69.63671475426895,14.55785775042915,90.82276179291668
+catalog_207,Smoked Salmon Wrap,nordic,data/catalog/images/catalog_207/rgb.png,236.4861493,170.14641500000002,17.761207248205118,1.2383,56.53930914
+catalog_208,Mussels With White Wine And Herbs,italian,data/catalog/images/catalog_208/rgb.png,523.3554567461,671.19994711,16.32687092582462,9.26303593446667,112.69190009888
+catalog_209,Slow Cooker Risottto Recipe,french,data/catalog/images/catalog_209/rgb.png,274.3789263375,224.12144152777776,18.557098173311964,10.142652482888888,18.070849105513886
+catalog_210,Yam Gratin with Gruyere Cheese,french,data/catalog/images/catalog_210/rgb.png,437.087123725,238.59713875,37.589869439807686,16.392200570416662,13.50157244575
+catalog_211,Canadian Bacon and Cheddar Quiche,french,data/catalog/images/catalog_211/rgb.png,778.8462813875,244.98654625,91.99669984807694,11.242485952875,55.1137131825
+catalog_212,5-Layer Mexican Dip,mexican,data/catalog/images/catalog_212/rgb.png,457.7781042583333,261.1326975,58.59508451410256,5.992848042657407,31.1214643438889
+catalog_213,"Nan's English Muffin, Hummus, & Tomato Sandwich ( Ww )",mediterranean,data/catalog/images/catalog_213/rgb.png,186.26835,196.0578144479381,6.269340000000001,10.9817,14.53848
+catalog_214,Jalapeno Homemade Hot Sauce,mexican,data/catalog/images/catalog_214/rgb.png,4.255,32.8830423359375,0.040944711538461534,0.16452942708333335,0.1999890625
+catalog_215,Souffle Omelet (Puffy Omelet),french,data/catalog/images/catalog_215/rgb.png,164.37133333333335,101.74982875137376,19.809374358974367,0.46711555555555556,20.097600000000003
+catalog_216,Chicken in Garlic Sauce (BC),chinese,data/catalog/images/catalog_216/rgb.png,671.3105,710.7669731149999,73.51987692307694,5.459991666666667,93.40523999999999
+catalog_217,Sugar Spanish Peanuts Recipe,mediterranean,data/catalog/images/catalog_217/rgb.png,320.364,104.68823547500001,22.10215384615385,14.9004,15.0672
+catalog_218,Senegalese Peanut and Chicken Stew (Màfe Ginaar),south east asian,data/catalog/images/catalog_218/rgb.png,405.016252061525,157.76489934305374,45.22357168376385,2.059088112533334,63.61059685472
+catalog_219,Slow Cooker Chicken Curry,indian,data/catalog/images/catalog_219/rgb.png,793.869154525,654.78189671875,52.55304756545672,30.41185603846355,61.82753906265625
+catalog_220,Kidney Beans and Rice Recipe 5,mexican,data/catalog/images/catalog_220/rgb.png,593.096694025,327.7559302556452,36.61303729058495,21.2958864561302,57.179383682656244
+catalog_221,Marinara Meat Sauce Topped Baked Potato,italian,data/catalog/images/catalog_221/rgb.png,311.1144967672899,308.9236589574965,22.52567080433825,9.27615819334733,34.43729475135174
+catalog_222,Spaghetti Hot Dogs,italian,data/catalog/images/catalog_222/rgb.png,432.6034615875,271.69904625,24.66331630519231,18.586395849583337,29.844752025
+catalog_223,Keto Carbonara,italian,data/catalog/images/catalog_223/rgb.png,1102.2096803333336,304.14303333333334,76.11329162051285,37.944578222222226,92.04841760000005
+catalog_224,"Brussels Sprouts, Bacon & Sun-dried Tomato Pasta",italian,data/catalog/images/catalog_224/rgb.png,1015.33820123125,650.9008401296335,58.56894351240385,43.52948108729168,106.869422257625
+catalog_225,6 Ingredient Leek Bacon Potato Frittata,italian,data/catalog/images/catalog_225/rgb.png,209.987975,119.2725,24.22655923076923,1.629166666666666,23.13134
+catalog_226,Butternut Squash and Spinach Tortellini,italian,data/catalog/images/catalog_226/rgb.png,233.1448431375,277.84904625,19.014541392884613,7.701285959625,18.668124195500003
+catalog_227,Roasted Squash Medley Recipe 5,mediterranean,data/catalog/images/catalog_227/rgb.png,413.55341666666664,462.8833333333334,28.586961538461534,19.926166666666667,13.194366666666667
+catalog_228,Fig Salad with Cabrales Cheese and Marcona Almonds,mediterranean,data/catalog/images/catalog_228/rgb.png,247.49810691580967,184.71284185592432,28.4749269028068,5.10947809456111,16.535157866619997
+catalog_229,Strawberry-Peanut Butter Quesadillas recipes,mexican,data/catalog/images/catalog_229/rgb.png,472.6604166666668,155.70833333333331,47.53328846153845,13.297345833333333,29.659016666666673
+catalog_230,Sweet Honeyed Date Nut Couscous With Tahini Note,mediterranean,data/catalog/images/catalog_230/rgb.png,426.724,122.45,10.561853846153845,29.205358333333326,17.970935
+catalog_231,Mango Chutney-Horseradish Sauce for BBQ,indian,data/catalog/images/catalog_231/rgb.png,40.27000000004058,18.7291666667512,0.053076923077820456,3.601500000003185,0.20037500000199507
+catalog_232,Chicken Feta Salad with Blackberry Balsamic Viniagrette recipes,greek,data/catalog/images/catalog_232/rgb.png,638.8187725416667,287.46838141983125,75.85525632435898,5.857589222222223,66.1843772
+catalog_233,Green Monster Salad,mediterranean,data/catalog/images/catalog_233/rgb.png,181.11847375000002,232.4197079313531,23.068047192307695,4.348344166666667,6.552379
+catalog_234,Skirt Steak With Arugula Salad,italian,data/catalog/images/catalog_234/rgb.png,585.1981705144062,346.2218838155415,49.27662530278175,11.176270093666668,69.4268046793
+catalog_235,Zucchini Casserole with Red-Pepper Aioli,mediterranean,data/catalog/images/catalog_235/rgb.png,114.20151633125,81.97416546875,14.87682435528846,1.6834688621354168,4.796054644625
+catalog_236,Smoky Stove-Top Beans,italian,data/catalog/images/catalog_236/rgb.png,141.49799225202895,158.9755236723712,2.107718365519651,9.846967664956775,13.362159748875264
+catalog_237,Chinese Cabbage Salad with Sesame Dressing,chinese,data/catalog/images/catalog_237/rgb.png,52.51288656293595,100.36779625007607,3.06689084044279,2.5952323941726023,2.8464155840269325
+catalog_238,Chicken Lollipop Recipe,indian,data/catalog/images/catalog_238/rgb.png,141.32129489940203,47.21567249986138,15.705742307657502,2.235349999969242,12.106149999979618
+catalog_239,Grilled Beer Can Chicken,mexican,data/catalog/images/catalog_239/rgb.png,293.0884944,163.1367641144248,31.178515692307702,0.46250066666666667,45.26160400000001
+catalog_240,Pig-wich Recipe,mediterranean,data/catalog/images/catalog_240/rgb.png,268.8652,123.32000000000001,29.07904615384616,0.06661600000000001,46.172576
+catalog_241,Chopped Chef's Salad,south american,data/catalog/images/catalog_241/rgb.png,464.946997485317,395.61806224265626,33.03865375298265,14.056540499756247,55.21857497131625
+catalog_242,Pea and ham soup,british,data/catalog/images/catalog_242/rgb.png,283.39125,134.0,6.751884615384614,14.950983333333337,35.81415
+catalog_243,Vegetable Lentil Curry,indian,data/catalog/images/catalog_243/rgb.png,314.094057936111,487.3784871006945,2.9289685401308776,20.662456723020256,35.65550454063543
+catalog_244,Indian style pan fried Cauliflower,british,data/catalog/images/catalog_244/rgb.png,217.41694825,168.41244954095612,17.716650069230774,8.969154333333334,12.7723736
+catalog_245,Stuffed Breakfast Sweet Potato,mediterranean,data/catalog/images/catalog_245/rgb.png,363.3685833330619,396.8996527783345,1.43019572649363,30.53741851848899,9.29573499999123
+catalog_246,Popeyes Sweet Potato Casserole,south american,data/catalog/images/catalog_246/rgb.png,169.58949191665667,105.2362831653225,7.219608817948647,10.123905333332559,5.360415199999681
+catalog_247,Beet Salad with Watercress and Fresh Pecorino,mediterranean,data/catalog/images/catalog_247/rgb.png,320.5556706453125,170.62898484375,40.27352776572115,4.591120303359376,17.360734859125
+catalog_248,Chicken Fried South of the Border Sirloin Steaks,french,data/catalog/images/catalog_248/rgb.png,1825.111250000016,711.0562500000398,206.0873269230772,9.024209375001165,240.99661875000146
+catalog_249,Fried Mushrooms,south american,data/catalog/images/catalog_249/rgb.png,154.885290175,150.9309878395901,2.1685796265384614,9.692337969250003,14.41940105825
+catalog_250,Country Ham With Redeye Gravy,british,data/catalog/images/catalog_250/rgb.png,184.254,155.8875,23.726826923076924,2.105479166666667,10.395925
+catalog_251,Vegan Korean Kimchi Fried Rice,korean,data/catalog/images/catalog_251/rgb.png,301.8236177498436,210.8055249997689,16.550507869229936,15.49928616665559,9.663349199985644
+catalog_252,Heirloom Tomato Pico de Gallo,mexican,data/catalog/images/catalog_252/rgb.png,43.92,186.85677083336412,0.5926153846153845,3.6548416666666674,3.48215
+catalog_253,Sauteed Tilapia Tacos With Grilled Peppers and Onions,mexican,data/catalog/images/catalog_253/rgb.png,175.774715107,185.13944125,4.084737558358975,6.0765057868616665,42.64105479744333
+catalog_254,5-Minute Kale Taco Salad,mexican,data/catalog/images/catalog_254/rgb.png,192.69541699999996,114.68197950648455,14.43784910769231,7.260270166666665,13.6037186
+catalog_255,Swordfish with Olive Tapenade Recipe,mediterranean,data/catalog/images/catalog_255/rgb.png,294.8886494995,279.1232351375,22.756476366671155,1.514115217109583,69.7421502929175
+catalog_256,Corn and Roasted Jalapeno Hummus recipes,mediterranean,data/catalog/images/catalog_256/rgb.png,466.04227625,295.90970155576025,31.0335028076923,19.69360166666667,33.817871
+catalog_257,Spinach & Mushroom Pizza with Goat Cheese,italian,data/catalog/images/catalog_257/rgb.png,359.2099516583333,271.57285406249997,33.36699557285257,9.038102032333335,32.277268624125
+catalog_258,Rosemary-Garlic Pumpkin Seeds,mediterranean,data/catalog/images/catalog_258/rgb.png,265.9145833333333,47.24622982731958,36.03815641025641,1.9311472222222215,26.396296666666668
+catalog_259,"Fig, Brussels Sprouts and Manchego Panini recipes",italian,data/catalog/images/catalog_259/rgb.png,690.4000000037603,261.8750000013525,41.77830769230915,30.052933333643974,45.03380000001
+catalog_260,EZ Panini's,italian,data/catalog/images/catalog_260/rgb.png,331.8025,120.125,15.488096153846154,14.913125,30.77475
+catalog_261,My Best Ham And Cheese,french,data/catalog/images/catalog_261/rgb.png,244.7689531648601,107.17602792472383,19.886619944910752,5.879916546693988,28.179721885027543
+catalog_262,Herbed Ricotta Cheese Omelette recipes,french,data/catalog/images/catalog_262/rgb.png,84.2559393456377,54.900112613568425,8.39558856880615,0.6576658463520217,12.990272765616412
+catalog_263,Corn Tortilla Quiche recipes,french,data/catalog/images/catalog_263/rgb.png,868.7818189,397.0543425,102.64053663846155,7.022538253416667,94.36318749
+catalog_264,Italian Sausage Stuffed Mushrooms,italian,data/catalog/images/catalog_264/rgb.png,188.26496940059585,80.19238281239107,23.742395092054768,1.201944850278774,17.865379661392183
+catalog_265,Madison Dog,french,data/catalog/images/catalog_265/rgb.png,745.00607819375,234.912023125,86.87089030865386,9.981890893104168,57.07175659124997
+catalog_266,Microwave Diabetic Fish with Cool Cucumber Sauce,british,data/catalog/images/catalog_266/rgb.png,166.06435629991844,138.81475916653724,11.810823508971273,0.32097083333029575,46.6428561016531
+catalog_267,Greek Chicken Salad,mediterranean,data/catalog/images/catalog_267/rgb.png,256.18129227777484,99.39172777785551,32.856961184615166,0.6606710000000849,27.347282711110235
+catalog_268,Ginger Soy Bok Choy recipes,chinese,data/catalog/images/catalog_268/rgb.png,105.89470886669505,202.6388054167956,11.54522196538509,2.9113041938779647,5.94852299666757
+catalog_269,Hibachi Style Teriyaki Vegetables,japanese,data/catalog/images/catalog_269/rgb.png,95.009125,178.0125,5.5550961538461525,4.090858333333332,10.856725
+catalog_270,"Avocado, labneh, roasted carrots & leaves",mediterranean,data/catalog/images/catalog_270/rgb.png,192.3729999998032,210.29999999996616,21.25766538458948,5.52357541666395,8.28404749998695
+catalog_271,Sous Vide Mexican Corn on the Cob,mexican,data/catalog/images/catalog_271/rgb.png,262.749096,166.546545352701,23.085022399999996,10.886153,12.2554988
+catalog_272,Healthy Baked Shrimp Boil Packets,mediterranean,data/catalog/images/catalog_272/rgb.png,298.9912179206896,59.89801275862069,49.159055814854106,0.7303509468390805,4.871286205344828
+catalog_273,Butter Garlic Mushrooms recipes,mediterranean,data/catalog/images/catalog_273/rgb.png,134.40042348300003,134.14481245465947,18.387709833549998,2.0289112511841667,5.715918932945
+catalog_274,Polenta with Fresh Herbs and White Cheddar Cheese,italian,data/catalog/images/catalog_274/rgb.png,322.6326893050505,341.48285645839354,18.366805265930633,13.22464112459781,30.18474603570718
+catalog_275,Cheese Ball Bites,french,data/catalog/images/catalog_275/rgb.png,277.7037807276862,74.57720404987501,35.200553386809126,4.587094907102501,13.669840552374001
+catalog_276,Chilled Vidalia Onion Soup,french,data/catalog/images/catalog_276/rgb.png,260.7680415096405,561.31244791673,21.60538556416925,10.950633689256692,8.091695419380123
+catalog_277,Baked Sweet Potato Home Fries recipes,south american,data/catalog/images/catalog_277/rgb.png,244.057197752,255.12252086477775,16.22479673323077,11.9440729644,6.478958150480002
+catalog_278,"Lorighittas with Shrimp, Mussels, and Orange",mediterranean,data/catalog/images/catalog_278/rgb.png,787.2000669792462,410.439445429964,39.33274047310432,28.57921292947935,101.2476896744354
+catalog_279,Double mushroom sourdough puddings,british,data/catalog/images/catalog_279/rgb.png,354.11848467683564,362.5231466926717,8.430310262435517,19.1248699847787,39.864980705850385
+catalog_280,Stuffed Capperino Peppers,italian,data/catalog/images/catalog_280/rgb.png,450.27386537782496,562.2060200000353,53.7816951521397,7.708734946725261,31.93311166000318
+catalog_281,Grilled Corn and Shrimp Salad,south american,data/catalog/images/catalog_281/rgb.png,249.212375,212.4625,15.366548076923072,13.783713333333335,12.338937500000002
+catalog_282,Parsnip bubble & squeak hash,british,data/catalog/images/catalog_282/rgb.png,198.65625,164.125,17.119038461538462,8.277875,4.4023
+catalog_283,Pommes Anna with Gruyère,french,data/catalog/images/catalog_283/rgb.png,320.6944218375,288.45963875,22.62990757673077,12.108161427083333,24.581602688750003
+catalog_284,Lomi-Lomi Salmon,nordic,data/catalog/images/catalog_284/rgb.png,47.01772627222223,89.31555540578992,3.1246038366453,1.311069074074074,7.241399384166668
+catalog_285,Cherry and Balsamic-Topped Alaska Cod,french,data/catalog/images/catalog_285/rgb.png,195.40773092065626,192.15628626035712,6.01410380422404,4.271653890666667,52.84149417465
+catalog_286,“French Onion Soup” Pizza,italian,data/catalog/images/catalog_286/rgb.png,670.8120595771425,385.32309250338125,38.908666038850725,29.007605830999974,51.19439795664878
+catalog_287,Zesty lentil & haddock pilaf,mediterranean,data/catalog/images/catalog_287/rgb.png,323.06125,170.75,8.895096153846154,17.1458875,34.385375
+catalog_288,Potato Soup With Apples And Brie Cheese recipes,french,data/catalog/images/catalog_288/rgb.png,634.3730831421875,684.843213515625,41.13736560588943,24.21523982027344,57.2427618225
+catalog_289,• Ore-Ida® Shredded Hash Brown Potatoes recipes,french,data/catalog/images/catalog_289/rgb.png,281.4238437499805,229.86138187918786,25.04613124999925,9.477808072915353,12.44454687499836
+catalog_290,IPA Corned Beef,south american,data/catalog/images/catalog_290/rgb.png,530.68992648,248.933198,62.05227877846155,0.869633125,65.38540898800002
+catalog_291,Potato Curry,south east asian,data/catalog/images/catalog_291/rgb.png,51.26325,30.56507358575,3.5638307692307696,2.903783333333333,4.297205
+catalog_292,Dad's Sliced Sausage,central europe,data/catalog/images/catalog_292/rgb.png,230.75343663333334,106.42579450376535,24.398911282051284,2.3963611111111116,28.88149588
+catalog_293,Cherry Baked Brie,french,data/catalog/images/catalog_293/rgb.png,97.90086607018873,108.05657166386193,0.271175574358957,8.371543336565745,1.6807930406665499
+catalog_294,Ellen’s Fried Chicken,mediterranean,data/catalog/images/catalog_294/rgb.png,373.00240747769226,145.2290884375,45.11768226531361,3.9602692307692307,29.153815097446163
+catalog_295,FRIED PEPPER EGG,chinese,data/catalog/images/catalog_295/rgb.png,113.42061979212143,28.8744791668061,2.2805700320575153,6.95645659725585,7.578514583359932
+catalog_296,Braised beef in red wine,french,data/catalog/images/catalog_296/rgb.png,830.2827499997596,343.63958333326735,90.88145833333233,0.9934895833165366,134.17386083331974
+catalog_297,"Pumpkin, fennel and gorgonzola bake",mediterranean,data/catalog/images/catalog_297/rgb.png,644.3289725187212,406.910359564332,84.9233881580546,9.31522327886759,28.243914673249126
+catalog_298,Orange Pistachio-Stuffed Grilled Scallops Recipe,mediterranean,data/catalog/images/catalog_298/rgb.png,267.5021036760115,312.336708787379,18.467357654859352,7.9114605463784775,35.94431789406117
+catalog_299,Skinny Strawberry Honey Bruschetta,italian,data/catalog/images/catalog_299/rgb.png,69.63388135800012,44.70947856768918,0.6542987036658656,4.759919208535404,5.448235558229121
+catalog_300,Oat Frittata,italian,data/catalog/images/catalog_300/rgb.png,206.673500002178,81.17500000071645,4.309138461538462,13.21187333353012,16.8518200000043
+catalog_301,Summer Fruit Salad with Mint Dressing,mediterranean,data/catalog/images/catalog_301/rgb.png,113.47725,272.825,0.9743,9.566428333333333,4.309564999999998
+catalog_302,Seared Black Pepper-Crusted Ahi Tuna Steaks,japanese,data/catalog/images/catalog_302/rgb.png,273.2043812375,206.8779710741826,12.704716892115387,2.279875,85.12427871
+catalog_303,Grilled Lamb Chops,mediterranean,data/catalog/images/catalog_303/rgb.png,954.642173504185,264.4446337136045,136.08314647765138,0.3166333333333335,74.19798131
+catalog_304,Zucchini Carrot Fritters recipes,south east asian,data/catalog/images/catalog_304/rgb.png,256.3081478404761,174.67693433588457,35.097020806227114,3.02895773015873,14.450836923809515
+catalog_305,Potato Omelet Cups,french,data/catalog/images/catalog_305/rgb.png,377.03051980312495,188.46507708333334,31.439261372205134,10.165645944770832,34.69018011925
+catalog_306,Chicken Bacon Ranch Quesadillas #SundaySupper recipes,mexican,data/catalog/images/catalog_306/rgb.png,490.055500002181,160.3500000005072,57.7208461541934,4.511791666676642,48.289900000013375
+catalog_307,Yellow Squash Casserole,italian,data/catalog/images/catalog_307/rgb.png,356.8381017653812,320.7318748781475,40.143193993537125,6.11445971605,30.07930723543
+catalog_308,Healthy Gratin with Good-for-You Carbs,french,data/catalog/images/catalog_308/rgb.png,450.057845748417,431.76462130209376,36.3920428964418,13.957180359665017,38.74082972412275
+catalog_309,Bangan ka Bhurta (Indian Eggplant),indian,data/catalog/images/catalog_309/rgb.png,62.46713194514192,199.5576388889678,2.368759188155572,4.030410185185185,3.9951666666666674
+catalog_310,Southwest Chicken Panini,italian,data/catalog/images/catalog_310/rgb.png,783.5025,478.6875,50.85973076923077,9.065391666666667,178.60055
+catalog_311,Chicken Veggie Packets Recipe 5,french,data/catalog/images/catalog_311/rgb.png,69.730655425,153.604819375,1.6586815586538461,2.4351588025833335,17.371811464500002
+catalog_312,Crock Pot Chicken Parm,italian,data/catalog/images/catalog_312/rgb.png,254.38000000000102,160.33333333333755,4.665115384615427,9.805041666666703,51.1505833333336
+catalog_313,Grilled Chicken and Plum Skewers recipes,mediterranean,data/catalog/images/catalog_313/rgb.png,186.025461,208.57309250000003,5.080178882307693,4.0741875,52.978341625
+catalog_314,Chicken Parm Panini,italian,data/catalog/images/catalog_314/rgb.png,213.282461890577,130.42701484366123,10.685014624197146,3.11360365050959,53.58713572499613
+catalog_315,Ladybug Caprese Bites,italian,data/catalog/images/catalog_315/rgb.png,69.07532235833334,35.08301541666667,7.365264296153847,0.6808096047083333,8.416059326666668
+catalog_316,Breakfast Avocado Pita with Spiced Chickpeas recipes,mediterranean,data/catalog/images/catalog_316/rgb.png,280.26904166667373,169.95747724726158,21.497764423077044,11.55125937500074,17.880372916666893
+catalog_317,Quick Pan Sausage,british,data/catalog/images/catalog_317/rgb.png,171.78436440007104,118.97546566271225,13.508008061030083,0.2773100694490055,44.77179136167145
+catalog_318,"Easy Chickpea ""Tofu",asian,data/catalog/images/catalog_318/rgb.png,150.24628667917298,149.38196441715485,12.851234290984392,4.52689023568004,10.397167979788037
+catalog_319,Creamy Polenta with Crumbled Sausage,italian,data/catalog/images/catalog_319/rgb.png,545.94358994375,317.3768241875,59.21462201076925,9.197752426395832,45.4587811175
+catalog_320,Hearty Lentil Stew,middle eastern,data/catalog/images/catalog_320/rgb.png,294.4247,618.3343153333334,1.3821956410256409,19.6893956111111,30.644808666666666
+catalog_321,Simple Mason Jar Salad recipes,mediterranean,data/catalog/images/catalog_321/rgb.png,503.7770000048661,278.5875000007925,67.81345769298439,7.793458333382998,22.73747000033286
+catalog_322,"Springtime Salad with Snow Peas, Cucumbers, and Radishes",mediterranean,data/catalog/images/catalog_322/rgb.png,63.310000000217975,171.25000000003803,4.376538461567548,2.6788750000029675,4.578300000013465
+catalog_323,Hummus Cucumber Bites,mediterranean,data/catalog/images/catalog_323/rgb.png,342.0775,310.75,25.90384615384615,2.9895,76.4247
+catalog_324,"Tomato, Hummus, and Spinach Sandwich recipes",mediterranean,data/catalog/images/catalog_324/rgb.png,121.325,87.4601364742268,6.16056923076923,5.55272,11.04548
+catalog_325,Strawberry Spinach Salad with Poppy Seed Dressing recipes,mediterranean,data/catalog/images/catalog_325/rgb.png,117.16218750000003,81.646875,13.774384615384616,2.0942656250000002,9.787575
+catalog_326,Blue Cheese Coleslaw recipes,central europe,data/catalog/images/catalog_326/rgb.png,197.0887984590909,72.17465318181819,27.87758742587413,1.3533688099696963,9.778215198181819
+catalog_327,Spider Deviled Egg Recipe,french,data/catalog/images/catalog_327/rgb.png,162.0908125,91.48750000000001,22.1886125,1.0607645833333337,10.925674999999998
+catalog_328,Apricot-Mustard Sauce with Pork Chops,french,data/catalog/images/catalog_328/rgb.png,321.11944444444447,220.90277777777771,26.596474358974362,8.597210648148147,36.32263888888888
+catalog_329,Swiss Salmon Recipe,nordic,data/catalog/images/catalog_329/rgb.png,293.3326838258259,125.2990462503201,29.322398136095075,2.315277777810322,47.538026034186835
+catalog_330,Macaroni Taco Bake Recipe 4,mexican,data/catalog/images/catalog_330/rgb.png,749.160310128125,243.16389408203125,66.05527397090145,17.937257742944013,72.4860656548125
+catalog_331,Spinach & Artichoke Stuffed Mushrooms recipes,mediterranean,data/catalog/images/catalog_331/rgb.png,17.9979009467879,43.69034343747837,0.8356350656620046,0.8146121161351738,3.2571587322401014
+catalog_332,Rice & bean enchiladas,mexican,data/catalog/images/catalog_332/rgb.png,240.105,159.625,5.449932692307692,14.583466666666663,16.644
+catalog_333,Seafood Congee recipes,mediterranean,data/catalog/images/catalog_333/rgb.png,132.2777083333851,67.65279511174656,1.4578076923076924,6.933127777778343,18.60062083333342
+catalog_334,"Broccoli & peas with sesame seeds, soy & honey",chinese,data/catalog/images/catalog_334/rgb.png,97.47125000027225,185.99687500008955,3.65523076923077,5.289358333357932,12.893093750000537
+catalog_335,Marinated Steak,french,data/catalog/images/catalog_335/rgb.png,213.63518075011592,145.14653000004617,14.478920662694623,0.3197258333431845,48.5479262200096
+catalog_336,My Mom's Pi Jiu Ya (Beer-Braised Duck),chinese,data/catalog/images/catalog_336/rgb.png,1432.7173811,420.2776108333333,205.89246316538467,3.073805555555555,81.21421715833334
+catalog_337,Fresh and Simple Fruit Salad Recipe,south american,data/catalog/images/catalog_337/rgb.png,173.04270833333337,233.6208333333333,6.214242307692308,11.846455555555558,6.176461666666667
+catalog_338,Gazpacho Salsa,mexican,data/catalog/images/catalog_338/rgb.png,56.144677083347524,148.2864583333978,5.531006730769468,2.017795000001483,2.2278858333337848
+catalog_339,Marinated Olives and Feta,greek,data/catalog/images/catalog_339/rgb.png,198.2037098,110.11497000000001,27.6587576923077,1.9746816666666676,11.089284999999997
+catalog_340,Butterflied Leg of Lamb Masala,middle eastern,data/catalog/images/catalog_340/rgb.png,852.5747500000082,432.9531250000199,89.50675769230783,0.835668437500582,149.35782687500074
+catalog_341,Summer Spaghetti,italian,data/catalog/images/catalog_341/rgb.png,1088.069382509375,522.00975796875,91.80881626872595,43.31385307552083,52.6832593771875
+catalog_342,Red Chard with Olives and Lemon,italian,data/catalog/images/catalog_342/rgb.png,100.59502388888889,200.63313757908168,9.301411834757834,3.76348,7.033104296296297
+catalog_343,Dill Potato Wedges Recipe,french,data/catalog/images/catalog_343/rgb.png,148.2046538542025,150.87111462718795,7.30392447179631,7.640920203647783,8.763969922714098
+catalog_344,Grilled Caprese Sandwich,italian,data/catalog/images/catalog_344/rgb.png,558.318672834722,216.13745826388885,57.23418505918805,10.570078036002315,50.14168641444445
+catalog_345,Simple Tuna Salad,mexican,data/catalog/images/catalog_345/rgb.png,498.3727628229451,334.18618260429565,20.51724908687548,16.2973470733363,90.97704633429255
+catalog_346,Awesome Sockeye Salmon,nordic,data/catalog/images/catalog_346/rgb.png,220.1249389167018,106.60137910309193,22.30209428461608,0.27601425000339225,40.8107669666686
+catalog_347,Honey-Ginger Salmon Skewers with Cucumber Salad recipes,nordic,data/catalog/images/catalog_347/rgb.png,482.26454860000024,289.84713875,47.14737168076925,4.224191666666665,77.93468261
+catalog_348,Grilled Salmon Kebabs with Kale Tabbouleh,nordic,data/catalog/images/catalog_348/rgb.png,630.5274584508797,470.06708590799724,49.22424064398643,13.718478359422685,97.286430456905
+catalog_349,Pina Colada Pork Chops,mexican,data/catalog/images/catalog_349/rgb.png,310.9329863819445,236.1365045138889,27.634023493002125,2.3876398148148157,62.82281758958332
+catalog_350,Mango and Cucumber Salsa,mexican,data/catalog/images/catalog_350/rgb.png,19.938942727272728,49.931,0.199866041958042,1.7046391818181819,0.8043772727272726
+catalog_351,The Supreme Shepherd's Pie,british,data/catalog/images/catalog_351/rgb.png,380.46447315,355.0230925,22.645257361538462,11.162804166666668,56.656185295
+catalog_352,Bok Choy & Quinoa Salad with Tahini Dr,chinese,data/catalog/images/catalog_352/rgb.png,195.54200000000006,185.1,9.9496,9.929266666666665,14.757
+catalog_353,French Onion Soup Stuffed Mushrooms,french,data/catalog/images/catalog_353/rgb.png,81.61065161441122,68.82961246012968,8.605307572816479,1.0521261954935266,6.657604479296743
+catalog_354,perfect butter-sauteed mushrooms,french,data/catalog/images/catalog_354/rgb.png,133.24938406902498,132.3925931075,19.135494077236924,1.3713690962708331,7.518568233705
+catalog_355,Crab Mashed Potatoes,british,data/catalog/images/catalog_355/rgb.png,328.27283517473444,267.4542780318566,24.714844089845673,9.307065901875,38.0033479885375
+catalog_356,Spicy Rice Salad,south american,data/catalog/images/catalog_356/rgb.png,675.0251213947918,346.10736018064074,35.86554107275642,30.882317222809025,48.61502113364585
+catalog_357,French Rice Salad Recipe,french,data/catalog/images/catalog_357/rgb.png,826.550666666667,628.374770185567,36.090743589743596,36.425408888888896,95.34262
+catalog_358,Oriental (Asian) Coleslaw,chinese,data/catalog/images/catalog_358/rgb.png,378.4443788645833,156.82634715277774,48.1417042931891,6.672528464756944,16.249967452708333
+catalog_359,Brown & Red Rice Salad,south american,data/catalog/images/catalog_359/rgb.png,277.0350000000197,279.68333333338967,11.50408461538486,15.684347777778738,14.254253333339884
+catalog_360,Turnip And Bacon Frittata Recipe,french,data/catalog/images/catalog_360/rgb.png,307.8199791666695,174.56041666667934,38.80650448717962,1.2560777777778898,31.3433500000008
+catalog_361,Caboches in Potage (Cabbage Soup),middle eastern,data/catalog/images/catalog_361/rgb.png,79.58728125,305.1953125,0.5473497596153847,5.456234374999998,9.45255375
+catalog_362,"Irish Comfort Food You’ve Been Missing, Creamy Colcannon",british,data/catalog/images/catalog_362/rgb.png,500.08397375,585.2114405447553,21.424516423076923,28.64859833333335,24.844379
+catalog_363,Vegan Irish Skillet,british,data/catalog/images/catalog_363/rgb.png,229.242821912175,266.37001259271386,10.179538899203335,11.056592844955555,24.600946121573333
+catalog_364,Green Bean and Lentil Salad,indian,data/catalog/images/catalog_364/rgb.png,533.07775,237.975,34.96666153846152,19.640504166666663,53.05338
+catalog_365,"Chickpea, red pepper, egg & feta hash",greek,data/catalog/images/catalog_365/rgb.png,188.29075,175.61666666666667,12.191734615384616,7.20808638888889,18.499798333333334
+catalog_366,Brussels Sprout Chestnut Rice recipes,central europe,data/catalog/images/catalog_366/rgb.png,179.3261195416867,157.0776447918356,4.959661858977848,11.47225,6.978925
+catalog_367,Portabella Pita,middle eastern,data/catalog/images/catalog_367/rgb.png,409.3288888880763,285.1444444442162,39.90914700845079,12.59996740740572,21.65888444433078
+catalog_368,Veal Scaloppine with Spring Pea Coulis and Asparagus,french,data/catalog/images/catalog_368/rgb.png,179.83438024486802,262.67910034269534,12.304161409284646,3.8264006619228668,33.260098844796296
+catalog_369,Rice with Black Beans,mexican,data/catalog/images/catalog_369/rgb.png,166.86967303828126,146.5451165234375,3.3749210517728363,10.526488547566407,10.864095385132813
+catalog_370,Rice and Veggie Stuffed Peppers,chinese,data/catalog/images/catalog_370/rgb.png,227.1195674913227,358.669249996543,3.7976693075189223,16.146764999262494,11.57566899928093
+catalog_371,Garlic and hot pepper prawns (Gambas Al Ajillo),british,data/catalog/images/catalog_371/rgb.png,185.42874999999208,140.7968749999802,17.561778846153715,0.910080729166085,34.61622812499925
+catalog_372,Spicy Chard with Ginger,south american,data/catalog/images/catalog_372/rgb.png,55.12092625,125.12510595060567,5.610905115384615,1.7026100000000002,4.318566
+catalog_373,Chicken with Ginger-Pear-Cider Pan Sauce,french,data/catalog/images/catalog_373/rgb.png,316.747336,239.8105925,25.930726959230775,4.49521,56.449391625
+catalog_374,Light Nicoise Salad,french,data/catalog/images/catalog_374/rgb.png,300.715316967997,426.338548229933,16.458049990669906,11.111088659037502,40.334063081835
+catalog_375,Lucques Pork Burger,nordic,data/catalog/images/catalog_375/rgb.png,838.9108419751218,283.271661875169,97.99728082211566,8.338633612280303,78.78884032625845
+catalog_376,BLTA Wrap,british,data/catalog/images/catalog_376/rgb.png,199.53791666666666,88.23958333333333,14.259567307692308,7.485298263888889,13.661791666666666
+catalog_377,Watermelon Star Salads,indian,data/catalog/images/catalog_377/rgb.png,163.8575,275.25,7.870461538461537,5.769791666666667,27.02715
+catalog_378,Bircher Müesli,central europe,data/catalog/images/catalog_378/rgb.png,251.211878625,235.1730925,4.694051778846155,16.341716421666664,19.6059594205
+catalog_379,Banana Raita,indian,data/catalog/images/catalog_379/rgb.png,146.33694625,197.694875,7.698609,7.2469993875,11.401889175000004
+catalog_380,Coconut Cauliflower Rice,south east asian,data/catalog/images/catalog_380/rgb.png,158.9477846875,206.7381095401942,20.361418443846155,3.0886675986250003,7.694330128
+catalog_381,Vegetable Cashew Curry + Cauliflower Rice,south east asian,data/catalog/images/catalog_381/rgb.png,600.311211946875,481.353609849287,72.61720947131413,13.676721033114587,26.591630903208326
+catalog_382,"Veggie Burger, Chickpea-Summer Squash",french,data/catalog/images/catalog_382/rgb.png,351.160152109222,281.6309731462925,13.004890891826008,18.467836145822165,33.917238874995
+catalog_383,Simple South African Lamb Curry,indian,data/catalog/images/catalog_383/rgb.png,770.836592525116,182.70408208354615,121.1601958384639,2.61555000000985,16.776415799509603
+catalog_384,Smoked Sausage Stir-Fry Recipe,chinese,data/catalog/images/catalog_384/rgb.png,473.382730875,396.3793425,25.575587883076924,17.48269867825,53.90650778
+catalog_385,Miami Halibut,chinese,data/catalog/images/catalog_385/rgb.png,260.39533730625,237.984161875,14.88101631221154,1.4197500000000003,74.84960821750002
+catalog_386,Roasted Tofu with Avocado Salsa,asian,data/catalog/images/catalog_386/rgb.png,176.70337500000002,108.7625,16.750121153846155,2.70595,30.50006
+catalog_387,French in a Flash: Provençal Calamari Salad with Tarragon and Mint Recipe,french,data/catalog/images/catalog_387/rgb.png,200.93629536400283,127.06313810000681,22.5742128791744,1.6940572869035335,24.817456819313602
+catalog_388,Salmon Cucumber Sandwiches Recipe,nordic,data/catalog/images/catalog_388/rgb.png,257.5202161994792,158.03722182291668,15.522550742692308,10.581016666666669,21.802789853854165
+catalog_389,Peanut Noodles with Chicken,asian,data/catalog/images/catalog_389/rgb.png,1271.672,543.1,96.38673076923075,34.202555,141.94275
+catalog_390,Easy Salmon Teriyaki recipes,nordic,data/catalog/images/catalog_390/rgb.png,567.0689398,281.021185,52.27928083076925,3.46933375,95.29471847999997
+catalog_391,Crispy Sesame Spinach,chinese,data/catalog/images/catalog_391/rgb.png,115.01396560161236,37.51934000026269,12.880984615612125,3.537733333351137,4.638000000080799
+catalog_392,Spinach & Garlic Meatballs in the Instant Pot recipes,middle eastern,data/catalog/images/catalog_392/rgb.png,270.3427729165935,243.37150161919584,22.586118703200718,3.4768591650245724,46.9979758001149
+catalog_393,Steamed Vegetables,french,data/catalog/images/catalog_393/rgb.png,151.36833333333337,406.3833333333334,0.7515897435897436,12.218650000000002,9.060213333333332
+catalog_394,Fish Fajitas,french,data/catalog/images/catalog_394/rgb.png,191.7324188,194.85642583333333,13.698357803846152,1.7618111111111119,47.24716651833333
+catalog_395,Citrus Mango Chicken Tacos,mexican,data/catalog/images/catalog_395/rgb.png,437.6414010625,269.514935,45.142518195384625,3.484366895833335,64.8760124735
+catalog_396,Black Bean Mango Salad,mexican,data/catalog/images/catalog_396/rgb.png,311.74083333333334,152.08333333333334,10.36323076923077,16.86666805555555,30.51685833333333
+catalog_397,Swiss Chard and Herb Fritters,south east asian,data/catalog/images/catalog_397/rgb.png,339.9801325000326,190.3560127483993,44.993712307697976,4.501857666666667,15.872988000000001
+catalog_398,Pork Chops Cordon Bleu,french,data/catalog/images/catalog_398/rgb.png,573.959875,293.4934570850515,45.345930769230776,4.9960125,117.648775
+catalog_399,Kittencal's Easy Chicken Cordon Bleu,french,data/catalog/images/catalog_399/rgb.png,289.56357142857144,174.5,14.810967032967037,3.8691999999999998,73.95342857142857
+catalog_400,Reuben Casserole,kosher,data/catalog/images/catalog_400/rgb.png,273.05628690833345,122.43206166666666,35.71234518564103,1.4020217431666666,24.545961492833342
+catalog_401,Simple Salmon and Spinach Sandwiches,nordic,data/catalog/images/catalog_401/rgb.png,440.97100439409724,301.25515616319444,30.775372573424146,10.68924074074074,70.96171548072915
+catalog_402,The 4-Ingredient Dinner I Make At Least Once a Week,nordic,data/catalog/images/catalog_402/rgb.png,598.9343487364465,437.81912697922826,51.309353734410124,12.418571072790964,75.557390220375
+catalog_403,Glenda's Mandarin Orange Salad,asian,data/catalog/images/catalog_403/rgb.png,358.07863972966635,265.9626973636627,35.076549258974346,12.139389254588961,10.435733398645835
+catalog_404,Asian Spiral Cucumber Carrot Chickpea Salad recipes,indian,data/catalog/images/catalog_404/rgb.png,172.61483287500002,329.66687570306823,4.921785842307693,10.228671333333333,12.772461299999998
+catalog_405,"Golden Beet, Halloumi, and Walnut Salad",eastern europe,data/catalog/images/catalog_405/rgb.png,476.9358895653813,174.08331588263994,64.19166327600504,7.091374638327777,17.83387726993
+catalog_406,Smoky Mashed White & Sweet Potatoes,south american,data/catalog/images/catalog_406/rgb.png,157.35254670833334,193.7650678388432,6.906157444017095,8.637530703703703,8.397999866666668
+catalog_407,"Red Snapper With Chick Peas, Fennel And White Wine",south american,data/catalog/images/catalog_407/rgb.png,530.391465,594.2216784222164,24.259924461538464,10.829193333333334,106.031192
+catalog_408,Delights of Dijon — Vichyssoise Galette with White Wine Mustard,french,data/catalog/images/catalog_408/rgb.png,241.35644444446334,68.77728763203038,25.000320512820835,6.798022777779756,7.450311111111713
+catalog_409,Baked Pretzel Chicken Fingers recipes,eastern europe,data/catalog/images/catalog_409/rgb.png,283.1072247083333,141.34434583333334,6.508601678205131,11.476934055555555,51.307723933333335
+catalog_410,Swedish Eggs,nordic,data/catalog/images/catalog_410/rgb.png,137.8050641,62.880773125,15.196414207692307,1.3035001883541668,16.059903122500007
+catalog_411,Shepherd's Pie Skillet,british,data/catalog/images/catalog_411/rgb.png,480.95199813483333,608.16512183125,40.79427772055947,12.97996664709226,42.898626225961046
+catalog_412,Mushroom and Kale Galette,french,data/catalog/images/catalog_412/rgb.png,570.8702503647218,400.789557676266,39.5294372413063,26.077873032321325,32.269257061586025
+catalog_413,Salmon Patties,nordic,data/catalog/images/catalog_413/rgb.png,83.845,76.5625,6.812375,0.40906041666666676,20.1789375
+catalog_414,"Aloo Gobi Recipe, How To Make Aloo Gobi Dr",indian,data/catalog/images/catalog_414/rgb.png,121.516125,153.34859080992268,5.8945,6.704310416666668,6.4474125
+catalog_415,Calamari Tacos with Salsa Naranja recipes,mexican,data/catalog/images/catalog_415/rgb.png,567.4443676499912,472.17526374997226,20.946418099615197,27.699629582832724,68.99837603999904
+catalog_416,Pan Seared Pork Cutlet with Black Eyed Pea Salsa - Guest Post from Spatulas On Parade,mexican,data/catalog/images/catalog_416/rgb.png,425.172699488889,483.825552361111,25.457988021901702,10.216575740828707,77.70060483841671
+catalog_417,Pineapple Fried Rice with a Thai Kick + Vegan Eats World Cookbook recipes,south east asian,data/catalog/images/catalog_417/rgb.png,519.7154166666668,387.48958333333326,12.153272435897437,32.10723055555555,35.08423750000002
+catalog_418,Scalloped Potatoes with Ham recipes,french,data/catalog/images/catalog_418/rgb.png,536.2262065700829,276.1247837584374,61.19592584335044,10.555987409565105,30.743429480655
+catalog_419,Low Carb Fried Chicken,french,data/catalog/images/catalog_419/rgb.png,309.001375,102.58958333333332,41.23233782051281,0.8814613888888887,29.803633333333337
+catalog_420,Instant Pot French Onion Risotto,french,data/catalog/images/catalog_420/rgb.png,256.6992043652965,184.6808237747001,14.587404519871791,10.228327535168217,19.709398855
+catalog_421,Kielbasa with Brussels Sprouts,central europe,data/catalog/images/catalog_421/rgb.png,414.5552455216095,248.1135377078125,49.19359978157645,4.44293117071875,42.4759694296
+catalog_422,STIR-FRIED SAUSAGES with red potatoes and Brussels sprouts recipes,central europe,data/catalog/images/catalog_422/rgb.png,423.236031225,426.1444829992475,28.63628624773505,17.777094284722224,23.17619068138889
+catalog_423,Israeli Couscous and Apple Salad,middle eastern,data/catalog/images/catalog_423/rgb.png,319.61515954358765,142.93553946291667,26.565075279729882,11.426992684811111,15.319638046620005
+catalog_424,Feta Cheese Turkey Burgers,greek,data/catalog/images/catalog_424/rgb.png,231.42696682922002,134.962149422,22.91426911870338,0.8365760900266667,44.64483524377602
+catalog_425,Mediterranean Quesadillas,mexican,data/catalog/images/catalog_425/rgb.png,608.5066576291432,198.69904625,62.5565500341087,10.69825090145693,65.18983008875
+catalog_426,Smoked Salmon Cucumber Bites recipes,nordic,data/catalog/images/catalog_426/rgb.png,16.85530294500001,23.596956166666658,1.5292229478717954,0.24335492765555547,2.6675248375
+catalog_427,"Roasted Sweet Potatoes with Quinoa, Kale, Dried Cranberries, and Feta",greek,data/catalog/images/catalog_427/rgb.png,513.24380625,221.8837263584407,37.0572725,22.06726666666667,21.84277
+catalog_428,Green Tomatillo Gazpacho,south american,data/catalog/images/catalog_428/rgb.png,171.4513631953703,237.9714135185185,17.863983917720798,4.8719947632901235,9.580615329666667
+catalog_429,Grilled Swordfish with Charred Leeks and Citrus,south american,data/catalog/images/catalog_429/rgb.png,812.9505767308877,785.59542539901,68.7116931295473,10.666816218433333,140.76933544096
+catalog_430,Baked Salmon Asparagus Sheet Pan Dinner,nordic,data/catalog/images/catalog_430/rgb.png,464.014751725116,390.41771500004626,27.07315468307925,7.781963246343185,104.40401799000962
+catalog_431,Super Easy Coleslaw with a Twist,central europe,data/catalog/images/catalog_431/rgb.png,314.84775,387.414431265464,25.53784615384615,14.366229166666665,10.150645
+catalog_432,Sesame Tofu With Broccoli,asian,data/catalog/images/catalog_432/rgb.png,472.93099674283724,374.65180315984725,47.2164078804862,12.71605826431466,35.75288656683397
+catalog_433,POPIAH / FRESH THIN SPRING ROLLS,south east asian,data/catalog/images/catalog_433/rgb.png,353.9789217571429,129.63844289732143,8.266050758125001,18.675466731808037,43.32916855727679
+catalog_434,Red Snapper on Couscous with Peas,mexican,data/catalog/images/catalog_434/rgb.png,297.0562988625,279.919426359375,4.09757935014423,12.373910067708337,59.0448995653125
+catalog_435,Mexican Chicken Salsa Salad,mexican,data/catalog/images/catalog_435/rgb.png,275.52279611875,157.53310833749998,14.9770719925,10.17709311770834,36.303696721875006
+catalog_436,The Best Grilled Steak Ever!,south american,data/catalog/images/catalog_436/rgb.png,1077.5681598233334,439.95118020833337,131.0264255384616,1.019722222222222,150.85062627733336
+catalog_437,Easy Tomato Omelette,indian,data/catalog/images/catalog_437/rgb.png,415.3391655555556,317.2621939560481,54.94732776068376,4.079987407407408,28.045088
+catalog_438,Boursin Scrambled Eggs,chinese,data/catalog/images/catalog_438/rgb.png,278.1703742100393,145.1884888021892,33.96436668226269,0.750858546613574,34.212754542064054
+catalog_439,Mexican Street Corn Dip,mexican,data/catalog/images/catalog_439/rgb.png,198.97599089453124,233.018921320933,13.026960580168263,10.246933724088542,12.406706093984376
+catalog_440,Strawberry Guava Crock Pot Chicken Recipe,caribbean,data/catalog/images/catalog_440/rgb.png,377.4833698332045,203.59431659371617,8.871766049743567,18.894637361100816,46.952982749999826
+catalog_441,Quick Beef Stroganoff,eastern europe,data/catalog/images/catalog_441/rgb.png,422.2887712432625,261.30754636304874,28.361829843035775,15.007414219183332,40.57219731736
+catalog_442,Spinach Chicken Wreath,british,data/catalog/images/catalog_442/rgb.png,320.1355083359375,138.59028,22.501694764639414,10.548604553932293,31.713559540625
+catalog_443,Red Lentil Spinach Soup Ready in 30 minutes! recipes,british,data/catalog/images/catalog_443/rgb.png,246.6995726026133,339.98333333333335,1.505685439235898,14.977268541707778,33.75085390126
+catalog_444,Calico Beans Recipe 4,mexican,data/catalog/images/catalog_444/rgb.png,442.9641667601563,328.852017734375,21.98356190340144,17.761221782213543,53.04394468577604
+catalog_445,Hot Ham & Swiss Croissants recipes,british,data/catalog/images/catalog_445/rgb.png,548.9709966998545,212.6949674999617,51.50603983076925,8.249658585904143,73.09914170999993
+catalog_446,Cannellini Bean and Tuna Salad,south american,data/catalog/images/catalog_446/rgb.png,275.822990053125,254.05728453661763,12.07196875237981,11.074924512291666,39.0453935580625
+catalog_447,Spicy Lamb Meatballs with Raisin Pesto,asian,data/catalog/images/catalog_447/rgb.png,739.4466833496623,262.62188360163475,98.57495805160245,5.605392760386592,51.48497525165965
+catalog_448,Carne Asada Sirloin Recipe,mexican,data/catalog/images/catalog_448/rgb.png,253.280814399025,125.52632320210462,25.439822657225374,0.8223502792,46.001784524720016
+catalog_449,The Quickest Black Bean Salad recipes,mexican,data/catalog/images/catalog_449/rgb.png,341.89577835,482.983685,2.20805221,23.15852432,34.959369911
+catalog_450,Grilled Asparagus With Lemon Pepper and Balsamic Vinegar,british,data/catalog/images/catalog_450/rgb.png,64.54483374688571,137.85897663142856,6.1934032869389,1.9884164184190471,5.824815735902858
+catalog_451,"Stuffed, Fried Cubanella Sweet Peppers",chinese,data/catalog/images/catalog_451/rgb.png,255.60244895833333,77.25184895833333,26.978551282051285,4.929738923611111,19.416299583333334
+catalog_452,Fried Green Tomatoes,south east asian,data/catalog/images/catalog_452/rgb.png,253.59164528188134,166.2760885680506,34.646959292846496,1.5074814814814814,19.42664444444445
+catalog_453,Japanese Stir Fry Zucchini,japanese,data/catalog/images/catalog_453/rgb.png,122.77077749999998,172.26525,13.188534076923078,3.1482866666666673,7.539672
+catalog_454,New Potato Salad for a Crowd,central europe,data/catalog/images/catalog_454/rgb.png,644.0943941535714,285.40846017073085,86.63712928956043,9.181024186494042,15.462270346
+catalog_455,Beet and Potato Salad,nordic,data/catalog/images/catalog_455/rgb.png,129.60331597222222,225.6134814429768,2.9576068376068374,8.562122199074075,7.417922916666665
+catalog_456,Teriyaki Potatoes,japanese,data/catalog/images/catalog_456/rgb.png,129.08493746978803,142.88687766660001,3.698666574187386,8.202070919431865,6.099704150983998
+catalog_457,Spicy Oven Roasted Chickpeas,middle eastern,data/catalog/images/catalog_457/rgb.png,239.4320000002217,174.39110455515885,8.216985737185603,14.548461458349275,22.97044166668117
+catalog_458,Simple Avocado Tuna Salad,mexican,data/catalog/images/catalog_458/rgb.png,327.8224999999351,309.0750445673577,25.27200854700751,4.924294444437486,69.80927777777283
+catalog_459,Avocado Salad,mexican,data/catalog/images/catalog_459/rgb.png,185.925,179.75,20.37423076923077,5.564708333333335,8.5144
+catalog_460,"Goat Cheese, Blackberry and Almond Topped Toast",british,data/catalog/images/catalog_460/rgb.png,199.0194955259581,80.17476156255388,13.32136490720924,7.714600000088643,17.51293677811869
+catalog_461,Spicy Honey-Chipotle Salmon Bowl,nordic,data/catalog/images/catalog_461/rgb.png,664.5748451619515,570.69855997877,45.05917117077251,22.738998279194455,69.1413789163751
+catalog_462,Parsnip mash with apple,british,data/catalog/images/catalog_462/rgb.png,208.58345653946319,228.01796154010353,12.119946153928248,11.59399571797499,4.989777410359856
+catalog_463,Smoked Meatballs with Fusilli Marinara,nordic,data/catalog/images/catalog_463/rgb.png,1450.817568195756,733.5529668483755,113.99671832989192,43.728062963084575,128.6644142358794
+catalog_464,Cassy's Barbecue Chip Burgers,nordic,data/catalog/images/catalog_464/rgb.png,237.794552475,81.34654625,28.344727307692317,1.2063700000000002,27.773076909999997
+catalog_465,Skillet Burrito Bowl,mexican,data/catalog/images/catalog_465/rgb.png,581.080089721875,346.25785046875,51.099628129375,12.657826812729166,65.62481232428125
+catalog_466,Kimchi Fried Rice,chinese,data/catalog/images/catalog_466/rgb.png,588.8351875,246.09,11.680734423076926,39.01614695833332,26.1309065
+catalog_467,Open Faced Afternoon Tea Sandwiches,british,data/catalog/images/catalog_467/rgb.png,194.3743624999744,152.0762499999694,9.510319807691895,10.04766479166498,14.08707224999733
+catalog_468,Sheet Pan Shrimp Fajitas,mexican,data/catalog/images/catalog_468/rgb.png,230.706378625,207.0105925,5.181758110384615,8.578608333333332,50.65798318500003
+catalog_469,Mexican Rice Dinner,mexican,data/catalog/images/catalog_469/rgb.png,229.46038498333334,86.17436416666668,12.97761205128205,10.281791666666667,19.399356273333343
+catalog_470,Western style sushi,japanese,data/catalog/images/catalog_470/rgb.png,314.3025,189.9705886875,0.6525,23.498025,9.667125000000002
+catalog_471,Peanut Butter Noodles With Cucumbers,asian,data/catalog/images/catalog_471/rgb.png,653.3391255162827,225.05939736487878,46.09575863299383,25.94343503548795,46.31431560979
+catalog_472,Veggie Crisp,indian,data/catalog/images/catalog_472/rgb.png,163.809937671875,240.30712423591982,6.208877317681623,8.74045203472222,17.046506352777783
+catalog_473,"Pico De Gallo, Simplicity",mexican,data/catalog/images/catalog_473/rgb.png,153.69822222222226,626.0061023084195,1.5662017094017096,12.833591203703705,10.424473333333335
+catalog_474,Chef Salad — Steemit,south american,data/catalog/images/catalog_474/rgb.png,162.29333333333332,251.95833333333334,13.594179487179488,3.438855555555555,25.97661666666667
+catalog_475,Primal Roast Beast Wrap Recipe,british,data/catalog/images/catalog_475/rgb.png,176.56122245416668,61.71410645833333,16.758782289102566,2.769526388888888,21.93505257375
+catalog_476,Reuben Quesadilla,mexican,data/catalog/images/catalog_476/rgb.png,144.2832812501625,29.664062500125,22.83076322115475,1.0002786458479584,0.19096406250092499
+catalog_477,Mandarin Coleslaw Recipe,mexican,data/catalog/images/catalog_477/rgb.png,279.55395410859376,112.14750126918825,38.7829222446274,4.442392245703125,1.461644066984375
+catalog_478,Potato Salad with Green Beans and Asparagu,japanese,data/catalog/images/catalog_478/rgb.png,258.3201829805555,449.70868277777777,26.571739270341876,8.24848708287963,13.012590463277782
+catalog_479,Sausage Sweet Potato And Bell Pepper Hash,eastern europe,data/catalog/images/catalog_479/rgb.png,380.8346737416667,292.5052034206147,32.761823354807696,11.35802917713889,29.330471781916668
+catalog_480,Low Carb Avocado Tuna Salad,mexican,data/catalog/images/catalog_480/rgb.png,175.29357075000001,125.92995081319845,17.037899069230775,2.541951,26.5542216
+catalog_481,Apple Sausage Stuffing,central europe,data/catalog/images/catalog_481/rgb.png,752.9522558557406,407.0760219021876,63.6398677969405,24.241558562195838,50.51860641321751
+catalog_482,Saffron Rice,middle eastern,data/catalog/images/catalog_482/rgb.png,226.76088281255446,162.1704427083817,6.122422776443887,14.052773802087165,10.985167187504002
+catalog_483,"Sausage, Potato and Kale Soup",central europe,data/catalog/images/catalog_483/rgb.png,512.5688781902819,546.4433678087092,42.29779972490346,16.739929316193717,38.01620290244812
+catalog_484,Caribbean Okra,caribbean,data/catalog/images/catalog_484/rgb.png,35.68625,112.375,0.3322884615384615,2.6953083333333323,3.230625
+catalog_485,"Orzo with Lamb, Olives & Feta",greek,data/catalog/images/catalog_485/rgb.png,516.76990815,283.6833715685245,24.219956679663465,24.17424530221875,41.7361891825625
+catalog_486,Summer Chicken Burgers,nordic,data/catalog/images/catalog_486/rgb.png,578.56741707305,337.40537355500004,57.28567279675845,2.0914402250666666,111.61208810944
+catalog_487,"Heirloom Tomato, Zucchini, Caramelized Onion and Feta Galette recipes",greek,data/catalog/images/catalog_487/rgb.png,449.2170050625,325.08175964713075,43.96548067884615,14.190103625,15.9815178
+catalog_488,Nutty Brussels Sprouts,central europe,data/catalog/images/catalog_488/rgb.png,251.8598636388888,92.26368157308617,33.61676160940171,4.399163,7.693508133333334
+catalog_489,Austrian Salad,south american,data/catalog/images/catalog_489/rgb.png,591.7425808374245,513.602474680697,73.77153592680685,6.05851425709922,51.1339519244676
+catalog_490,M'baazi,british,data/catalog/images/catalog_490/rgb.png,213.82969921876065,111.16999927302466,31.406261631944734,2.65005763888965,4.116953472222915
+catalog_491,Sweet Potato Latkes,kosher,data/catalog/images/catalog_491/rgb.png,78.23035871380397,77.34123490290024,3.0184807002289635,4.389970266401915,4.41629922427082
+catalog_492,Salmon Cakes,nordic,data/catalog/images/catalog_492/rgb.png,184.82360791666667,74.24936416666667,23.466778882051283,0.8836027451111111,19.542798459166665
+catalog_493,Anne Burrell's Full English Breakfast,british,data/catalog/images/catalog_493/rgb.png,653.965421278652,388.8880527778993,78.8814561967333,5.25485069444447,63.2739756944465
+catalog_494,Grilled Root Vegetables,chinese,data/catalog/images/catalog_494/rgb.png,387.429314796225,614.1288946540164,19.195141553819234,19.046386661333333,36.3032441316
+catalog_495,"Spaghetti Squash and Tortellini with Lemon, Herb and Feta Dressing",greek,data/catalog/images/catalog_495/rgb.png,434.196375,252.744892943299,24.946159615384616,19.112079166666668,33.3127375
+catalog_496,Chicken Curry Salad,indian,data/catalog/images/catalog_496/rgb.png,241.6211111111111,148.28634396262888,24.483822649572648,2.1759037037037037,35.81403333333333
+catalog_497,Wild Rice Salad Recipe,south american,data/catalog/images/catalog_497/rgb.png,577.962256163453,313.8830552368087,34.2010231273524,29.43554658752083,31.22344075295
+catalog_498,Scallion Egg Drop Soup,chinese,data/catalog/images/catalog_498/rgb.png,142.9422900012778,588.465666667011,9.74024574359014,2.8289545556573783,24.229090666670235
+catalog_499,Crispy Fried Eggs,chinese,data/catalog/images/catalog_499/rgb.png,431.033798125,155.55948595834448,47.633279831730775,6.930845833333335,33.09958875
+catalog_500,Crispy Chicken Wings,south american,data/catalog/images/catalog_500/rgb.png,894.12256560484,299.1679207653965,105.25644414868155,8.113066225066667,85.97718556944
+catalog_501,Tex-Mex Pork Chops,mexican,data/catalog/images/catalog_501/rgb.png,393.97089985625,295.599523125,33.31741340375,1.86782602125,84.762633133
+catalog_502,Game-Winning 7-Layer Dip,mexican,data/catalog/images/catalog_502/rgb.png,195.09324438888902,163.5931727777778,18.79496324025642,5.102567536296295,17.486528897555548
+catalog_503,Jalapeno Pepper Appetizers,mexican,data/catalog/images/catalog_503/rgb.png,231.3533309375,89.974523125,30.400555315384626,1.5108770588333336,18.910241344375002
+catalog_504,EASY Three Cheese Queso Dip,caribbean,data/catalog/images/catalog_504/rgb.png,247.525014909375,95.08654625,30.066286708173074,1.7279954664166663,26.341187401875
+catalog_505,Breakfast Sausage Casserole Recipe - (4.2/5),british,data/catalog/images/catalog_505/rgb.png,270.9078875958333,126.36571291666667,29.338132995512826,3.3259955687638896,29.6622585575
+catalog_506,Breakfast Sausage Casserole recipes,british,data/catalog/images/catalog_506/rgb.png,262.56383546666666,130.46603083333335,26.676449712820517,4.019733584472221,28.884537496666667
+catalog_507,Fresh Asparagus Patties,south american,data/catalog/images/catalog_507/rgb.png,101.67964039792396,105.85473335721291,8.504923195875296,2.585752661875563,12.209491604815035
+catalog_508,Garlic Parmesan Edamame with Toasted Black,south east asian,data/catalog/images/catalog_508/rgb.png,141.74152354731154,72.7967823780099,13.02560042842357,2.0442868125059834,22.925604775026983
+catalog_509,Quick and Easy Salad,south american,data/catalog/images/catalog_509/rgb.png,170.179806375,188.78650651041667,13.831082617620192,4.989808310666668,22.124991462979168
+catalog_510,Crock Pot Shrimp Scampi Recipe,chinese,data/catalog/images/catalog_510/rgb.png,473.8242201317325,311.4295554714485,7.918111440387871,20.44354036001555,90.730956451036
+catalog_511,Pressure Cooker Corned Beef and Cabbage Recipe,middle eastern,data/catalog/images/catalog_511/rgb.png,151.964111575,294.36179175,13.241473678846155,3.0965928882499996,20.7347995975
+catalog_512,Easy Crockpot Shredded Barbecue Chicken recipe,british,data/catalog/images/catalog_512/rgb.png,231.15587436422126,190.85624162781764,5.106586824342214,7.5178082660081875,51.935700857077464
+catalog_513,Easy Coconut Rice Made in a Rice Cooker,south east asian,data/catalog/images/catalog_513/rgb.png,235.42203124981475,135.68221537497186,11.374308894202917,12.728540624997787,7.964987499996138
+catalog_514,Coconut Milk Tilapia,south american,data/catalog/images/catalog_514/rgb.png,425.53744956136,432.028806378498,31.0995848023077,11.841042663958335,59.11424659
+catalog_515,Cherry Chicken,british,data/catalog/images/catalog_515/rgb.png,1086.9670857467756,664.6511867142204,98.81343540856952,21.728647348070936,126.01795612116108
+catalog_516,Couscous with Scallions,middle eastern,data/catalog/images/catalog_516/rgb.png,137.12143966666667,101.3046558434811,3.92855637948718,7.810106222222223,9.456451733333333
+catalog_517,Broccoli and Sesame Rice,chinese,data/catalog/images/catalog_517/rgb.png,148.92814814814815,64.91308851374572,3.8786609686609683,9.337282716049382,6.938477777777777
+catalog_518,Grilled Teriyaki Steak,japanese,data/catalog/images/catalog_518/rgb.png,266.3082248196625,173.28698138892693,23.008722659858147,2.6012314814844477,50.9674165183468
+catalog_519,Grilled Chicken and Chopped Veggie Salad with Sesame-Ginger Vinaigrette,asian,data/catalog/images/catalog_519/rgb.png,502.8620306069445,347.10889167982526,62.15109419252138,3.96202909882176,46.49090742833332
+catalog_520,JW Fried Chicken,south american,data/catalog/images/catalog_520/rgb.png,1737.1172110684702,650.9307108436565,196.82247001426967,27.85624806053335,123.48933140982
+catalog_521,Winnie's Sweet 'N' Sour Fish,chinese,data/catalog/images/catalog_521/rgb.png,613.5159763306473,564.677485331801,8.487667284669193,26.520861551954,116.7256802097131
+catalog_522,Tropical Island Fruit Salad,caribbean,data/catalog/images/catalog_522/rgb.png,108.80688095238092,197.01666666666665,0.7641512820512821,9.251909523809521,2.585888095238095
+catalog_523,Forbidden Rice And Pineapple Salad Recipe,south east asian,data/catalog/images/catalog_523/rgb.png,41.92240549516909,12.850981280195912,3.0810827108881456,1.8230940901771333,1.2012076811594203
+catalog_524,"Eggplant with Bell Pepper, Feta, and Green Olives",greek,data/catalog/images/catalog_524/rgb.png,115.987324674715,206.95153831975,10.88600075875,3.7964852495416674,7.88428228375
+catalog_525,Roast Lamb with Figs,middle eastern,data/catalog/images/catalog_525/rgb.png,1103.7288506946554,448.3592013892943,128.6155996794913,9.88118388890694,96.4379733333503
+catalog_526,Quinoa With Mushrooms & Arugula recipes,south american,data/catalog/images/catalog_526/rgb.png,259.995345611525,224.83179579114264,23.747271320686924,8.552547188366667,14.26487463472
+catalog_527,Eggplant Dip with Rosemary and Roasted Tomatoes – Baba Ghanoush Recipe,middle eastern,data/catalog/images/catalog_527/rgb.png,109.5290799249188,480.138390573671,1.571131039167938,8.508374132777965,8.66347746611384
+catalog_528,Chickpea Curry | FastDay Intermittent Fasting,indian,data/catalog/images/catalog_528/rgb.png,238.89890242968875,248.2061934897505,19.206195322836564,9.43254870833344,13.429361162500102
+catalog_529,Binghamton Spiedies recipes,middle eastern,data/catalog/images/catalog_529/rgb.png,707.76152665,444.8222266667282,70.80538560000002,8.946866666666667,91.36191345000003
+catalog_530,Pan-Fried Salmon in Curry Cream Sauce,nordic,data/catalog/images/catalog_530/rgb.png,443.6695228703551,177.92345911082245,56.68123712582475,0.946571334791915,50.0794360830794
+catalog_531,Roasted Sweet Potato & Beet Stacks,south american,data/catalog/images/catalog_531/rgb.png,151.906577625,236.28446133190334,6.536804742307693,8.467974291666666,8.505562225000002
+catalog_532,Grape Leaves with Bulgur and Mint,middle eastern,data/catalog/images/catalog_532/rgb.png,62.675060965499995,56.790366475,5.294677127615386,2.529445768625834,2.44029484996
+catalog_533,Grilled Salmon with Cilantro-Pecan Pesto,nordic,data/catalog/images/catalog_533/rgb.png,226.9762016079403,61.84826643704437,34.623093787590676,0.640045181557118,10.716607714898627
+catalog_534,Montreal-Style Hanger Steak & Sweet Potato Frites recipes,south american,data/catalog/images/catalog_534/rgb.png,507.14555688414623,387.17274999993526,33.469211914009826,16.011648756978666,62.38151332334725
+catalog_535,"Salmon With Oranges, Tomatoes, and Olives",nordic,data/catalog/images/catalog_535/rgb.png,285.409457688025,251.44968857910075,30.1249232489177,3.0766344713358325,37.5286642592
+catalog_536,Portobello Burgers Recipe,british,data/catalog/images/catalog_536/rgb.png,335.60425000000436,252.625000000019,25.326200000000185,11.0723958333335,29.5060250000012
+catalog_537,Grilled Scallops And Mushrooms In Foil Packets,south american,data/catalog/images/catalog_537/rgb.png,393.276698,379.1692775,37.90268433999999,4.214583832833334,63.2565438865
+catalog_538,Dinner Tonight: Bubble and Squeak Recipe,british,data/catalog/images/catalog_538/rgb.png,322.78257406343124,305.47562665965626,32.988010374430175,10.259097094449997,10.370357137495002
+catalog_539,Classic Reuben Sandwich (Corned Beef on Rye With Sauerkraut and Swiss) Recipe,central europe,data/catalog/images/catalog_539/rgb.png,704.5878276679302,287.87638451612673,87.77424758816755,4.75409831958233,68.06145516576338
+catalog_540,Polish Cucumber Salad (Mizeria),eastern europe,data/catalog/images/catalog_540/rgb.png,92.629307125,128.30271270729253,11.643330414102563,1.915887277777778,3.4632398666666675
+catalog_541,"Quinoa, lentil & feta salad",greek,data/catalog/images/catalog_541/rgb.png,497.9118134920636,149.35939153439153,3.6014439356939354,29.519308478835974,67.89825251322752
+catalog_542,Mandarin Orange Salad,asian,data/catalog/images/catalog_542/rgb.png,556.4149753356285,213.04307092743406,60.08710608933023,15.453091115437333,25.81858522752535
+catalog_543,Crockpot Swedish Meatballs Recipe,nordic,data/catalog/images/catalog_543/rgb.png,764.4149232333372,246.23029958334382,100.78985121153859,5.132733016083557,61.357126331000615
+catalog_544,Paris mash (creamy mashed potato recipe),caribbean,data/catalog/images/catalog_544/rgb.png,725.1319029795408,352.67426590727,90.7857385519269,15.300551099717712,14.184668378388478
+catalog_545,Loaded Mashed Potatoes,british,data/catalog/images/catalog_545/rgb.png,252.00856050200895,175.60080113839942,22.718070940020606,8.055109999014135,13.303171401919643
+catalog_546,"Cucumber, Salmon & Cream Cheese Rolls recipes",nordic,data/catalog/images/catalog_546/rgb.png,133.69907874895833,117.62825265625001,15.746120293974357,1.2550550122638893,14.400375862760418
+catalog_547,Salmon & Crab Cakes,nordic,data/catalog/images/catalog_547/rgb.png,322.82881591820626,235.7903552603514,24.412704390095975,7.364012465276723,47.11610826968305
+catalog_548,Cauliflower Fried Rice Fritters recipes,south east asian,data/catalog/images/catalog_548/rgb.png,175.16332959003427,269.080565618017,14.080035788515755,6.59852168947826,12.483573273805018
+catalog_549,Fried Okra,middle eastern,data/catalog/images/catalog_549/rgb.png,528.84123947863,261.97499548309275,56.56878698247267,14.830127781091667,16.38530217033
+catalog_550,Chinese Macaroni recipes,chinese,data/catalog/images/catalog_550/rgb.png,652.1925130441863,355.6435977093137,47.834785215382574,19.896141239635572,65.67229200630223
+catalog_551,Aunt Peggy and Uncle Bill's Stuffed Cabbage,middle eastern,data/catalog/images/catalog_551/rgb.png,607.67455193125,914.05403546875,44.2368633871875,19.428694491130212,64.46357052265625
+catalog_552,Sweet Potato Pancakes (Latkes),kosher,data/catalog/images/catalog_552/rgb.png,529.1027500000002,339.1125,48.56823076923075,17.381741666666667,21.890775000000005
+catalog_553,Fodni Bhaat (Indian Fried Rice) Recipe,indian,data/catalog/images/catalog_553/rgb.png,601.110999999893,243.06766205920604,60.67899999999945,18.803608333325403,10.61294999999086
+catalog_554,Bengali-Spiced Squash,indian,data/catalog/images/catalog_554/rgb.png,205.904,280.3375,14.262826923076922,10.865470833333335,6.624425
+catalog_555,Vegan Spring Soba Noodle Bowl,asian,data/catalog/images/catalog_555/rgb.png,513.727423238007,242.2311205685617,28.269418572025106,24.306358483651994,42.65980356037832
+catalog_556,Rainbow Red Cabbage Salad recipes,south east asian,data/catalog/images/catalog_556/rgb.png,186.09462500155593,174.08750000026376,21.65108076944524,4.831500000019084,9.36128000009053
+catalog_557,Smoked Sausage with Sauerkraut on the Char,central europe,data/catalog/images/catalog_557/rgb.png,117.805,526.0625,1.4919230769230774,8.759222916666666,9.8745
+catalog_558,Salty Dogs Recipe,eastern europe,data/catalog/images/catalog_558/rgb.png,215.68963888888882,81.40347222222222,18.574571581196583,5.874330439814815,17.19048194444445
+catalog_559,German Potato Salad recipes,central europe,data/catalog/images/catalog_559/rgb.png,368.35460735836756,305.39206650075187,30.91445826209424,12.706158934061374,18.49511084801143
+catalog_560,Tofu Thai Green Curry,south east asian,data/catalog/images/catalog_560/rgb.png,194.50545833339925,30.610416666743276,32.27653942307851,0.794279305560331,1.9554212500050105
+catalog_561,Smoky Shrimp and Cheesy Grits,south east asian,data/catalog/images/catalog_561/rgb.png,798.9034905846288,449.99053585401225,88.57788905389825,8.775148853214166,87.36177853670503
+catalog_562,Easy Crockpot “Roast” Chicken,nordic,data/catalog/images/catalog_562/rgb.png,260.9642857142857,204.52339792341678,20.18441208791209,5.925890476190475,36.03344285714286
+catalog_563,Potato-free Hash Browns recipes,eastern europe,data/catalog/images/catalog_563/rgb.png,301.7835,241.2301471715,35.539653846153854,5.406666666666665,15.08645
+catalog_564,Indian Red Lentil Flatbread,indian,data/catalog/images/catalog_564/rgb.png,185.94562499999995,92.8125,1.6493942307692306,10.954754166666667,25.2419875
+catalog_565,Baked Halibut Curry with Basmati Rice,indian,data/catalog/images/catalog_565/rgb.png,211.116446359375,203.5800578125,5.578474644471154,8.569071875,35.83115650625
+catalog_566,Quinoa Brown Rice Sushi,japanese,data/catalog/images/catalog_566/rgb.png,514.0959574816668,457.19419384166673,30.9359670119765,24.60414802981389,31.2737103787811
+catalog_567,Salmon with Curried Yogurt & Cucumber Salad,nordic,data/catalog/images/catalog_567/rgb.png,382.4574155,206.48511562500002,40.44366999038463,1.438041666666667,61.653477175
+catalog_568,Oyster Kilpatrick,british,data/catalog/images/catalog_568/rgb.png,76.67802083362379,71.35242251520451,5.529061609736618,1.7439238425928234,11.292700231482788
+catalog_569,Paprika Cream Schnitzel With Veal And Bacon Recipe,central europe,data/catalog/images/catalog_569/rgb.png,220.49439999999998,111.36984277113402,29.47657846153846,1.11047,17.881399999999996
+catalog_570,Malaysian Chicken Satay,south east asian,data/catalog/images/catalog_570/rgb.png,209.7995,99.97441199398624,22.685089743589753,1.6172555555555554,28.80585333333333
+catalog_571,Corned Beef,south american,data/catalog/images/catalog_571/rgb.png,334.34162499999996,167.470625,38.81868076923077,1.7395083333333337,40.843452500000005
+catalog_572,Potato Salad with Radishes and Sweet Pickle Relish,south american,data/catalog/images/catalog_572/rgb.png,248.7157343375,220.4016073773076,17.638127769038462,11.305475177083336,7.644126438749997
+catalog_573,Potato Salad,central europe,data/catalog/images/catalog_573/rgb.png,320.664491938675,350.26705189999024,16.95029800800846,15.52169979645556,21.959713304106668
+catalog_574,Creamy German Coleslaw,central europe,data/catalog/images/catalog_574/rgb.png,179.46533333333332,112.86612308762888,22.990871794871797,3.664495,2.0929733333333336
+catalog_575,Spicy Honey Chicken Thighs ~ Sweet Beginnings Blog,south american,data/catalog/images/catalog_575/rgb.png,151.86275,108.45290227920962,6.2655076923076924,3.160772222222223,38.05171666666667
+catalog_576,Spiced Crab Slaw,south american,data/catalog/images/catalog_576/rgb.png,381.634562499182,375.081249999852,28.2696730768234,16.19193833331844,21.436024999946152
+catalog_577,Spiced Peppers and Eggplant,middle eastern,data/catalog/images/catalog_577/rgb.png,242.58721687944364,490.9409719949765,22.53072143182281,9.406422014788076,9.849692514553212
+catalog_578,Chinese Mushroom Rice,chinese,data/catalog/images/catalog_578/rgb.png,31.682583333333337,30.067227164089346,1.028171794871795,1.927761111111111,1.7922000000000005
+catalog_579,Spicy Ramen-Stuffed Jalapenos,japanese,data/catalog/images/catalog_579/rgb.png,275.45149048928846,88.38241364582863,35.83524461025684,2.0933684344079064,20.499270115773694
+catalog_580,Moroccan-Style Lamb Stew recipes,middle eastern,data/catalog/images/catalog_580/rgb.png,523.86875,705.875,27.81371153846154,22.70026666666667,58.392525
+catalog_581,Strawberry Spinach Salad,middle eastern,data/catalog/images/catalog_581/rgb.png,232.9673896,218.14809250000002,28.038798888461525,5.618966168,10.1407344395
+catalog_582,Indian Corn and Coconut Salad,south american,data/catalog/images/catalog_582/rgb.png,268.7614791666737,205.05416666669888,15.336475961538577,15.473375000000743,13.142272916666892
+catalog_583,Sweet Pea & Pearl Onion Pesto smothered Zucchini Noodles recipes,asian,data/catalog/images/catalog_583/rgb.png,461.0640289023452,556.632219661651,43.81411565949522,14.84717866666679,23.65637710625012
+catalog_584,Sweet and Spicy Sweet Potato Steak Fries,south american,data/catalog/images/catalog_584/rgb.png,165.807875,140.5240492857603,7.147389423076925,9.89411875,4.1939375000000005
+catalog_585,Baked Sweet Potato With Topping,south american,data/catalog/images/catalog_585/rgb.png,226.2052072929375,166.183644959476,4.799922660490265,16.06660972220153,7.225686666779728
+catalog_586,Quinoa Tabbouleh,middle eastern,data/catalog/images/catalog_586/rgb.png,210.20574166666665,88.20166666666664,24.21373517094017,5.437621296296297,6.366440555555556
+catalog_587,Salmon with Lentils and Orange-Basil Dressing,nordic,data/catalog/images/catalog_587/rgb.png,460.90581529922525,353.65816830037227,30.785844669785327,13.71582676514,61.3798404710115
+catalog_588,Salmon With Cucumber Salad,nordic,data/catalog/images/catalog_588/rgb.png,315.58275925,232.588240625,30.11957960576923,1.154887291666667,59.893210925
+catalog_589,Cucumber and Tomato Salad with Feta (NO DRESSING NEEDED!),greek,data/catalog/images/catalog_589/rgb.png,67.27662500000001,125.2875,6.439073076923076,1.616325,6.908649999999999
+catalog_590,Feta & peach couscous,greek,data/catalog/images/catalog_590/rgb.png,192.73416666666665,124.08333333333333,13.197115384615385,7.527294444444444,15.01215
+catalog_591,"Gnocchi With Summer Squash, Basil, and Feta",greek,data/catalog/images/catalog_591/rgb.png,444.3426214700128,340.11988300545175,34.836840204991375,16.938094513147913,23.58945148776292
+catalog_592,Black Eyed Peas And Veggie Soup Recipe,british,data/catalog/images/catalog_592/rgb.png,128.623375,157.74243531185562,11.22353846153846,5.022435416666666,4.8958375
+catalog_593,Easy Egg Muffins,british,data/catalog/images/catalog_593/rgb.png,134.8300215625,118.54070685793492,13.088730740384625,0.9567193749999999,22.699011
+catalog_594,Grilled Cheesy Potato Pack,south east asian,data/catalog/images/catalog_594/rgb.png,97.61762243020833,116.28948423822654,11.111377846634618,1.6955853771076381,8.200574128958333
+catalog_595,Gems Country Gravy Recipe,british,data/catalog/images/catalog_595/rgb.png,245.08800000000002,146.8,19.69081538461539,8.00955,16.98846
+catalog_596,Wild Mushroom Stroganoff With Noodles,asian,data/catalog/images/catalog_596/rgb.png,315.812383621875,263.09455421191626,19.428707439278842,13.688951371604167,21.363015629312503
+catalog_597,Thai Yum Yum Beef Salad,south east asian,data/catalog/images/catalog_597/rgb.png,123.37131885526632,192.92481134992357,7.553178416405805,2.2503167639003796,26.638875309606824
+catalog_598,Summer Bulgur Salad recipes,middle eastern,data/catalog/images/catalog_598/rgb.png,178.23085564028167,280.3294105925659,2.5854734766818974,12.40516715712,15.748992353191996
+catalog_599,Thai Chicken Burritto recipes,south east asian,data/catalog/images/catalog_599/rgb.png,727.25475,394.27720629675,53.1578923076923,24.278958333333332,67.60367
+catalog_600,Vegetables with Brown Rice,chinese,data/catalog/images/catalog_600/rgb.png,118.166734375,147.171599292875,7.287957211538463,5.57119875,6.78837
+catalog_601,Kale Chopped Salad recipes,south american,data/catalog/images/catalog_601/rgb.png,449.67775160288136,282.72373065310103,57.9634587292102,6.38905533790417,27.044682893680005
+catalog_602,Honey Mustard Grilled Salmon Or Tuna Steaks,nordic,data/catalog/images/catalog_602/rgb.png,306.1235,255.0125,12.83268846153846,0.39151458333333344,105.726915
+catalog_603,Creamy Tuna Noodle Casserole,asian,data/catalog/images/catalog_603/rgb.png,240.66656435028665,200.37893666672718,4.554886361502872,12.47368683533334,33.614459434389566
+catalog_604,Grilled Octopus Salad,caribbean,data/catalog/images/catalog_604/rgb.png,252.94066666666666,258.28333333333336,14.155471794871795,2.1569661111111116,68.11240333333335
+catalog_605,Jazzie Ragu Brunch Tostada #Ragu,south american,data/catalog/images/catalog_605/rgb.png,393.22336111111116,218.20700477233666,21.089334188034183,15.759418518518515,42.865066666666685
+catalog_606,Sausage and Egg Casserole,british,data/catalog/images/catalog_606/rgb.png,313.38385256000004,148.734237,33.717701193846146,3.958566134700001,34.264394995999986
+catalog_607,Cornish Rarebit,british,data/catalog/images/catalog_607/rgb.png,241.09947912943926,85.02738605683552,13.550959134615388,9.809615110005886,20.740204451722875
+catalog_608,Chicken Kiev-Cheap and Tasty,central europe,data/catalog/images/catalog_608/rgb.png,1221.43,711.0,70.11353846153847,13.350699999999998,306.494
+catalog_609,Rolfs Original Swiss Cheese Fondue,nordic,data/catalog/images/catalog_609/rgb.png,384.5389146158719,154.78646526697287,30.03372565300989,7.591165551972171,38.208448567827915
+catalog_610,"Short ribs, Korean style (Kalbi)",chinese,data/catalog/images/catalog_610/rgb.png,1274.794716899853,415.5651358747058,164.68186710471156,10.881616919243822,85.35485512104708
+catalog_611,Moroccan spiced chicken,middle eastern,data/catalog/images/catalog_611/rgb.png,1208.1315128149986,473.64405924832175,145.85311676927714,4.4876916666666675,156.89690221729276
+catalog_612,Cold Noodles with Salsa Verde and White Beans,asian,data/catalog/images/catalog_612/rgb.png,298.8478483800406,99.59505042224157,24.800547662323943,10.854580655807142,13.696402767255714
+catalog_613,Cinnamon Sugar Snap Peas,nordic,data/catalog/images/catalog_613/rgb.png,74.069829986525,118.39339059584495,3.8405120437638467,3.4535881071166665,6.47538838972
+catalog_614,"Steamed Salmon and Zucchini, Tomato and Basil",nordic,data/catalog/images/catalog_614/rgb.png,268.30033795558484,153.25087027814013,28.104861462393483,0.38415194444526785,47.070707851121455
+catalog_615,Summer Couscous Salad recipes,middle eastern,data/catalog/images/catalog_615/rgb.png,257.89507291667064,194.15065104166789,17.716095612980876,10.058677907986398,17.53728593750026
+catalog_616,Asian Tofu Tacos,asian,data/catalog/images/catalog_616/rgb.png,242.97950916666665,175.54641666666666,19.9190662051282,7.754838941666667,26.392314016666663
+catalog_617,Asian Chicken Salad,asian,data/catalog/images/catalog_617/rgb.png,485.022983971369,292.4719894207555,44.8003267339738,8.331638001440302,70.54568196813973
+catalog_618,Indian Style Saffron Rice,indian,data/catalog/images/catalog_618/rgb.png,223.0804535083955,131.82718304207435,12.739592367495554,11.373055471938912,8.24875023097406
+catalog_619,"Sweet Potato, Kale & Split Pea Soup",british,data/catalog/images/catalog_619/rgb.png,267.65173926928,604.0098643174538,4.31974184949231,16.326082430596667,28.53425390126
+catalog_620,Cabbage Roll Bowls,british,data/catalog/images/catalog_620/rgb.png,423.00854135,494.048813002151,27.6953304296875,16.25858223221354,36.30719365515625
+catalog_621,Chimichurri Sirloin,south american,data/catalog/images/catalog_621/rgb.png,1335.025291646,537.3367373740945,159.88985791184615,2.7082383333333326,178.04483036219997
+catalog_622,Green salad with avocado,south american,data/catalog/images/catalog_622/rgb.png,193.43583333333333,113.43836805566667,29.178538461538466,2.3507972222222233,3.6158916666666667
+catalog_623,Roasted Cornish Hens recipes,indian,data/catalog/images/catalog_623/rgb.png,283.417573510424,113.640944791699,36.60013110288475,1.8188767291674282,22.433066516666912
+catalog_624,Olivye (Russian Potato Salad) Оливье recipes,eastern europe,data/catalog/images/catalog_624/rgb.png,1311.5200819374813,713.9155732613913,162.50016310554597,21.295148963362916,57.2560155072975
+catalog_625,"Roasted Asparagus With Smoky Lemon Yogurt, Chopped Eggs And Toasted Almonds",british,data/catalog/images/catalog_625/rgb.png,153.42577411171894,153.370516313409,17.856421444389564,2.49682003554074,14.098977297591112
+catalog_626,Oniony Brothy Beans,south east asian,data/catalog/images/catalog_626/rgb.png,220.27881897118667,426.98983672934514,8.8347638862,10.89254241332833,18.276179683756666
+catalog_627,Broccoli Quinoa Slaw,central europe,data/catalog/images/catalog_627/rgb.png,232.1779539704862,184.12658559027784,5.995911160283118,13.556234382233795,20.98336967934028
+catalog_628,Salmon Caesar Salad,nordic,data/catalog/images/catalog_628/rgb.png,672.335105825,557.4223771875,74.24318597596155,7.408675774104165,78.62925645375
+catalog_629,Donal Skehan's Sticky Roasted Carrots and,chinese,data/catalog/images/catalog_629/rgb.png,252.87366666684818,225.8019109736425,14.130569230769233,12.716871666683064,16.65141583333369
+catalog_630,Candied Turnip Salad,south american,data/catalog/images/catalog_630/rgb.png,263.02,156.8125,32.97407692307692,5.0566875,10.9105125
+catalog_631,Moroccan carrot salad recipe,middle eastern,data/catalog/images/catalog_631/rgb.png,88.30510070312478,120.38719926131033,10.768292925480763,2.3429108333333137,2.0930008749999813
+catalog_632,Cauliflower No-Mash Potatoes recipes,british,data/catalog/images/catalog_632/rgb.png,99.7610486111111,172.62569444444443,7.389562606837605,3.9463796296296274,9.609766666666662
+catalog_633,Lime Curry Chicken,indian,data/catalog/images/catalog_633/rgb.png,324.681055125,207.38802305555555,32.40041638162395,3.7900777777777774,47.311530687777775
+catalog_634,"Watermelon, Strawberry and Tomatillo Salad recipes",south american,data/catalog/images/catalog_634/rgb.png,135.97157590433335,213.72914049666667,11.402845897703845,5.8788721945425,3.902910721428335
+catalog_635,Sesame Crusted Scallops With Teriyaki Glaze recipes,japanese,data/catalog/images/catalog_635/rgb.png,117.7134858504459,77.77811514143643,11.602163306302527,1.479233812511469,14.386233998604222
+catalog_636,Sesame and Ginger Beef Sandwiches,chinese,data/catalog/images/catalog_636/rgb.png,681.0683515895835,286.63591885416673,52.82803434429488,23.570318608611117,43.011061817125
+catalog_637,Best Pork Chops Marinade Ever,british,data/catalog/images/catalog_637/rgb.png,294.93687500374824,130.42187500035848,43.501365385343675,3.0516406249624226,5.580112499999725
+catalog_638,Butternut Squash and Veggie Bake with Tort,british,data/catalog/images/catalog_638/rgb.png,222.66170704886983,191.09232194477167,12.96357230419535,10.234850047069445,17.380106211595834
+catalog_639,Black Bean Casserole,south american,data/catalog/images/catalog_639/rgb.png,573.3166027464285,282.91292321428574,45.058784362582415,16.40802439309523,57.21357540171429
+catalog_640,Cheeseburger Empanadas,south american,data/catalog/images/catalog_640/rgb.png,234.56916666666666,97.875,24.086730769230766,3.948927777777778,23.867900000000002
+catalog_641,20-Minute Crispy Pierogies with Broccoli and Sausage,central europe,data/catalog/images/catalog_641/rgb.png,322.09240765332726,343.684177396047,26.863141639681125,8.717510918702638,36.33338892899055
+catalog_642,Basil Grilled Chicken Recipe,south american,data/catalog/images/catalog_642/rgb.png,509.90660156815727,189.26099482322385,64.3807058303065,0.34548441623447973,63.41873450521088
+catalog_643,5-Ingredient Easy Meatloaf,central europe,data/catalog/images/catalog_643/rgb.png,214.946361575,108.34357750000001,19.065262209615387,2.1607475520833326,37.28463932
+catalog_644,Paleohacks recipes,british,data/catalog/images/catalog_644/rgb.png,912.271024,458.1472,88.68380800000001,20.32446666666667,75.0272
+catalog_645,Savory Lokshen Kugel (Noodle Pudding),british,data/catalog/images/catalog_645/rgb.png,484.9434001,197.93610098611074,39.24133292846154,15.990807075416663,33.705341635
+catalog_646,Buttermilk Mashed Potatoes,middle eastern,data/catalog/images/catalog_646/rgb.png,271.4606431487,216.882882380405,24.549052567582567,9.715238677822226,9.510870669626664
+catalog_647,"Chicken, Shrimp, and Pepper Skewers",chinese,data/catalog/images/catalog_647/rgb.png,162.2108015203311,177.38874048824638,11.65766687591706,1.699101038174815,37.77433520577601
+catalog_648,Mango chutney baked feta with lentils,greek,data/catalog/images/catalog_648/rgb.png,214.6267516237275,111.0271927233239,12.431170753954659,8.190006404052298,24.374056315623676
+catalog_649,Mini Potato Leek Frittata,british,data/catalog/images/catalog_649/rgb.png,87.19560986498959,112.226156779519,5.940728108721154,2.1817270375583333,13.0130747166875
+catalog_650,Marinated Cauliflower Salad,british,data/catalog/images/catalog_650/rgb.png,162.496490375,115.97796676615248,23.96844115,2.1061305,3.0852856333333323
+catalog_651,Hungarian Salad,central europe,data/catalog/images/catalog_651/rgb.png,189.79489162500002,117.34880781250003,22.982386616346158,3.8535730182291674,5.5761156003125
+catalog_652,6 Scarily Good Halloween Food Ideas,british,data/catalog/images/catalog_652/rgb.png,155.50888888869716,70.9444444440894,15.329316239309955,2.2731111111008615,19.04473333331785
+catalog_653,Sicilian Summer Vegetable Medley - Caponatina pressure cooker recipes,eastern europe,data/catalog/images/catalog_653/rgb.png,338.20385259363525,521.600680517526,28.200986422115225,13.933935958323183,14.613090199997448
+catalog_654,Grilled Eggplant with Pomegranate and Feta,greek,data/catalog/images/catalog_654/rgb.png,95.2192529791666,211.5102307743428,6.141766063461538,4.9522834166666625,4.668128216666663
+catalog_655,Warm Ham and Potato Salad,nordic,data/catalog/images/catalog_655/rgb.png,482.208328875116,265.05712250004626,53.62229849307925,8.072666762468188,38.54767035025962
+catalog_656,Easy Creamy Potato Salad with Yogurt,nordic,data/catalog/images/catalog_656/rgb.png,209.834532433313,218.44745666664016,10.098121869743553,10.723605163331792,14.125736978665586
+catalog_657,Moroccan Spaghetti (Very Low Fat and Healthy),middle eastern,data/catalog/images/catalog_657/rgb.png,612.067979643866,415.76264786479624,11.452654929112892,38.895987165551524,57.70559788119712
+catalog_658,Famous Queso Dip: Green Goodness,caribbean,data/catalog/images/catalog_658/rgb.png,236.8770610125,99.76095015625,29.23773024771635,1.2364603080572918,26.82364126421875
+catalog_659,Chef Kiran's Okra Stir Fry,chinese,data/catalog/images/catalog_659/rgb.png,132.42637052500004,215.52309250000002,11.32164442423077,5.348369297083335,6.4855163705
+catalog_660,Grilled Salmon with Black Bean Salsa,nordic,data/catalog/images/catalog_660/rgb.png,988.944081776031,556.1113078124735,90.43418057844544,7.526434032290833,174.124292888853
+catalog_661,Ginger-Soy Tilapia,japanese,data/catalog/images/catalog_661/rgb.png,181.75599447522188,177.64120681906252,7.740531551040675,0.5532565714,65.49513719274
+catalog_662,Chinese Boiled Peanuts Recipe,south east asian,data/catalog/images/catalog_662/rgb.png,276.63852379,56.02423700000001,34.45370939076924,3.9104282190000013,24.548546292
+catalog_663,Chicken Teriyaki Meatballs With Edamame,japanese,data/catalog/images/catalog_663/rgb.png,635.5650625656813,376.72331006936776,32.665771246260675,23.943088339465692,78.70316190416648
+catalog_664,Pork Schnitzels,central europe,data/catalog/images/catalog_664/rgb.png,350.0414466666667,127.91457064840061,38.87939170940171,2.627892592592593,43.76603555555557
+catalog_665,Broccoli Pasta With Salmon,nordic,data/catalog/images/catalog_665/rgb.png,283.39400000015735,161.63003472259115,5.2177923077052,16.21940000000412,29.05945000001623
+catalog_666,"Michael Schlow's Buttered ""Noodles""",asian,data/catalog/images/catalog_666/rgb.png,660.767954425,151.092233125,41.6434559276923,28.341562141875,36.6209087375
+catalog_667,"Beer-Braised Cabbage, Apples, and Sausage",central europe,data/catalog/images/catalog_667/rgb.png,593.6295790590875,493.7876169156945,63.8010369339427,8.972463378426852,50.9619716256589
+catalog_668,Warm White Bean And Spinach Salad,middle eastern,data/catalog/images/catalog_668/rgb.png,560.95867095625,571.423569375,21.18723372394231,27.5824626894375,60.29332816825
+catalog_669,Pumpkin Spring Rolls,south east asian,data/catalog/images/catalog_669/rgb.png,264.5861698201019,172.26864308871,14.4911555318372,12.004451757751774,19.199260776455738
+catalog_670,Cuban Sandwich,caribbean,data/catalog/images/catalog_670/rgb.png,205.93325,77.31875,21.945009615384613,2.708175208333335,22.685112500000006
+catalog_671,Mini Shrimp Rolls,south east asian,data/catalog/images/catalog_671/rgb.png,1308.112602000749,454.70807799059867,64.52898928545811,60.110169825023235,106.22047935203591
+catalog_672,Stir-fried Noodles with Vegetables,asian,data/catalog/images/catalog_672/rgb.png,578.787936984695,387.54535099254923,28.89088839951925,29.162044555583126,35.71334552500005
+catalog_673,Chinese Noodle Salad,chinese,data/catalog/images/catalog_673/rgb.png,223.80752114948376,119.88654625011834,19.36332513431669,8.423937998072917,7.3971658315625
+catalog_674,Linzer Star Sandwich Cookies,central europe,data/catalog/images/catalog_674/rgb.png,150.40713608127686,34.033848990066396,12.095506983838586,6.332340714348448,2.798704370708588
+catalog_675,Mushroom Swiss Veggie Burgers recipes,nordic,data/catalog/images/catalog_675/rgb.png,543.332834528031,283.2824653828542,31.015972151968317,22.294006662133217,53.80517159287757
+catalog_676,Grilled Vegetable Kabobs recipes,middle eastern,data/catalog/images/catalog_676/rgb.png,186.38565327777778,232.6249869677738,21.426573447863245,5.459991592592592,4.21776928888889
+catalog_677,Grilled Salmon & Vegetables with Charred Lemon-Garlic Vinaigrette,nordic,data/catalog/images/catalog_677/rgb.png,433.4095965,375.701958125,46.87964146884615,2.704548663,65.231843245
+catalog_678,Domestic Diva's Pan Roasted Salmon With Mango Salsa,nordic,data/catalog/images/catalog_678/rgb.png,240.25635845555547,139.8337881741131,24.975242151452992,2.405379274074074,33.48184832000001
+catalog_679,Roasted Cauliflower Steaks with Sumac,caribbean,data/catalog/images/catalog_679/rgb.png,183.187289603655,638.5197170835,22.07126151577,4.209873888287417,9.56962408308
+catalog_680,Beet-and-Onion Salad,eastern europe,data/catalog/images/catalog_680/rgb.png,116.439350411525,141.92746773914513,10.726222570302308,4.192708826866667,4.085195388220002
+catalog_681,Steak and Rice Noodle Salad with Mint and Peanuts,asian,data/catalog/images/catalog_681/rgb.png,284.425993371915,114.2062562793565,25.244725381027543,7.719757279853336,25.24172796133201
+catalog_682,Stuffed Eggs Beyth Mahshi,middle eastern,data/catalog/images/catalog_682/rgb.png,265.8363653876383,115.79350683466096,40.15012823174225,0.9764326931314221,12.013929797402303
+catalog_683,Shabu-Shabu,eastern europe,data/catalog/images/catalog_683/rgb.png,364.757911384375,787.9483733125,36.66091004682693,4.164928075729168,56.746767128
+catalog_684,Oven-Fried Green Tomatoes,south east asian,data/catalog/images/catalog_684/rgb.png,148.647875000895,240.715196229375,2.1065666667332694,10.1295972222605,9.5556916667246
+catalog_685,Quinoa Salad – Whole Food Plant Based recipes,middle eastern,data/catalog/images/catalog_685/rgb.png,365.884375,269.744270833364,15.385673076923073,18.622841666666666,32.169675
+catalog_686,Chickpea Rice Soup With Cabbage recipes,middle eastern,data/catalog/images/catalog_686/rgb.png,403.91026106358123,363.352829532875,14.894424060759425,21.546077463764163,34.962981963235
+catalog_687,Littlemafia's Hungarian Coleslaw,central europe,data/catalog/images/catalog_687/rgb.png,308.061404245025,384.207106927836,35.042454081186925,7.971561573283335,13.203383244570002
+catalog_688,Beet Falafel,middle eastern,data/catalog/images/catalog_688/rgb.png,260.95616666666666,188.10959043642617,10.317307692307693,13.56591611111111,22.577856666666666
+catalog_689,Air Fryer Chicken Katsu,japanese,data/catalog/images/catalog_689/rgb.png,676.056739318395,273.3054554168562,67.00892811173075,8.2894,88.7929124375
+catalog_690,"Soba Noodles with Peanuts, Carrots, and Snow Peas recipes",asian,data/catalog/images/catalog_690/rgb.png,405.5207358560534,172.43411993839715,29.600261437737863,16.379527444750146,31.795032228040043
+catalog_691,Asparagus-Pepper Stir-Fry,chinese,data/catalog/images/catalog_691/rgb.png,47.11561849997052,153.4230924999345,2.1319503246151834,2.484271996331062,6.506576069999085
+catalog_692,"Sausage, Brussels Sprout & Potato Soup",central europe,data/catalog/images/catalog_692/rgb.png,474.718863306143,553.2101156249282,46.96614746336483,11.05899725999207,40.485231870865874
+catalog_693,Losh Kebab (Armenian Style Lamb Burgers),middle eastern,data/catalog/images/catalog_693/rgb.png,482.513590375,270.766409583364,55.58607357307695,1.796280833333333,59.57941217500002
+catalog_694,Sweet and Sour Shrimp Casserole (Microwave),chinese,data/catalog/images/catalog_694/rgb.png,303.845272915541,319.22118599819635,4.831434633637769,16.776059198755465,38.312305342447566
+catalog_695,Healthy Chicken Tikka Masala,indian,data/catalog/images/catalog_695/rgb.png,395.342790592126,338.3767123251678,29.971960987183376,5.846457168788038,74.29618528206622
+catalog_696,Pickled Eggs Recipe,eastern europe,data/catalog/images/catalog_696/rgb.png,103.22607117187499,207.35357057291665,6.790604943870192,2.276364979635417,11.79397879703125
+catalog_697,Beet Salad,eastern europe,data/catalog/images/catalog_697/rgb.png,169.40687706534064,145.2573226246875,19.986459680265096,3.18572816687,10.784681686655
+catalog_698,Curried Chicken Salad Sandwich,indian,data/catalog/images/catalog_698/rgb.png,1673.6675311249996,651.166216715674,178.2191878346154,20.05457858333333,196.0912349
+catalog_699,Crunchy Quinoa,middle eastern,data/catalog/images/catalog_699/rgb.png,269.06828373251426,353.570051035942,9.334289986947098,12.155908341973335,36.1761019724865
+catalog_700,Slow Cooker Mild Curry Split Black Lentils,indian,data/catalog/images/catalog_700/rgb.png,188.521,238.45471904172825,9.009,8.6059,19.0324
+catalog_701,Chicken & Cucumber Lettuce Wraps with Peanut Sauce,chinese,data/catalog/images/catalog_701/rgb.png,194.87458466667525,152.385320778611,12.572578703974537,5.036104149306158,31.95505237500095
+catalog_702,Spicy Fruit Salad,caribbean,data/catalog/images/catalog_702/rgb.png,210.8764746046875,340.3944771355128,1.9939326923076923,16.21604375,5.6575375
+catalog_703,Thai Green Curry Coconut Soup,south east asian,data/catalog/images/catalog_703/rgb.png,78.48166666666665,264.20833333333337,2.079589743589744,4.828697222222222,15.042175
+catalog_704,Butternut Squash and White Bean Soup,indian,data/catalog/images/catalog_704/rgb.png,632.5484617595484,837.2811456597223,24.853315385870726,33.54669737740163,59.20363402723957
+catalog_705,Basil Pesto Zucchini Noodles,asian,data/catalog/images/catalog_705/rgb.png,166.2414176675328,90.13190270833333,16.867637203202968,0.196500091454744,32.752987152500005
+catalog_706,Asparagus & lentil salad with cranberries & crumbled feta,greek,data/catalog/images/catalog_706/rgb.png,209.59083333333334,127.16666666666667,10.32371794871795,9.61336111111111,21.1389
+catalog_707,Thai Basil Chicken in Coconut-Curry Sauce,south east asian,data/catalog/images/catalog_707/rgb.png,511.20711082251,299.904756771,64.68630480592962,4.061261310943083,48.817646313209224
+catalog_708,Cabbage and Sauerkraut for the Crock Pot,central europe,data/catalog/images/catalog_708/rgb.png,116.4573398813078,268.0915643484636,7.696892411176971,5.924333705344791,5.57471308857125
+catalog_709,Homestyle Venison Sausage Gravy,central europe,data/catalog/images/catalog_709/rgb.png,214.3219692266667,137.5159036666666,24.319769398974362,2.665295190255556,20.34106832933334
+catalog_710,Gobi Manchurian Recipe (Dry) | How to Make Veg Cauliflower Manchurian,chinese,data/catalog/images/catalog_710/rgb.png,182.31214999959374,111.55424999995795,1.503297115378304,12.899695916638185,12.345377199982554
+catalog_711,Beef and Broccoli Stir-Fry,chinese,data/catalog/images/catalog_711/rgb.png,514.661751925,518.00963875,44.56370706346155,7.56689125,87.8372362225
+catalog_712,Lentil-Walnut Salad with Grapes & Feta,greek,data/catalog/images/catalog_712/rgb.png,1956.127000001089,859.1291954810305,152.3678461538462,69.52048666676507,160.1625150000021
+catalog_713,Grilled beef scotch fillet with smoky eggplant and pomegranate salad,south east asian,data/catalog/images/catalog_713/rgb.png,1204.77375,823.6875,119.27561538461538,9.453729166666667,191.91928750000002
+catalog_714,Sweet Mandarin Cucumber Salad,chinese,data/catalog/images/catalog_714/rgb.png,118.0855086390625,168.83618859375002,12.314543732788463,4.107206751354168,2.4439203455625
+catalog_715,Coriander Tabbouleh Salad with Shrimp,middle eastern,data/catalog/images/catalog_715/rgb.png,260.35285813802824,345.69069177640074,17.495038139932404,11.797614961266673,17.470656212235
+catalog_716,"Simple, Quick Yet Delicious and Healthy Stir-fry Veggies recipes",chinese,data/catalog/images/catalog_716/rgb.png,187.63633784269663,277.3057309628247,14.665244194987036,7.6834488838951325,12.3063196
+catalog_717,Roasted Root Vegetable Fries recipes,chinese,data/catalog/images/catalog_717/rgb.png,175.95068750000533,145.25518482007251,14.395443936965956,7.652661284722601,3.39787569444479
+catalog_718,Lamb and White Beans with Rosemary,middle eastern,data/catalog/images/catalog_718/rgb.png,729.7232030234455,405.3986471183955,58.610019061939326,20.09933976041724,76.00935580416717
+catalog_719,Fattet Batinjen – Eggplant with Yogurt and Pine Nuts,middle eastern,data/catalog/images/catalog_719/rgb.png,176.9274441,243.3703256055675,14.33963076923077,6.468385416666668,14.416437500000002
+catalog_720,White Bean-Sausage Soup,eastern europe,data/catalog/images/catalog_720/rgb.png,247.8830491625,484.3701285125,7.891461884240385,10.423361656922916,39.7220492282875
+catalog_721,Noodles Mit Cabbage Und Bacon,asian,data/catalog/images/catalog_721/rgb.png,604.9977892673188,254.94672003039582,48.22197034056214,21.162672073147217,37.221980796896666
+catalog_722,Skillet Beans 'n Weiners,indian,data/catalog/images/catalog_722/rgb.png,874.6462926388891,433.9589194444445,81.44523905401711,16.254144320925928,104.0263312038889
+catalog_723,South Carolina Slaw,central europe,data/catalog/images/catalog_723/rgb.png,230.4636481270924,207.75271856015283,22.98025283497953,7.70502458,4.759328668
+catalog_724,Rack of Lamb with Sautéed Vegetable,middle eastern,data/catalog/images/catalog_724/rgb.png,172.84114814814816,301.94074074074086,17.67457834757835,4.425734567901235,14.388107407407409
+catalog_725,Sticky Sriracha Tofu Bowl,asian,data/catalog/images/catalog_725/rgb.png,225.27418981481483,237.98624787962967,5.508237891737892,14.600270910493826,8.664915277777778
+catalog_726,David's Sweet Shrimp Kabob's,middle eastern,data/catalog/images/catalog_726/rgb.png,475.7501132067068,190.38211013765024,50.76655118463265,15.45643903836587,6.636562641778535
+catalog_727,Caribbean Summer Salad,caribbean,data/catalog/images/catalog_727/rgb.png,110.95129700911521,145.35724388022612,1.2631323689303,7.80106605156255,9.959412518203173
+catalog_728,Basil and roasted peppers french lentils with rice,chinese,data/catalog/images/catalog_728/rgb.png,214.14021423999998,99.9822578334,7.192655249538464,11.00146041933333,23.624151604000012
+catalog_729,Salami & Eggs,chinese,data/catalog/images/catalog_729/rgb.png,133.04865277801545,74.38472222229747,15.018532905988714,0.8074303703913547,17.23880000001952
+catalog_730,Copycat Pappasito's Queso,caribbean,data/catalog/images/catalog_730/rgb.png,401.9039249680198,186.15333013886502,43.6005177328417,4.734670279497357,46.83877053366362
+catalog_731,Spicy Thai Papaya Salad,south east asian,data/catalog/images/catalog_731/rgb.png,234.6940624994178,496.1273948178228,1.907701923076923,20.272638020783234,5.602024999999635
+catalog_732,Fast Roast Fish & Snow Peas recipes,south east asian,data/catalog/images/catalog_732/rgb.png,94.04562499999997,114.15625,3.630634615384615,2.7799822916666677,27.25215
+catalog_733,Cucumber & Celery Salad,south east asian,data/catalog/images/catalog_733/rgb.png,42.58733333333333,90.14999999999999,3.6948974358974365,1.63257,2.0835
+catalog_734,Sesame Green Beans,chinese,data/catalog/images/catalog_734/rgb.png,45.756004436743275,118.2487755388975,1.8402907684083232,2.7684637949529924,4.48900959523349
+catalog_735,Peachy Sweet and Sour Tofu Stir-Fry,asian,data/catalog/images/catalog_735/rgb.png,356.88341509278564,483.626073375097,22.53133587572848,16.048810738410033,31.579804921416297
+catalog_736,Salsiccia con peperoni,eastern europe,data/catalog/images/catalog_736/rgb.png,268.110131762963,113.18084564814818,29.500549997720793,5.216131053608026,17.462415644814815
+catalog_737,Roasted Swiss Chard with Feta,greek,data/catalog/images/catalog_737/rgb.png,172.71318319038127,186.407071694375,20.19588239267173,3.0649475272166673,13.06923466993
+catalog_738,Warm Hummus with Spiced Beef & Feta recipes,greek,data/catalog/images/catalog_738/rgb.png,368.920126990625,158.61035406250002,43.22848583173077,4.337482890625,36.688353905625
+catalog_739,Corn on the Cob with Feta and Herbs,greek,data/catalog/images/catalog_739/rgb.png,161.32125,133.225,13.159235897435893,7.023081666666666,9.138963333333333
+catalog_740,curry roasted cabbage,indian,data/catalog/images/catalog_740/rgb.png,44.84925,48.01061770618558,5.45425,1.1429208333333332,1.779375
+catalog_741,Veggie Chickpea Curry,indian,data/catalog/images/catalog_741/rgb.png,288.385858929375,215.6486119463571,19.556323383067312,12.74792495447917,14.649626692562501
+catalog_742,Saag Paneer,indian,data/catalog/images/catalog_742/rgb.png,224.30620733497037,191.0560848438955,26.56748319118394,3.060082332408904,21.712990917137176
+catalog_743,Red Bell Pepper and Eggplant Tian with Anchovies,middle eastern,data/catalog/images/catalog_743/rgb.png,290.3566696417878,279.9869479999878,23.03561689404892,11.59066238169101,12.70807963708665
+catalog_744,Middle Eastern Salad,middle eastern,data/catalog/images/catalog_744/rgb.png,106.81083333333333,117.29779413016666,11.572089743589741,1.7317444444444432,11.12118333333333
+catalog_745,Rouladen,central europe,data/catalog/images/catalog_745/rgb.png,586.1128302497596,431.344714562434,56.9183865176913,1.7422718749832034,110.35210743998637
+catalog_746,Paleo Broccoli Tempura recipes,japanese,data/catalog/images/catalog_746/rgb.png,1076.3115,464.71354166672825,161.42384615384614,8.821808333333335,36.2321
+catalog_747,veg fried rice recipe,chinese,data/catalog/images/catalog_747/rgb.png,171.12615885456438,334.2340126146282,0.5424719551974235,12.48625,6.824
+catalog_748,Grilled Vegetables Over Couscous recipes,middle eastern,data/catalog/images/catalog_748/rgb.png,196.339462962963,317.6618739398148,6.688413105413105,11.64231413580247,11.730011481481483
+catalog_749,Thai Cucumber Salad,south east asian,data/catalog/images/catalog_749/rgb.png,104.70625,284.875,2.1368461538461534,7.4773125,3.2784999999999993
+catalog_750,"Red Pepper, Cauliflower And Wild Rice",chinese,data/catalog/images/catalog_750/rgb.png,637.9724107500001,310.385425,26.74613657692308,36.27036583333333,38.75829525
+catalog_751,Fattoush recipes,middle eastern,data/catalog/images/catalog_751/rgb.png,277.0491611111112,273.8838888888888,34.864394358974366,6.348360814814816,8.545264444444445
+catalog_752,Grilled Tofu and Tomatoes,asian,data/catalog/images/catalog_752/rgb.png,251.0372176253279,247.91856636840384,30.629323381655436,3.414525825703776,23.35658809196379
+catalog_753,Halibut Topped with Creamy Parmesan Shrimp,caribbean,data/catalog/images/catalog_753/rgb.png,208.27286875647917,133.66984669459603,18.130745652719867,0.6519783507222223,45.8944731206
+catalog_754,Croatian Rizi-bizi (Rice and Green Peas),chinese,data/catalog/images/catalog_754/rgb.png,709.05246875,261.61547660212625,32.9649298076923,37.89125,27.22935
+catalog_755,Easy Baked Potato and Spinach Salad Dinner Idea,middle eastern,data/catalog/images/catalog_755/rgb.png,90.21403805223186,74.46256924191235,5.746090445217763,3.91510170833363,6.03936176111113
+catalog_756,Quinoa (Keen-Wa) Vegetable Delight,middle eastern,data/catalog/images/catalog_756/rgb.png,237.968753272488,253.34054270264437,15.056473516888888,10.775394537037036,14.013051111111112
+catalog_757,Asian Noodle Salad,asian,data/catalog/images/catalog_757/rgb.png,539.3311646034723,235.36801381944446,34.98925437231838,23.817480348449077,26.862719704166675
+catalog_758,Cold Sesame Noodles with Chicken,asian,data/catalog/images/catalog_758/rgb.png,315.48237825416675,148.08237958333336,6.311771433397435,16.592853905138888,38.342639525
+catalog_759,Simple Sesame + Spice Rice Noodles recipes,asian,data/catalog/images/catalog_759/rgb.png,365.368621133307,124.88206166660063,12.404507633845705,21.252233304998065,14.59415075499753
+catalog_760,Yakitori Skewers and Red Wine,japanese,data/catalog/images/catalog_760/rgb.png,236.77633333333338,203.05416666666662,11.00875,3.26835,59.583575
+catalog_761,Tasty Sesame Tilapia Recipe,south east asian,data/catalog/images/catalog_761/rgb.png,203.3469188,144.75642583333334,17.078497547435898,0.8534486111111109,47.54674985166668
+catalog_762,Garlic-Feta Mashed Potatoes,greek,data/catalog/images/catalog_762/rgb.png,407.0875696145835,424.9625110564735,16.81817559775642,22.328267165750002,24.668931234166667
+catalog_763,"Chickpea, Sun-dried Tomato and Feta Salad",greek,data/catalog/images/catalog_763/rgb.png,303.0076642645775,170.78928229166667,19.613112894656982,12.74154632411076,26.43636677703125
+catalog_764,Herbed Quinoa Salad,middle eastern,data/catalog/images/catalog_764/rgb.png,304.6994270834955,245.6510416668921,19.375647435897783,12.539651041679292,24.751718750011275
+catalog_765,"Super Grilled ""cuban"" Midnight Sandwich",caribbean,data/catalog/images/catalog_765/rgb.png,1208.6728142125,365.53463875,161.10782171692307,8.594063019875003,82.16278130999997
+catalog_766,Coconut Rice With Winter Squash,south east asian,data/catalog/images/catalog_766/rgb.png,880.6684722222222,385.422445322165,45.5140299145299,43.94947824074075,43.243866666666676
+catalog_767,Red Lentil Kofte,middle eastern,data/catalog/images/catalog_767/rgb.png,101.59868952027271,51.06052714647691,5.8581625097157195,4.777189918986549,7.393627537881621
+catalog_768,Creamy Avocado Zucchini Noodles,asian,data/catalog/images/catalog_768/rgb.png,215.5496873333333,230.48203608588997,29.538888266666664,3.9344297777777766,6.696696533333333
+catalog_769,Chicken Apricot Curry,indian,data/catalog/images/catalog_769/rgb.png,252.84002525833338,176.37725916666662,21.212656016923074,3.0909298611111113,46.28654427833334
+catalog_770,Healthy Chicken Stir Fry with Noodles,asian,data/catalog/images/catalog_770/rgb.png,476.902187133919,316.8554720835665,18.90430832610145,19.722540260327552,75.0321848158819
+catalog_771,SMOKED GOUDA CABBAGE AND BACON recipes,middle eastern,data/catalog/images/catalog_771/rgb.png,176.03504927945914,129.01554119936628,20.86074218826233,2.172699259062577,15.1490488731668
+catalog_772,Cheddar Bacon Pistachio Cheeseball recipes,middle eastern,data/catalog/images/catalog_772/rgb.png,630.3791514583893,163.96883791673932,87.37027793846156,2.8334066176713173,46.00889268875
+catalog_773,Beer-Cheese Soup,central europe,data/catalog/images/catalog_773/rgb.png,418.1789232208275,280.86522537319485,48.032415384615256,4.247040797291254,37.20157705883268
+catalog_774,Quick White Bean Stew with Swiss Chard and Tomatoes,eastern europe,data/catalog/images/catalog_774/rgb.png,172.38902515,300.408685,21.727776723076925,3.5426174396666674,9.13966266
+catalog_775,Spicy sauteed peppers recipe,eastern europe,data/catalog/images/catalog_775/rgb.png,134.53770833336503,358.80937500000977,11.337337980770103,5.77170548611339,6.422960833335405
+catalog_776,Instant Pot Chicken Fried Rice,chinese,data/catalog/images/catalog_776/rgb.png,553.5363864519288,514.1751787962738,22.570702393385318,24.76227324251335,63.089885544719316
+catalog_777,Curried Chicken Salad With Toasted Almonds,indian,data/catalog/images/catalog_777/rgb.png,448.90163003472225,146.67121519856636,55.27958951388887,4.228044907407408,39.271911666666675
+catalog_778,Cinnamon's Curry Chicken Salad,indian,data/catalog/images/catalog_778/rgb.png,392.4949135951833,250.880697174787,39.84165649426397,4.558626345714168,53.051953155570615
+catalog_779,Curried Sweet Potato Soup,indian,data/catalog/images/catalog_779/rgb.png,239.227807013405,518.0766101375,5.612236958092305,16.40876792682042,9.262719539117503
+catalog_780,Feta Shrimp Pasta,greek,data/catalog/images/catalog_780/rgb.png,298.467174384375,105.2733309375,10.66132600346154,14.379932765791676,30.27924260500001
+catalog_781,Fermented Beet and Orange Sauerkraut Salad Recipe [Beat the Winter Blues],central europe,data/catalog/images/catalog_781/rgb.png,73.538118140625,105.6747615625,4.874574978365385,3.1443602495416667,5.77783228375
+catalog_782,Arugula with Berries and Feta,greek,data/catalog/images/catalog_782/rgb.png,323.52991784690425,198.9179694228618,42.109494620556376,4.943082971685765,16.038205103263927
+catalog_783,Chicken Noodle Soup recipes,asian,data/catalog/images/catalog_783/rgb.png,901.5041044081134,949.8238415222812,86.35951530689636,9.61261654845125,135.43949698075951
+catalog_784,Roast duck with plum compote,chinese,data/catalog/images/catalog_784/rgb.png,738.83425,317.76176478125,83.94227307692307,8.042825,74.023855
+catalog_785,Braised Cabbage and Bacon,middle eastern,data/catalog/images/catalog_785/rgb.png,137.92096800182253,106.88681029698209,16.673291790903715,1.852304917227355,9.726956002629999
+catalog_786,Turmeric Rice (Slow Cooker Recipe),chinese,data/catalog/images/catalog_786/rgb.png,315.79608708671736,205.52878916898567,6.764498309982408,19.04636897245861,20.879094959873033
+catalog_787,Chickpea Salad,indian,data/catalog/images/catalog_787/rgb.png,284.3439912743055,235.30203745939733,18.511792406036317,11.892373023726847,21.558773803125003
+catalog_788,Saucy meatballs,eastern europe,data/catalog/images/catalog_788/rgb.png,54.79562962962963,37.725925925925935,2.6706142450142445,0.7501209876543213,15.077808888888887
+catalog_789,Vegan Spring Soba Noodle Bowl recipes,asian,data/catalog/images/catalog_789/rgb.png,257.9878616190035,126.18056028428087,14.181384670627935,12.216945908492667,21.418721780189166
+catalog_790,Pork Fried Rice,chinese,data/catalog/images/catalog_790/rgb.png,234.3673987874579,156.4623521461797,16.568463236961282,7.712660539742814,21.52560049289444
+catalog_791,Spring Veggie Rösti,south east asian,data/catalog/images/catalog_791/rgb.png,152.92258888541667,124.46882346474916,10.851895085833332,6.0224055853611125,10.661755833500004
+catalog_792,Connecticut-Style Lobster Rolls,south east asian,data/catalog/images/catalog_792/rgb.png,970.86993735,787.613555,61.35406025,9.947511666666665,235.43314814999997
+catalog_793,Warm Shrimp Salad,japanese,data/catalog/images/catalog_793/rgb.png,500.5627270555556,649.441901111111,50.753549275384636,7.87650814814815,71.2820442466667
+catalog_794,Butter Beans and Noodles In Tarragon-Lemon Cream Recipe,asian,data/catalog/images/catalog_794/rgb.png,360.32879205607884,186.8418811464764,18.601715475219496,17.731315318248395,23.9524995723189
+catalog_795,Raspberry-Dressed Coleslaw,central europe,data/catalog/images/catalog_795/rgb.png,119.88345808989375,106.4415228061089,15.905760852342112,2.24445193218125,2.8904246373525
+catalog_796,Curried Potato Salad recipes,indian,data/catalog/images/catalog_796/rgb.png,158.79760000000005,147.85999999999999,12.148898461538462,5.999202666666666,10.349344000000002
+catalog_797,Greek Orzo and Feta Stuffed Peppers,greek,data/catalog/images/catalog_797/rgb.png,234.71155725215417,191.57981241896468,13.457075535499243,10.220986729326363,21.401346846531684
+catalog_798,Indian Tofu With Spinach,indian,data/catalog/images/catalog_798/rgb.png,273.4962818125795,324.595869930877,26.83246719070515,4.517726843978562,45.625508006916775
+catalog_799,Warming Winter Veggie Curry,indian,data/catalog/images/catalog_799/rgb.png,586.96605445196,634.2270833334564,54.91831600250385,17.540182656280834,47.130465425945
+catalog_800,Supremely Easy Teriyaki Chicken,japanese,data/catalog/images/catalog_800/rgb.png,381.6557577177553,165.9036660175698,41.1460365594058,4.566994749720282,42.45648243911646
+catalog_801,Sage Mashed Potatoes,eastern europe,data/catalog/images/catalog_801/rgb.png,501.8380701063833,350.75296664158685,51.85323432701485,15.464732252288892,16.52729554577333
+catalog_802,Spicy Asian Chicken With Brussels Sprouts,asian,data/catalog/images/catalog_802/rgb.png,533.4617482067888,309.329518725693,18.87858790476663,23.05830145382359,69.84056381812657
+catalog_803,Grilled Romaine Lettuce Cobb Salad,eastern europe,data/catalog/images/catalog_803/rgb.png,139.3225,177.95833333333334,15.789410256410255,1.545259722222222,15.538933333333334
+catalog_804,Loaded Baked Potato Dip Recipe Will Be a Super Bowl Party Hit,caribbean,data/catalog/images/catalog_804/rgb.png,284.42283184010427,94.11303348958334,40.01745408302083,1.4821100606354165,17.80271942928125
+catalog_805,Polish Noodles,asian,data/catalog/images/catalog_805/rgb.png,433.6764500858364,434.38867427587326,39.0432651546414,11.22715103894713,39.80480551895245
+catalog_806,Red Cabbage and Peas with Cumin and Mustar,indian,data/catalog/images/catalog_806/rgb.png,116.10521021059293,205.58336567467705,5.252679287252023,6.238272721354267,10.293065703125098
+catalog_807,Crunchy Asian Cucumber Watermelon Salad,chinese,data/catalog/images/catalog_807/rgb.png,160.67000000000002,327.3776041666975,12.31419230769231,7.600361111111113,4.2367
+catalog_808,Easy Fried Crab Cakes,eastern europe,data/catalog/images/catalog_808/rgb.png,263.954605940625,169.78703578125,16.30004032153846,5.707970592708335,47.879754558812515
+catalog_809,Curried Egg Salad,indian,data/catalog/images/catalog_809/rgb.png,170.52583333333334,84.87458615979382,21.9098717948718,1.3437666666666666,12.689633333333335
+catalog_810,Fried Tomatoes with Garlic,chinese,data/catalog/images/catalog_810/rgb.png,80.3759691875,78.30512968956765,11.044867098076924,1.3421066250000002,1.7830753499999998
+catalog_811,Classic Viennese Schnitzel Recipe,central europe,data/catalog/images/catalog_811/rgb.png,954.6707500000001,275.825,119.53117179487181,13.364605555555556,49.2356
+catalog_812,"Crunchy, Juicy Apple, Edamame and Chickpea Salad recipes",indian,data/catalog/images/catalog_812/rgb.png,158.76130381944446,134.1324698818192,13.384338835470087,5.848225925925927,9.8745125
+catalog_813,Cumin-Scented Beef Kebabs,south east asian,data/catalog/images/catalog_813/rgb.png,382.2925404999551,163.27245666664976,44.036229928204015,0.5122833333294505,61.43017757999697
+catalog_814,BCD Soon Tofu Soup Starter with Mussels in White Wine recipes,asian,data/catalog/images/catalog_814/rgb.png,551.8532908861107,715.4712684722217,14.68431670495726,6.681685305912035,165.77157634083324
+catalog_815,Hungarian Cabbage and Potatoes,central europe,data/catalog/images/catalog_815/rgb.png,217.3924764997591,291.32118724831486,8.673116753845148,12.9146278333165,10.764358699986355
+catalog_816,Flank Steak with Asian Slaw,asian,data/catalog/images/catalog_816/rgb.png,1266.3667426415382,608.9044581550113,179.78479654905024,6.231640539438953,81.16074010704368
+catalog_817,Curry Tomato Soup With Naan Croutons,indian,data/catalog/images/catalog_817/rgb.png,407.2326143193335,544.4229530600545,31.547206889530624,16.657707146989438,20.67586171857097
+catalog_818,Asian pear slaw,asian,data/catalog/images/catalog_818/rgb.png,58.95072222222223,110.76074942136042,0.49511253561253565,5.012971790123457,1.5376388888888883
+catalog_819,Watermelon Mandarin Mint Salad recipes,caribbean,data/catalog/images/catalog_819/rgb.png,139.8421799546875,328.99868859375,4.0498802840625,9.71415352765625,7.10307625521875
+catalog_820,"Slow Cooker Sundried Tomato, Asparagus, & Feta Frittata recipes",greek,data/catalog/images/catalog_820/rgb.png,185.22607673560415,168.868558829784,18.48028750266115,2.052442943693882,26.98320334519212
+catalog_821,Sesame-Paprika Fregola,south east asian,data/catalog/images/catalog_821/rgb.png,537.0434368127723,119.11737898446458,53.4706363451923,15.052527310826683,23.06442316750054
+catalog_822,Grilled Mojo-Marinated Skirt Steak Recipe,south east asian,data/catalog/images/catalog_822/rgb.png,781.8518269229043,304.662330155612,100.3965602782954,1.8879970917164497,92.5158879094331
+catalog_823,Cold Carrot Soup with Indian Spices,indian,data/catalog/images/catalog_823/rgb.png,122.790875,346.8,6.250682692307692,6.024633333333335,11.9695125
+catalog_824,Zucchini Noodles with Roasted Tomatoes,asian,data/catalog/images/catalog_824/rgb.png,202.216185,418.15715204737126,22.627520153846152,5.484921666666665,9.914348
+catalog_825,Low Carb Zucchini Noodles Carbonara,asian,data/catalog/images/catalog_825/rgb.png,210.162046875,124.5287109375,28.60440805288461,1.228837330729167,15.56520203125
+catalog_826,Grilled Leg of Lamb with Pearl Onion and Plum Chutney,indian,data/catalog/images/catalog_826/rgb.png,1302.2445625000057,622.5876482612236,131.68408111645314,10.027971284722602,197.59667569444483
+catalog_827,Beer-Flavored Potatoes,central europe,data/catalog/images/catalog_827/rgb.png,255.0298124998545,302.17187499996174,10.817975,14.52305104165414,10.455457499999902
+catalog_828,Low Fat Potato Latkes,kosher,data/catalog/images/catalog_828/rgb.png,69.05234894583334,75.66571291666666,0.19225508967948715,4.969081586805555,4.59831089625
+catalog_829,Tonkatsu,japanese,data/catalog/images/catalog_829/rgb.png,354.241325,129.94640625,40.933506730769224,1.9007229166666662,44.0835375
+catalog_830,Tofu Burgers,asian,data/catalog/images/catalog_830/rgb.png,224.19944070021802,140.32934250003805,18.478361409259858,3.6297514905029673,45.781565005013476
+catalog_831,Gingered Sesame Noodles,asian,data/catalog/images/catalog_831/rgb.png,729.226084922674,199.22896469694209,43.7139506593321,32.68717124574783,45.73125202002797
+catalog_832,Christmas Cider and Applesauce: 2 for 1,central europe,data/catalog/images/catalog_832/rgb.png,208.91391666666667,639.4844380833333,0.7449762820512821,18.38555138888888,1.4997066666666665
+catalog_833,Salt And Vinegar Potatoes,central europe,data/catalog/images/catalog_833/rgb.png,226.24400848352937,528.75865194651,20.913928348173062,7.367754234395898,5.010308307718662
+catalog_834,White Bean and Chickpea Salad,indian,data/catalog/images/catalog_834/rgb.png,170.16564581032986,136.49774933437962,7.78078199849092,8.203549707219329,15.782088680286462
+catalog_835,Whole Grilled Vegetables,japanese,data/catalog/images/catalog_835/rgb.png,102.53622666666666,268.7544125187628,7.836714256410257,4.5905035555555544,6.1655413333333335
+catalog_836,French in a Flash: Green Salad with Creamy Goat Cheese Dressing Recipe,japanese,data/catalog/images/catalog_836/rgb.png,180.33544048467422,162.38449940560926,24.763474228501902,1.9780493022166665,10.636256122005
+catalog_837,Peach-Tomato Salad with Basil and Feta,greek,data/catalog/images/catalog_837/rgb.png,107.9003198451906,187.1978714585367,8.77726095787433,4.107305596941668,7.256114934965
+catalog_838,Chickpea Salad,indian,data/catalog/images/catalog_838/rgb.png,205.53415535937498,201.90089114583336,17.36733188677885,7.424880030381945,12.199440234895839
+catalog_839,Curry Coconut Drinkable Soup,indian,data/catalog/images/catalog_839/rgb.png,117.54426763464,173.07978323687243,18.699251663207693,0.962731881965,2.73846535063
+catalog_840,Asian Noodle Salad,asian,data/catalog/images/catalog_840/rgb.png,334.5754727944445,316.762935138889,4.629890073675215,23.50669984564815,15.060819837083338
+catalog_841,Katsu curry sauce,indian,data/catalog/images/catalog_841/rgb.png,186.13772244503664,138.8939876102404,24.890705066550137,3.6718011185425534,4.5126451200333015
+catalog_842,Roasted Vegetables Recipe: A Colorful Side Dish for Any Meal,caribbean,data/catalog/images/catalog_842/rgb.png,113.65246875007385,127.07065972236074,7.183081089745045,5.7220777777840715,3.7173966666726934
+catalog_843,Greek Style Mac and (Feta) Cheese recipes,greek,data/catalog/images/catalog_843/rgb.png,300.31445830088416,136.7395990322801,22.17732941552495,11.197184318125617,19.2015670807976
+catalog_844,Zucchini & Yellow Tomato Fritters,south east asian,data/catalog/images/catalog_844/rgb.png,299.15523856,179.4071438907307,36.967166018461526,6.348629933333333,6.73674896
+catalog_845,Beef and Sauerkraut Dinner Recipe 3,central europe,data/catalog/images/catalog_845/rgb.png,598.12798855147,468.0657049307247,54.58579997511932,13.980455756943869,55.38051275908732
+catalog_846,Bulk curried egg,indian,data/catalog/images/catalog_846/rgb.png,153.5504727854027,84.06904085145104,18.428292819293738,0.3705871999996246,19.75912789499857
+catalog_847,Sweet Noodle Kugel,asian,data/catalog/images/catalog_847/rgb.png,410.7934188,137.24007384453725,36.915894348846166,13.178986662708338,20.8507645675
+catalog_848,Spiced Roasted Pumpkin Seeds Recipe,caribbean,data/catalog/images/catalog_848/rgb.png,59.18687500142875,40.260416666829926,5.94823717978646,2.1543312499749967,0.711270833337227
+catalog_849,"Bacon, Spinach and Feta Breakfast Scramble",greek,data/catalog/images/catalog_849/rgb.png,261.18494107000004,130.054931,33.052798196769245,0.8947535418666668,28.3971281733
+catalog_850,Sweet Potatoes With Feta Cheese,greek,data/catalog/images/catalog_850/rgb.png,204.57000000000002,134.75,16.435576923076923,6.310616666666667,16.64845
+catalog_851,Chickpea & Avocado Salad w/ Feta recipes,greek,data/catalog/images/catalog_851/rgb.png,235.76176,142.5530905012371,23.168057846153843,6.907246666666665,14.859058
+catalog_852,Sauteed Cremini Mushrooms with Red Russian Kale,eastern europe,data/catalog/images/catalog_852/rgb.png,171.07610713333335,245.33078999999998,20.563637112820516,3.721023545555557,12.086372833333336
+catalog_853,Indonesian Bakwan Sayur (Vegetable Fritter,south east asian,data/catalog/images/catalog_853/rgb.png,104.1488472219167,89.4879439973387,2.0136529914511674,6.4012199073851175,7.496904166656735
+catalog_854,Ramen Broccoli Soup Recipe 3,japanese,data/catalog/images/catalog_854/rgb.png,158.8632992732143,267.2008130357143,10.304604076978023,6.586763614071429,12.194532281857144
+catalog_855,Korean Barbecue Marinade,korean,data/catalog/images/catalog_855/rgb.png,160.74577777777782,153.96742949537037,7.442240028490029,9.322952932098763,6.3095000000000026
+catalog_856,Bobby's 'slaw (Rob's Coleslaw),central europe,data/catalog/images/catalog_856/rgb.png,88.95918749999998,97.09583333333335,9.220940705128205,2.9289204166666667,1.9910504166666667
+catalog_857,Sushi Sandwiches,japanese,data/catalog/images/catalog_857/rgb.png,264.2264166666834,315.927083333406,12.510214102565065,8.895396666667855,45.24115333333677
+catalog_858,Boy Scout Supper | Easy Recipe for the Gri,central europe,data/catalog/images/catalog_858/rgb.png,213.15166666666667,254.75,6.892282051282052,12.105766666666666,15.784933333333335
+catalog_859,Sauteed Brussels Sprouts and Apples recipes,central europe,data/catalog/images/catalog_859/rgb.png,241.29751310833336,199.6592036111111,26.33092709358975,5.824788833657408,14.373866608555556
+catalog_860,Butternut Squash Noodles with Red Pesto – Squashetti and Pesto recipes,asian,data/catalog/images/catalog_860/rgb.png,617.52875,255.116127435567,68.09179487179487,18.230187499999996,28.788508333333326
+catalog_861,Frugal Family Creamy Noodles recipes,asian,data/catalog/images/catalog_861/rgb.png,463.37127049372225,130.85513435360457,40.2253896628852,15.559569562830875,21.53040154156217
+catalog_862,Asparagus - the Dutch way,central europe,data/catalog/images/catalog_862/rgb.png,184.22875,154.33556713917525,19.833807692307687,3.9200875,13.233425
+catalog_863,SPICY POTATO WEDGES WITH LIME DIPPING SAUCE,caribbean,data/catalog/images/catalog_863/rgb.png,759.9421388888887,604.0652777777777,56.669626068376076,33.0370587962963,34.54630833333332
+catalog_864,Hot and Sour Soup with Tofu,asian,data/catalog/images/catalog_864/rgb.png,154.2398895940132,372.268624791599,9.165188685448665,4.059114831798863,30.71711221243715
+catalog_865,Recipe Fried Tofu with Broccoli and Mushrooms recipes,asian,data/catalog/images/catalog_865/rgb.png,501.371757580963,271.75053580465874,68.19265169706085,3.298815302585965,45.04069297174698
+catalog_866,"Feta, Baby Spinach, Tomatoes, Lentils and Morrocan Spices",greek,data/catalog/images/catalog_866/rgb.png,248.73723923749122,296.6185359959507,12.97603304115376,10.81427914999931,27.612546139999303
+catalog_867,Leah Darby’s Chowchow,kosher,data/catalog/images/catalog_867/rgb.png,31.016513125,161.2379792070039,0.3617764038461539,2.2672070833333335,2.462873
+catalog_868,Sauerkraut and mushroom TARTS recipes,central europe,data/catalog/images/catalog_868/rgb.png,631.5231207541008,353.52760377227423,60.892821321841076,20.222814313761546,20.655535205917502
+catalog_869,Golden Beet Quinoa Salad,eastern europe,data/catalog/images/catalog_869/rgb.png,308.6498125,317.64669215625,14.87915576923077,15.430033333333338,20.3164
+catalog_870,Baby Romaine and Grapefruit Salad,eastern europe,data/catalog/images/catalog_870/rgb.png,160.79712703812498,126.12957081249999,18.49792571144231,4.561596459910417,3.8182324419875
+catalog_871,"Tomato, Basil, and Feta Salad",greek,data/catalog/images/catalog_871/rgb.png,155.47449330351952,180.29772525817032,19.81600342130983,2.72918072048347,6.148561765569638
+catalog_872,Feta Pomegranate and Couscous Salad with Mint,greek,data/catalog/images/catalog_872/rgb.png,172.61972465695385,77.13575345490408,9.558215709230927,7.891430687651454,9.592121217778079
+catalog_873,"Creamy Feta, Bacon and Spinach Dip",greek,data/catalog/images/catalog_873/rgb.png,319.4273228067735,100.07528350694525,35.78257212592689,6.3215690968977585,17.8977335737849
+catalog_874,Red Lentil and Vegetable Soup with Chive Yogurt,eastern europe,data/catalog/images/catalog_874/rgb.png,366.89136653703713,503.5640619539693,7.928286614814813,19.360958345679,52.91881434074073
+catalog_875,Tofu kimchi burger,korean,data/catalog/images/catalog_875/rgb.png,123.21603374999998,87.85209375,17.805144230769226,1.66590625,1.5015
+catalog_876,Glass Noodle Stir-Fry,asian,data/catalog/images/catalog_876/rgb.png,188.44921580817265,206.36560782751965,17.638614027565232,6.7441244959119855,6.509750597428822
+catalog_877,Teriyaki Chicken Noodle Salad,asian,data/catalog/images/catalog_877/rgb.png,2018.2752962962968,891.6925925925926,195.06486039886033,16.811987654320983,318.82642222222216
+catalog_878,Asian Succotash,asian,data/catalog/images/catalog_878/rgb.png,80.79375,89.250908189433,4.4981153846153825,3.3124,11.49485
+catalog_879,Sally's Napa Cabbage Salad,south east asian,data/catalog/images/catalog_879/rgb.png,581.4036346458332,337.0538090104167,62.5693903371795,16.199257972204865,20.933927038125002
+catalog_880,Loaded Smashed Potatoes,central europe,data/catalog/images/catalog_880/rgb.png,95.410806245,41.3399972851015,11.611844856384614,1.5227989958333334,5.2875393585
+catalog_881,"Coconut Shrimp Curry with Cauliflower, Red Pepper, and Spinach",south east asian,data/catalog/images/catalog_881/rgb.png,575.9741360546875,357.96657109096174,52.56510276908652,15.709496999765628,49.46785564218752
+catalog_882,Warm Shrimp Salad,japanese,data/catalog/images/catalog_882/rgb.png,232.40970325,176.051575,27.65765591538461,2.889612666666667,14.142247599999996
+catalog_883,Savory Dutch Baby,central europe,data/catalog/images/catalog_883/rgb.png,215.02147519884818,89.75746742126528,20.5212636544887,4.063610660184397,22.230098021687613
+catalog_884,Roasted Asparagus with Lemon Feta Vinaigre,greek,data/catalog/images/catalog_884/rgb.png,167.08522723018748,126.64512676251327,22.656013326081133,1.2928558794988818,12.132865921642116
+catalog_885,Healthy Baked Chicken Fingers,eastern europe,data/catalog/images/catalog_885/rgb.png,262.8797084166667,178.97050354166666,13.301797564230768,2.133963480902777,76.11880706250004
+catalog_886,"Spinach, Mushroom and Feta Egg Scramble",greek,data/catalog/images/catalog_886/rgb.png,37.36114648420319,41.309960937435164,3.2005524639208613,0.25830299479082813,7.703248906231586
+catalog_887,"Orzo with Zucchini, Dill, and Feta",greek,data/catalog/images/catalog_887/rgb.png,612.94013913316,302.4041456973333,44.05063076181335,22.62901069704445,44.978424626293354
+catalog_888,"Instant Pot Chickpea Salad with Lemon, Feta, and Fresh Dill",greek,data/catalog/images/catalog_888/rgb.png,289.8657934392566,326.1516270105679,19.672751049135776,11.297067459840141,24.535363408817574
+catalog_889,Green Beans with Warm Pistachio Vinaigrette recipes,south east asian,data/catalog/images/catalog_889/rgb.png,224.393283675,154.48228369525,28.80063585153845,4.038158182416668,10.6090176855
+catalog_890,Sushi Rice,japanese,data/catalog/images/catalog_890/rgb.png,755.1350000000001,492.2483673194443,1.7399999999999995,55.715192592592594,25.779000000000007
+catalog_891,Broccoli & Water Chestnut Thai Peanut Stir-fry,south east asian,data/catalog/images/catalog_891/rgb.png,453.0792957713908,291.6194493697353,25.74672130704684,22.02095307314927,26.098505373685175
+catalog_892,Zucchini and Cauliflower Skewers with Feta,greek,data/catalog/images/catalog_892/rgb.png,56.68243055555555,238.07791666666662,2.6351303418803425,2.848489814814815,7.820883333333331
+catalog_893,Coconut Fish Curry,south east asian,data/catalog/images/catalog_893/rgb.png,217.4272568664063,316.85963875000004,21.856336250913465,4.473694466533854,23.97837946715625
+catalog_894,Rice patties recipe | Leftover rice cutlet recipes,eastern europe,data/catalog/images/catalog_894/rgb.png,82.02693181806211,58.30881594631382,5.378071678318495,3.834298484842525,3.1839454545315977
+catalog_895,Indonesian Style Stir-Fried Cabbage,south east asian,data/catalog/images/catalog_895/rgb.png,484.6349,248.47115014226802,52.14585743589743,1.140461111111111,79.00035333333334
+catalog_896,Cucumber Kimchi (Oi Gimchi),korean,data/catalog/images/catalog_896/rgb.png,94.82353703703704,709.8181563902962,0.9561396011396014,7.593040123456791,7.778544444444445
+catalog_897,Warm German Potato Salad,central europe,data/catalog/images/catalog_897/rgb.png,183.35896333333343,195.43124683054052,8.714751530982909,9.540520553472225,10.402174054166666
+catalog_898,Deviled Cuban Eggs,caribbean,data/catalog/images/catalog_898/rgb.png,194.551025,75.89932538991947,26.9656535673077,0.31661430104166677,15.2879285125
+catalog_899,Creamy Potato Salad,central europe,data/catalog/images/catalog_899/rgb.png,322.2268208033334,220.2868082222345,31.722638967367523,9.633301613888886,12.922732262111111
+catalog_900,Asian Style Tilapia,japanese,data/catalog/images/catalog_900/rgb.png,206.50146638641402,261.617733568281,12.245072724012742,8.984759201833334,20.59584449835
+catalog_901,"Baked Pasta and Rolls with Feta, Sundried Tomatoes and Thyme",greek,data/catalog/images/catalog_901/rgb.png,251.032957191663,98.42522014442848,21.636979670653332,7.645961688786327,16.71497832306243
+catalog_902,"Mama's Bhindi Okra :: Gluten-Free, Grain-Free, Dairy-Free",south east asian,data/catalog/images/catalog_902/rgb.png,113.97674403333338,196.94363722224273,7.685605386153843,5.503014618333334,7.350435160666667
+catalog_903,Pork and Sauerkraut a La Budapest,central europe,data/catalog/images/catalog_903/rgb.png,499.1028625208333,456.81479291666665,48.85927458358973,5.550644651291667,66.59530619683333
+catalog_904,Jaeger Schnitzel (Spaetzle Sauce),central europe,data/catalog/images/catalog_904/rgb.png,92.14100000012172,224.23750000016906,5.04478846153872,3.718189166676135,11.324225000008456
+catalog_905,Grilled Mushrooms With Garlic Oil,eastern europe,data/catalog/images/catalog_905/rgb.png,172.7004263893387,92.1401049068346,26.749640230522324,1.3917479933553973,4.130662949771512
+catalog_906,Edamame Two Ways,japanese,data/catalog/images/catalog_906/rgb.png,276.50714374375,185.04394715935692,24.689632553173077,5.278573931166667,42.56705688375
+catalog_907,Warm Garbanzo Quinoa Salad,south east asian,data/catalog/images/catalog_907/rgb.png,242.67233333333334,173.15,9.511256410256411,12.933435000000001,17.153223333333333
+catalog_908,Sofrito- Puerto Rican cooking base (Recaito),caribbean,data/catalog/images/catalog_908/rgb.png,207.80350405,450.3980925,1.8469142730769235,15.53650165925,17.0656822315
+catalog_909,Teriyaki Grilled Prawns recipes,japanese,data/catalog/images/catalog_909/rgb.png,267.8206124999455,324.8501249999613,2.076783076922793,3.6956789583292644,106.95143674999535
+catalog_910,Garlicky Sautéed Swiss Chard,eastern europe,data/catalog/images/catalog_910/rgb.png,119.2560937500079,300.29039601039227,11.313729366987397,4.033750260417235,10.662163541667182
+catalog_911,"Grapefruit, Feta And Cauliflower",greek,data/catalog/images/catalog_911/rgb.png,581.42859325,503.599376060384,61.54300619230769,13.71741583333333,39.59702274999999
+catalog_912,"Salad with Asparagus, Cherry Tomatoes, Kalamata Olives, and Feta recipes",greek,data/catalog/images/catalog_912/rgb.png,92.82686111113003,131.5194444445304,10.91083974359006,1.78754333333531,6.765996111111714
+catalog_913,Fresh Green Beans with Cherry Tomatoes,south east asian,data/catalog/images/catalog_913/rgb.png,320.0535957625506,456.4983223942452,36.49636562721062,8.998213103882085,10.988447593803
+catalog_914,Honey Walnut Shrimp,japanese,data/catalog/images/catalog_914/rgb.png,801.085878625,341.982651625,55.932623495,30.790333333333326,61.66143318500003
+catalog_915,Broccoli Fritters Recipe 4,japanese,data/catalog/images/catalog_915/rgb.png,144.10508333333334,140.91283864078608,13.10816858974359,3.16381548611111,17.833295833333334
+catalog_916,Singapore-Style Chicken Fried Rice,south east asian,data/catalog/images/catalog_916/rgb.png,405.983299625,330.5326975,26.790006137179486,13.801231111111113,42.46243013666667
+catalog_917,One Pot Hamburger Stroganoff,eastern europe,data/catalog/images/catalog_917/rgb.png,507.3274944486857,385.0651943056523,34.46782682544872,16.7850144957562,51.39772194383334
+catalog_918,"Grape Salad with Toasted Garlic, Basil and Feta",greek,data/catalog/images/catalog_918/rgb.png,340.58780196562503,175.40618739583334,37.53452925733974,9.21442849704167,12.601998149083334
+catalog_919,"Asparagus, Bean, and Feta Salad",greek,data/catalog/images/catalog_919/rgb.png,158.90560416670564,206.6645649131694,8.465348076923823,6.519140833336973,19.651346666669156
+catalog_920,Thai Cucumber Salad,south east asian,data/catalog/images/catalog_920/rgb.png,166.36599999883416,211.07019555453596,17.605230769113994,4.9407687499666695,7.41674999992021
+catalog_921,Beet & Cabbage Salad,eastern europe,data/catalog/images/catalog_921/rgb.png,226.0338958333333,188.2554687500154,21.260903205128205,8.694238888888888,5.484088333333332
+catalog_922,Ramen Coleslaw recipes,japanese,data/catalog/images/catalog_922/rgb.png,275.3086805555555,187.11402905798968,24.617859401709403,9.80150851851852,11.966816666666668
+catalog_923,Strawberry Feta Salad Recipe,greek,data/catalog/images/catalog_923/rgb.png,284.0615625,281.21875,15.64516346153846,3.779516666666667,71.31095
+catalog_924,Watermelon Feta Salad,greek,data/catalog/images/catalog_924/rgb.png,169.12127644038128,326.439401222973,10.303940461902503,7.99632686055,13.04181426993
+catalog_925,Japanese Potato Salad,japanese,data/catalog/images/catalog_925/rgb.png,493.1972080625,590.47236875,31.830212263461537,21.638815333333334,27.8414527
+catalog_926,Japanese Cucumber Salad,japanese,data/catalog/images/catalog_926/rgb.png,74.83916666673933,282.83756633162784,2.97010256411226,4.5337611111121,4.217600000004489
+catalog_927,Korean Roast Chicken Thighs,korean,data/catalog/images/catalog_927/rgb.png,508.98203125,229.084375,57.310331730769235,2.959222916666666,66.84687750000002
+catalog_928,Slow Cooker Sweet Teriyaki Chicken,japanese,data/catalog/images/catalog_928/rgb.png,257.6411,188.06,5.7185584615384615,7.355423333333334,65.59182000000001
+catalog_929,A Warm Bowl of Soup is Just What the Doctor Ordered,japanese,data/catalog/images/catalog_929/rgb.png,224.7460272078125,359.91056328125,5.503804699903847,6.4622096298125,55.567205648
+catalog_930,Polish Egg Salad,eastern europe,data/catalog/images/catalog_930/rgb.png,196.09064379550833,79.45176506018886,27.34372889920333,1.222767671511111,11.753220595739998
+catalog_931,Top Ramen Recipe (Not Your Average Top Ramen!) recipes,japanese,data/catalog/images/catalog_931/rgb.png,309.12906250086,223.6645833334533,32.13488782066246,3.71557291666669,40.0075979166687
+catalog_932,Low Fat Butter & Lemon Spaghetti (Kosher-Dairy),kosher,data/catalog/images/catalog_932/rgb.png,449.87916666666666,138.48804353522337,23.044358974358985,22.316736111111116,24.088958333333334
+catalog_933,Serbian Roasted Eggplant Pepper Spread (Ajvar),eastern europe,data/catalog/images/catalog_933/rgb.png,255.91141673555,427.719938364024,29.097896119932816,7.671794458126665,7.521568252499999
+catalog_934,"Bow Ties With Tomatoes, Feta, and Balsamic Dressing",greek,data/catalog/images/catalog_934/rgb.png,325.2849366385585,206.0917879443614,17.732614749728526,15.074739052938687,21.660151919586767
+catalog_935,Sauteed Spinach with Cranberries and Feta,greek,data/catalog/images/catalog_935/rgb.png,165.1281296518722,123.9383760569733,17.30637100772388,4.442435440457434,10.683229725539356
+catalog_936,Crispy Parmesan Green Beans,caribbean,data/catalog/images/catalog_936/rgb.png,217.52662143125,227.6435297572428,20.23366201903846,6.752101220270832,15.698227512125
+catalog_937,Greek Chicken Burgers With Feta,greek,data/catalog/images/catalog_937/rgb.png,276.94754263164174,159.27438015124082,21.664272763175326,4.14550187180301,50.59351933467695
+catalog_938,Feta Chicken Bake,greek,data/catalog/images/catalog_938/rgb.png,212.13900511025417,170.01211630889165,6.768446268768333,3.413765975144445,70.30612549328664
+catalog_939,Halloween: Zombie Fingers,eastern europe,data/catalog/images/catalog_939/rgb.png,151.0354444444444,96.42222222222223,17.115496581196584,1.2845387037037035,19.082372222222222
+catalog_940,Cuban Pork Hash,caribbean,data/catalog/images/catalog_940/rgb.png,458.3532799479984,289.1115446816485,50.263925878344615,7.039718930973382,45.04260439398195
+catalog_941,Roasted Red Pepper Pasta with Kale & Feta recipes,greek,data/catalog/images/catalog_941/rgb.png,349.7525608910806,164.157702321449,18.930543249331745,16.26477928953637,24.690461539762502
+catalog_942,Asparagus with Feta Yogurt Mint Dressing recipes,greek,data/catalog/images/catalog_942/rgb.png,135.98452220873224,159.91993616061077,13.529267142214598,2.3075373230324816,18.49604699837135
+catalog_943,Seared Asparagus and Red Peppers Recipe,japanese,data/catalog/images/catalog_943/rgb.png,194.93314358413127,161.50367735941032,22.547519500364043,3.2834470281333323,15.102720658680003
+catalog_944,Sushi Rice,japanese,data/catalog/images/catalog_944/rgb.png,106.165,69.15915399484535,0.0646153846153846,8.772233333333334,0.30800000000000005
+catalog_945,Japanese noodles with sesame dressing,japanese,data/catalog/images/catalog_945/rgb.png,525.547000000872,339.90000000015215,16.49765384627019,31.8737283333452,42.52315000005387
+catalog_946,Miso Phat Poke,japanese,data/catalog/images/catalog_946/rgb.png,315.7468000119811,277.71427986897,17.46696971716408,2.39112289163112,90.97074877680774
+catalog_947,Homemade Teriyaki Sauce,japanese,data/catalog/images/catalog_947/rgb.png,65.65012499993558,39.59834559760809,0.09059326923075624,4.998378124994853,3.1342674999999125
+catalog_948,Vegan Kimchi Fried Rice,korean,data/catalog/images/catalog_948/rgb.png,282.49990972,184.948569375,14.681175415538458,12.892842392641672,24.37904458575001
+catalog_949,Mandarin Orange Spinach Salad with Orange,caribbean,data/catalog/images/catalog_949/rgb.png,101.5735875,99.6227083078608,3.6671657692307695,6.456533333333335,1.22782
+catalog_950,Caribbean Black Bean Mango Salad with Orange-Ginger Dressing,caribbean,data/catalog/images/catalog_950/rgb.png,227.23557039271364,292.7379875347238,3.700530380283265,14.710239951458712,20.061896886965616
+catalog_951,My Version Of Asian Pork Burger,japanese,data/catalog/images/catalog_951/rgb.png,350.57985058472224,201.56706006944447,39.24231297395298,2.063980558699074,47.54142246079165
+catalog_952,Russian Beet Salad with Sour Cream,eastern europe,data/catalog/images/catalog_952/rgb.png,321.9749999994485,139.86318951974303,36.50031730769095,6.381072916617715,23.234687499989978
+catalog_953,Garlic Roasted Red Potato Wedges,eastern europe,data/catalog/images/catalog_953/rgb.png,237.74763683333333,258.1394522057165,11.0271414,13.474938,9.788046133333333
+catalog_954,3-Ingredient Tomato Soup,eastern europe,data/catalog/images/catalog_954/rgb.png,237.3391258,281.77847666672824,32.825813261538464,3.6811738655000013,6.013812856
+catalog_955,Sauteed Cabbage with Bacon,eastern europe,data/catalog/images/catalog_955/rgb.png,128.67922641538127,54.675559194375,16.222410546517885,1.3807626948000002,8.28628483868
+catalog_956,Eggplant Croquettes,japanese,data/catalog/images/catalog_956/rgb.png,551.6724333333333,278.8293378589777,71.37993589743591,8.47158888888889,22.5528
+catalog_957,Chicken Teriyaki,japanese,data/catalog/images/catalog_957/rgb.png,510.38,257.8,52.328,3.7439999999999993,75.0528
+catalog_958,Drunken Shrimp Recipe,caribbean,data/catalog/images/catalog_958/rgb.png,244.17739372211517,237.13014663024884,12.011962843760086,3.7638817129545834,62.55802591333184
+catalog_959,Easy Crock Pot Teriyaki Chicken,japanese,data/catalog/images/catalog_959/rgb.png,342.824999999709,291.1562499999235,16.055269230769234,2.4191562499749484,104.67874999999982
+catalog_960,Easy Bacon-wrapped Green Beans,caribbean,data/catalog/images/catalog_960/rgb.png,188.54545433720884,94.7302962499234,23.667289079615383,2.7990265911832815,10.032060092749816
+catalog_961,Cabbage Soup with Pickled Cucumbers,eastern europe,data/catalog/images/catalog_961/rgb.png,212.689135416744,473.49062500003083,1.3926067307707746,15.517638888895453,15.337576666673073
+catalog_962,Asian Kale Salad,japanese,data/catalog/images/catalog_962/rgb.png,154.00609083362437,155.63500042602197,18.20000300003879,3.93243222222621,6.8959560000179865
+catalog_963,Pressure Cooker “Roasted” Whole Chicken recipes,caribbean,data/catalog/images/catalog_963/rgb.png,1056.7649272961,535.6393298793155,116.84848050582465,1.0855782834666667,172.01972827888005
+catalog_964,Japanese Cucumber Salad,japanese,data/catalog/images/catalog_964/rgb.png,127.835,495.6784757731959,0.980846153846154,9.902536666666665,8.5097
+catalog_965,MISO PUMPKIN SOUP,japanese,data/catalog/images/catalog_965/rgb.png,245.84424048333335,238.49517979895316,14.090303779487177,13.244080001666669,6.450374706000001
+catalog_966,Sushi Rice,japanese,data/catalog/images/catalog_966/rgb.png,507.29040000000003,345.670987817664,1.044,37.33573066666668,15.467400000000003
+catalog_967,Healthy Baked Chicken Fingers recipes,eastern europe,data/catalog/images/catalog_967/rgb.png,302.97292975,149.36823046401426,22.19351854576923,3.7302391927083325,60.8600813125
+catalog_968,Sweet-Potato Latkes recipes,kosher,data/catalog/images/catalog_968/rgb.png,167.87726875235882,61.24717538888375,21.094103822361124,3.247451844245014,3.7957231090769223
+catalog_969,Tangy tuna burgers,japanese,data/catalog/images/catalog_969/rgb.png,180.317,122.925,11.36998076923077,0.64295,50.54055
+catalog_970,Saucy Meatball Subs,eastern europe,data/catalog/images/catalog_970/rgb.png,241.57392396,107.9915458249421,28.561730461538467,0.39948666666666666,32.565755056000015
+catalog_971,Spicy Potato Wedges,eastern europe,data/catalog/images/catalog_971/rgb.png,161.69850864305727,174.35981236111766,5.431325044679518,9.987535611111245,7.062310292916796
+catalog_972,Celery Root Mash,caribbean,data/catalog/images/catalog_972/rgb.png,126.85993179999998,179.621827026278,10.573988261538458,4.966775337777777,5.9422236999999996
+catalog_973,Coconut Lime Black Beans,caribbean,data/catalog/images/catalog_973/rgb.png,394.8212845555555,246.6890460201684,7.817291258119657,22.728598296296298,44.42529653333335
+catalog_974,"Chicken Sausage with Apples, Sage and Cabbage",eastern europe,data/catalog/images/catalog_974/rgb.png,485.5433296083335,408.05642583333326,40.9555527974359,13.48047730038889,43.31815700833332
+catalog_975,Chicken al Mattone,caribbean,data/catalog/images/catalog_975/rgb.png,761.556432472,488.238022480558,87.54051901743078,0.66830785257,115.37917235798
+catalog_976,Simple Russian Cucumber and Tomato Salad recipes,eastern europe,data/catalog/images/catalog_976/rgb.png,97.41098553125,207.86772575090816,10.839637770192308,2.9326494583333327,3.1752078
+catalog_977,Crawford Polish Bake,eastern europe,data/catalog/images/catalog_977/rgb.png,377.0881666773105,316.04635125199314,32.6288199001372,9.755063227666726,36.967290321692964
+catalog_978,baby's beef stroganoff,eastern europe,data/catalog/images/catalog_978/rgb.png,141.77907009375,228.0242846875,3.522335528413461,6.280334713875,25.557940985
+catalog_979,Korean Food: Galbi Tang (Short Rib Soup),korean,data/catalog/images/catalog_979/rgb.png,927.4749546268557,275.20936966601425,126.74136871761075,3.5816549666911577,67.69376974096848
+catalog_980,Red Zone Chicken Fingers,eastern europe,data/catalog/images/catalog_980/rgb.png,614.9589957916705,209.54980552085306,28.312882144968,26.477530555555866,61.2923270677087
+catalog_981,Basic Tzimmes,kosher,data/catalog/images/catalog_981/rgb.png,219.086106478715,235.2125447781185,0.4898790603845633,17.574619389518265,7.397316330416195
+catalog_982,Korean Beef Meal Prep Bowls recipes,korean,data/catalog/images/catalog_982/rgb.png,627.49847588658,486.983702987602,44.69384917629583,21.32241164029768,56.2949467526684
+catalog_983,"Steamer Clams, New England Style",caribbean,data/catalog/images/catalog_983/rgb.png,599.4455190062503,502.941893125,42.16761539442307,6.055819107625,134.300098673125
+catalog_984,Spicy and Sweet Spinach,caribbean,data/catalog/images/catalog_984/rgb.png,64.83530139242671,88.16143835524935,3.976109371185027,3.314347752671893,5.125348256036942
+catalog_985,Honey Marinated Cucumber,eastern europe,data/catalog/images/catalog_985/rgb.png,244.6972669370132,663.88752070572,3.6578367521367525,17.994016599228924,10.313768333333336
+catalog_986,Grilled Red Potatoes,eastern europe,data/catalog/images/catalog_986/rgb.png,226.8322475,222.70521986889185,10.720445153846155,12.676613333333334,8.997948
+catalog_987,Grilled Skirt Steak with Green Bean Salad and Citrus Vinaigrette,caribbean,data/catalog/images/catalog_987/rgb.png,459.1038856820333,177.36155466673483,57.509728612197954,0.40460415004444455,61.14675412629333
+catalog_988,Korean Sesame Chicken and Potatoes,korean,data/catalog/images/catalog_988/rgb.png,776.613903087611,678.3812608124663,51.66650053041315,24.341079166661704,90.06265369700432
+catalog_989,Copy Desk Salad Bowl,caribbean,data/catalog/images/catalog_989/rgb.png,124.79432228125,30.68927999123636,20.991420290705125,0.30308102777777773,0.4774034499999999
+catalog_990,Shakshuka with Fire-Roasted Tomatoes and Fennel,kosher,data/catalog/images/catalog_990/rgb.png,657.8937305656,851.9971719115805,69.75891928329385,13.309848987245,58.87113878191
+catalog_991,Chicken with Roasted Tomato Scallion Relish,eastern europe,data/catalog/images/catalog_991/rgb.png,451.01168293491,307.57723698712,43.33188361466345,5.14596066666784,68.0241798375
+catalog_992,Vegetarian Eggplant Caviar Recipe,eastern europe,data/catalog/images/catalog_992/rgb.png,218.07345312511592,278.2010457254008,26.7540793269254,5.350679166676517,5.389185000009605
+catalog_993,Easy Korean-Style Beef and Rice,korean,data/catalog/images/catalog_993/rgb.png,458.4438531266762,240.3546198333364,33.93088313782078,14.83517586805624,40.40199130600064
+catalog_994,Red Russian Kale,eastern europe,data/catalog/images/catalog_994/rgb.png,50.440908,104.17651834725775,4.464808615384615,1.7114800000000006,6.123648
+catalog_995,Spiced Carrot & Chickpea Mash,caribbean,data/catalog/images/catalog_995/rgb.png,248.91217226924505,281.599706345164,10.55064351311,13.42113544935,19.051031298770003
+catalog_996,Kale with Red Bell Pepper,eastern europe,data/catalog/images/catalog_996/rgb.png,123.8624999998861,219.04769170937854,13.845580929488055,2.80746166665642,8.809741666668648
+catalog_997,Cuban Black Beans,caribbean,data/catalog/images/catalog_997/rgb.png,291.26499695,108.05528634282115,5.342054270256409,16.675368826666666,33.655383973333336
+catalog_998,Mamzells Potatoes and Octopus Salad,caribbean,data/catalog/images/catalog_998/rgb.png,266.06907339762904,220.31889932862833,19.31416563364947,7.041966088890365,34.26579533333438
+catalog_999,Sausage and Peppers,eastern europe,data/catalog/images/catalog_999/rgb.png,130.62114583333337,159.18512532474227,9.207721794871794,2.59178611111111,23.953487500000005

@@ -4,18 +4,19 @@ Two regimes:
   - **Training distribution** (sampled IID per episode): continuous random
     targets from ``TARGET_RANGES`` + preference embedding sampled from a
     pool of *training-style* templates.
-  - **Held-out eval pool**: a fixed grid of personas × held-out styles ×
-    seeds (default 5×5×2 = 50 episodes). Eval styles are disjoint from
-    training styles — the policy's preference-embedding generalisation
+  - **Held-out eval pool**: a fixed grid of personas x held-out styles x
+    seeds (default 5x8x2 = 80 episodes). Eval styles are disjoint from
+    training styles; the policy's preference-embedding generalisation
     is the headline test.
 
 Eval personas sit *inside* the training support — nothing is held out
 on the target axis, the persona presets just discretise it for clean
 per-persona breakdowns at evaluation time.
 
-TODO: dietary-style filter is expected to ship a ``dict[str, list[MealTemplate]]`` 
-keyed by style name and covering ``TRAIN_STYLES + EVAL_STYLES`` with disjoint membership. 
-Until then, ``make_dummy_style_template_lists`` partitions a dummy catalog the same way.
+The shipped catalog artifact includes a ``style`` column. For real
+catalogs, ``make_style_template_lists`` groups templates by that metadata.
+For dummy catalogs with no style labels, it falls back to a deterministic
+disjoint partition.
 """
 
 from __future__ import annotations
@@ -62,11 +63,29 @@ NUTRITION_PERSONAS: dict[str, dict[str, float]] = {
 
 
 # ---------------------------------------------------------------------------
-# Dietary-style partition (TODO: ships keys; we slice train vs eval)
+# Dietary-style partition
 # ---------------------------------------------------------------------------
 
-TRAIN_STYLES: tuple[str, ...] = ("japanese", "mediterranean", "vegan", "indian", "american")
-EVAL_STYLES:  tuple[str, ...] = ("mexican",  "korean",        "italian", "middle_eastern", "caribbean")
+TRAIN_STYLES: tuple[str, ...] = (
+    "american",
+    "asian",
+    "mediterranean",
+    "central europe",
+    "nordic",
+    "chinese",
+    "indian",
+    "japanese",
+)
+EVAL_STYLES: tuple[str, ...] = (
+    "french",
+    "italian",
+    "mexican",
+    "south american",
+    "eastern europe",
+    "british",
+    "middle eastern",
+    "south east asian",
+)
 
 
 # ---------------------------------------------------------------------------
@@ -168,7 +187,7 @@ def no_op_resampler() -> EpisodeResampler:
 
 
 # ---------------------------------------------------------------------------
-# Held-out eval pool (5 personas × 5 styles × n_seeds = 50 default)
+# Held-out eval pool (5 personas x 8 styles x n_seeds = 80 default)
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -190,14 +209,15 @@ def build_eval_pool(
 ) -> list[EvalUserSpec]:
     """Build the held-out evaluation pool.
 
-    Cardinality = ``len(personas) × len(eval_styles) × n_seeds``
-    (default ``5 × 5 × 2 = 50``). Each entry pins (persona, style, seed)
+    Cardinality = ``len(personas) x len(eval_styles) x n_seeds``
+    (default ``5 x 8 x 2 = 80``). Each entry pins (persona, style, seed)
     into a ``SimulatedUser`` whose targets are the persona preset and
     whose preference embedding is the L2-normalised mean of
     ``style_template_lists[style]``.
 
     Args:
-        style_template_lists: TODO: style filter; must contain everyname in ``eval_styles``.
+        style_template_lists: style filter; must contain every name in
+            ``eval_styles``.
         personas: subset of ``NUTRITION_PERSONAS`` to grid over.
         eval_styles: subset of ``EVAL_STYLES`` to grid over.
         n_seeds: per-cell seed multiplicity (drives noise in
@@ -237,8 +257,51 @@ def build_eval_pool(
 
 
 # ---------------------------------------------------------------------------
-# Placeholder filter — TODO: the real dietary-style filter
+# Style-template construction
 # ---------------------------------------------------------------------------
+
+def make_catalog_style_template_lists(
+    catalog: MealCatalog,
+    style_names: Sequence[str],
+) -> dict[str, list[MealTemplate]]:
+    """Group real catalog templates by the catalog's style metadata."""
+    out: dict[str, list[MealTemplate]] = {style: [] for style in style_names}
+    wanted = set(style_names)
+    for meal in catalog.meals:
+        if meal.style in wanted:
+            out[meal.style].append(meal)
+
+    missing = [style for style in style_names if not out[style]]
+    if missing:
+        available = sorted({m.style for m in catalog.meals if m.style})
+        raise KeyError(
+            f"catalog missing required styles: {missing}. "
+            f"Available styles: {available}"
+        )
+    return out
+
+
+def make_style_template_lists(
+    catalog: MealCatalog,
+    style_names: Sequence[str],
+    per_style: int = 30,
+    seed: int = 0,
+) -> dict[str, list[MealTemplate]]:
+    """Use real style metadata when present, otherwise dummy partitioning.
+
+    Dummy fallback is only for synthetic catalogs, whose ``MealTemplate``
+    rows intentionally have no style labels.
+    """
+    has_style_metadata = any(m.style for m in catalog.meals)
+    if has_style_metadata:
+        return make_catalog_style_template_lists(catalog, style_names)
+    return make_dummy_style_template_lists(
+        catalog,
+        style_names=style_names,
+        per_style=per_style,
+        seed=seed,
+    )
+
 
 def make_dummy_style_template_lists(
     catalog: MealCatalog,

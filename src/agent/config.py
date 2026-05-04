@@ -27,8 +27,8 @@ class AgentConfig:
     w_diversity: float = 0.3
     w_preference: float = 0.2
     w_boundary: float = 0.5
-    total_timesteps: int = 200_000
-    learning_rate: float = 1e-3
+    total_timesteps: int = 1_000_000
+    learning_rate: float = 1e-4
     buffer_size: int = 100_000
     batch_size: int = 128
     gamma: float = 0.99
@@ -56,12 +56,14 @@ class AgentConfig:
 
         Layout:
           [0:4]                         daily_deficit  (normalized)
-          [4:8]                         weekly_deficit (normalized)
-          [8 : 8+meals_per_day]         time slot one-hot
-          [8+mpd : 8+mpd+emb]           mean recent meal embedding
-          [8+mpd+emb : 8+mpd+2*emb]    user preference embedding
+          [4:8]                         episode_deficit (normalized)
+          [8:12]                        daily_target   (scaled)
+          [12:13]                       remaining_steps_fraction
+          [13 : 13+meals_per_day]       time slot one-hot
+          [13+mpd : 13+mpd+emb]         mean recent meal embedding
+          [13+mpd+emb : 13+mpd+2*emb]  user preference embedding
         """
-        return 8 + self.meals_per_day + 2 * self.embedding_dim
+        return 13 + self.meals_per_day + 2 * self.embedding_dim
 
     # --- Utilities ---
 
@@ -86,6 +88,8 @@ class AgentConfig:
         """Restore config from a JSON file written by to_json()."""
         path = Path(path)
         data = json.loads(path.read_text())
+        # Keep old run folders evaluable after removing the architecture flag.
+        data.pop("policy_arch", None)
         if "portion_levels" in data:
             data["portion_levels"] = tuple(data["portion_levels"])
         return cls(**data)

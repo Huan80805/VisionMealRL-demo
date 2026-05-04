@@ -69,10 +69,12 @@ class MultiObjectiveGreedy:
 
         # Obs slice boundaries — must match MealPlanningEnv._build_obs
         self._s_daily = slice(0, 4)
-        self._s_weekly = slice(4, 8)
-        self._s_time = slice(8, 8 + mpd)
-        self._s_meal_emb = slice(8 + mpd, 8 + mpd + emb)
-        self._s_user_pref = slice(8 + mpd + emb, 8 + mpd + 2 * emb)
+        self._s_episode = slice(4, 8)
+        self._s_target = slice(8, 12)
+        self._s_remaining = slice(12, 13)
+        self._s_time = slice(13, 13 + mpd)
+        self._s_meal_emb = slice(13 + mpd, 13 + mpd + emb)
+        self._s_user_pref = slice(13 + mpd + emb, 13 + mpd + 2 * emb)
 
     def _parse_obs(
         self, obs: np.ndarray
@@ -99,11 +101,13 @@ class MultiObjectiveGreedy:
             embedding = self.env.catalog.get_embedding(meal_idx)
 
             # Health component
-            old_daily = np.abs(daily_deficit).sum()
+            old_daily = np.abs(
+                daily_deficit / (self.env.user.daily_target + 1e-8)
+            ).mean()
             new_daily = daily_deficit - nutrition
-            delta_health = (old_daily - np.abs(new_daily).sum()) / (
-                self.env.user.daily_target.sum() + 1e-8
-            )
+            delta_health = old_daily - np.abs(
+                new_daily / (self.env.user.daily_target + 1e-8)
+            ).mean()
 
             # Diversity component
             diversity = 1.0 - float(np.dot(recent_emb, embedding))

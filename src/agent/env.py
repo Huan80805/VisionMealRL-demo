@@ -41,12 +41,14 @@ class MealPlanningEnv(gym.Env):
     Episode = num_days × meals_per_day steps.
     At each step the agent picks (meal_template, portion_level).
 
-    Observation layout (obs_dim = 8 + meals_per_day + 2 × embedding_dim):
+    Observation layout (obs_dim = 13 + meals_per_day + 2 × embedding_dim):
       [0:4]                         daily_deficit  (normalized by daily_target)
-      [4:8]                         weekly_deficit (normalized by weekly_target)
-      [8 : 8+mpd]                   time slot one-hot  (mpd = meals_per_day)
-      [8+mpd : 8+mpd+emb]           mean recent meal embedding
-      [8+mpd+emb : 8+mpd+2*emb]    user preference embedding
+      [4:8]                         episode_deficit (normalized by episode target)
+      [8:12]                        daily_target   (scaled)
+      [12:13]                       remaining_steps_fraction
+      [13 : 13+mpd]                 time slot one-hot  (mpd = meals_per_day)
+      [13+mpd : 13+mpd+emb]         mean recent meal embedding
+      [13+mpd+emb : 13+mpd+2*emb]  user preference embedding
 
     Action: integer in [0, num_meals × len(portion_levels)).
     """
@@ -86,13 +88,19 @@ class MealPlanningEnv(gym.Env):
         self.w_diversity = w_diversity
         self.w_preference = w_preference
         self.w_boundary = w_boundary
+        self.target_scale = np.array(
+            [3200.0, 200.0, 450.0, 100.0],
+            dtype=np.float32,
+        )
 
         self.num_actions = catalog.num_meals * self.num_portions
         self.action_space = spaces.Discrete(self.num_actions)
 
         obs_dim = (
             4               # daily deficit
-            + 4             # weekly deficit
+            + 4             # episode deficit
+            + 4             # daily target
+            + 1             # remaining steps fraction
             + meals_per_day # time slot one-hot
             + self.emb_dim  # mean-pooled recent embeddings
             + self.emb_dim  # user preference
@@ -247,7 +255,11 @@ class MealPlanningEnv(gym.Env):
 
     def _build_obs(self) -> np.ndarray:
         daily_norm = self._daily_deficit / (self.user.daily_target + 1e-8)
-        weekly_norm = self._weekly_deficit / (self.user.weekly_target + 1e-8)
+        episode_target = self.user.daily_target * self.num_days
+        episode_norm = self._episode_deficit / (episode_target + 1e-8)
+        target_norm = self.user.daily_target / self.target_scale
+        remaining_steps = (self.horizon - self._step_count) / max(self.horizon, 1)
+        remaining_steps = np.array([remaining_steps], dtype=np.float32)
 
         slot_onehot = np.zeros(self.meals_per_day, dtype=np.float32)
         slot_onehot[self._get_meal_slot()] = 1.0
@@ -256,7 +268,9 @@ class MealPlanningEnv(gym.Env):
 
         return np.concatenate([
             daily_norm.astype(np.float32),
-            weekly_norm.astype(np.float32),
+            episode_norm.astype(np.float32),
+            target_norm.astype(np.float32),
+            remaining_steps,
             slot_onehot,
             recent_mean.astype(np.float32),
             self.user.preference_embedding,
@@ -344,11 +358,16 @@ class MealPlanningEnv(gym.Env):
             nutrition, embedding = observed_meal
             used_observed_meal = True
 
-        # 1. Health: how much daily deficit was reduced (normalized)
-        old_daily = np.abs(self._daily_deficit).sum()
+        # 1. Health: how much daily deficit was reduced. Use per-component
+        # normalized deficits so calories do not swamp protein/carbs/fat.
+        old_daily = np.abs(
+            self._daily_deficit / (self.user.daily_target + 1e-8)
+        ).mean()
         new_daily_deficit = self._daily_deficit - nutrition
-        new_daily_abs = np.abs(new_daily_deficit).sum()
-        delta_health = (old_daily - new_daily_abs) / (self.user.daily_target.sum() + 1e-8)
+        new_daily_abs = np.abs(
+            new_daily_deficit / (self.user.daily_target + 1e-8)
+        ).mean()
+        delta_health = old_daily - new_daily_abs
 
         # 2. Diversity: dissimilarity from recent meals
         if self._recent_embeddings:
@@ -366,13 +385,23 @@ class MealPlanningEnv(gym.Env):
         if is_last_meal_of_day:
             remaining = np.abs(new_daily_deficit).sum()
             target_sum = self.user.daily_target.sum()
-            boundary_bonus = max(0, 1.0 - remaining / target_sum)
+            nga_threshold = 0.10 * target_sum
+            boundary_bonus = float(
+                np.clip(1.0 - remaining / (nga_threshold + 1e-8), -1.0, 1.0)
+            )
+
+        weighted_health = self.w_health * delta_health
+        weighted_diversity = self.w_diversity * diversity
+        weighted_preference = self.w_preference * pref_score
+        weighted_boundary = self.w_boundary * boundary_bonus
+        terminal_bonus = 0.0
+        weighted_terminal = 0.0
 
         reward = (
-            self.w_health * delta_health
-            + self.w_diversity * diversity
-            + self.w_preference * pref_score
-            + self.w_boundary * boundary_bonus
+            weighted_health
+            + weighted_diversity
+            + weighted_preference
+            + weighted_boundary
         )
 
         # --- Update state ---
@@ -391,9 +420,11 @@ class MealPlanningEnv(gym.Env):
         if terminated:
             episode_remaining = np.abs(self._episode_deficit).sum()
             episode_target_sum = (self.user.daily_target * self.num_days).sum()
-            reward += self.w_boundary * max(
+            terminal_bonus = max(
                 0, 1.0 - episode_remaining / (episode_target_sum + 1e-8)
             )
+            weighted_terminal = self.w_boundary * terminal_bonus
+            reward += weighted_terminal
 
         return self._build_obs(), reward, terminated, truncated, {
             "meal_idx": meal_idx,
@@ -403,4 +434,17 @@ class MealPlanningEnv(gym.Env):
             "used_observed_meal": used_observed_meal,
             "day": current_day,
             "slot": current_slot,
+            "reward_terms": {
+                "delta_health": float(delta_health),
+                "diversity": float(diversity),
+                "preference": float(pref_score),
+                "boundary": float(boundary_bonus),
+                "terminal": float(terminal_bonus),
+                "weighted_health": float(weighted_health),
+                "weighted_diversity": float(weighted_diversity),
+                "weighted_preference": float(weighted_preference),
+                "weighted_boundary": float(weighted_boundary),
+                "weighted_terminal": float(weighted_terminal),
+                "total": float(reward),
+            },
         }

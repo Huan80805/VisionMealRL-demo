@@ -4,11 +4,11 @@ Usage examples:
 
   # Default: dummy catalog + dummy style filter, randomised targets and
   # preference per episode.
-  python -m agent.train --num_days 3 --total_timesteps 200000 --seed 42 \\
+  python -m agent.train --num_days 3 --total_timesteps 1000000 --seed 42 \\
       --output_dir runs/exp1
 
   # Pin a specific dietary persona (no target randomisation).
-  python -m agent.train --num_days 7 --total_timesteps 500000 \\
+  python -m agent.train --num_days 7 --total_timesteps 1000000 \\
       --dietary_profile high_protein_lifter --output_dir runs/exp2
 
   # Real catalog + real style filter (once those artifacts ship):
@@ -28,6 +28,7 @@ import argparse
 from pathlib import Path
 
 import numpy as np
+from stable_baselines3.common.callbacks import BaseCallback
 
 from agent.config import AgentConfig
 from agent.catalog import MealCatalog
@@ -40,7 +41,7 @@ from agent.profiles import (
     EVAL_STYLES,
     apply_persona,
     make_training_resampler,
-    make_dummy_style_template_lists,
+    make_style_template_lists,
 )
 from visionmealrl import load_dish_embedding_lookup
 
@@ -61,8 +62,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Embedding dimension.  512 for CLIP ViT-B/32; use 32 for smoke tests. "
              "Overridden when --catalog_artifact is supplied.",
     )
-    parser.add_argument("--total_timesteps", type=int, default=200_000)
+    parser.add_argument("--total_timesteps", type=int, default=1_000_000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--learning_rate", type=float, default=AgentConfig.learning_rate,
+        help="DQN optimizer learning rate. Default follows AgentConfig.",
+    )
+    parser.add_argument(
+        "--gamma", type=float, default=AgentConfig.gamma,
+        help="DQN discount factor. Lower values emphasize day-level rewards.",
+    )
     parser.add_argument(
         "--output_dir", type=Path, required=True,
         help="Directory to write dqn_model.zip and config.json.",
@@ -71,11 +80,24 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--w_diversity",  type=float, default=0.3)
     parser.add_argument("--w_preference", type=float, default=0.2)
     parser.add_argument("--w_boundary",   type=float, default=0.5)
+    parser.add_argument(
+        "--tb_log_dir", type=Path, default=None,
+        help="Optional TensorBoard log directory.",
+    )
+    parser.add_argument(
+        "--tb_log_name", type=str, default="dqn",
+        help="TensorBoard run name used when --tb_log_dir is set.",
+    )
 
     # ----- catalog / style / user-history wiring -----
     # TODO: wire to the real catalog manifest + embeddings file once the
     # format is frozen. Until then --catalog_artifact must remain unset
     # and the dummy catalog is used.
+    parser.add_argument(
+        "--catalog_dir", type=Path, default=None,
+        help="Directory containing catalog_manifest.csv and "
+             "catalog_embeddings.npy. Used as the real action catalog.",
+    )
     parser.add_argument(
         "--catalog_artifact", type=Path, default=None,
         help="Path to catalog manifest (CSV/JSON). When omitted, falls back "
@@ -91,8 +113,9 @@ def build_parser() -> argparse.ArgumentParser:
     # keyed by style name. Until then a dummy disjoint partition is used.
     parser.add_argument(
         "--styles_artifact", type=Path, default=None,
-        help="Path to dietary-style filter artifact. When omitted, "
-             "make_dummy_style_template_lists partitions the catalog instead.",
+        help="Path to dietary-style filter artifact. When omitted, real "
+             "catalog style metadata is used when present; dummy catalogs "
+             "use a deterministic partition.",
     )
     parser.add_argument(
         "--dietary_profile", type=str, default=None,
@@ -211,18 +234,65 @@ def _load_nutrition5k_history_pool(
     return emb, nut
 
 
-def main() -> None:
-    args = build_parser().parse_args()
+def _resolve_catalog_artifacts(args: argparse.Namespace) -> tuple[Path, Path] | None:
+    if args.catalog_dir is not None:
+        if args.catalog_artifact is not None or args.catalog_embeddings is not None:
+            raise SystemExit(
+                "--catalog_dir cannot be combined with --catalog_artifact "
+                "or --catalog_embeddings"
+            )
+        return (
+            args.catalog_dir / "catalog_manifest.csv",
+            args.catalog_dir / "catalog_embeddings.npy",
+        )
 
-    # ----- catalog -----
     if args.catalog_artifact is not None:
         if args.catalog_embeddings is None:
+            raise SystemExit("--catalog_artifact requires --catalog_embeddings")
+        return args.catalog_artifact, args.catalog_embeddings
+
+    if args.catalog_embeddings is not None:
+        raise SystemExit("--catalog_embeddings requires --catalog_artifact")
+
+    return None
+
+
+class RewardTermLogger(BaseCallback):
+    """Log raw and weighted reward terms emitted by MealPlanningEnv."""
+
+    def _on_step(self) -> bool:
+        infos = self.locals.get("infos", [])
+        term_values: dict[str, list[float]] = {}
+        for info in infos:
+            terms = info.get("reward_terms")
+            if not terms:
+                continue
+            for key, value in terms.items():
+                term_values.setdefault(key, []).append(float(value))
+
+        for key, values in term_values.items():
+            self.logger.record(f"reward_terms/{key}", float(np.mean(values)))
+        return True
+
+
+def main() -> None:
+    args = build_parser().parse_args()
+    if args.tb_log_dir is not None:
+        try:
+            import tensorboard  # noqa: F401
+        except ImportError as exc:
             raise SystemExit(
-                "--catalog_artifact requires --catalog_embeddings"
-            )
+                "--tb_log_dir requires the tensorboard package. Install project "
+                "dependencies with `uv sync` or `pip install -e .`."
+            ) from exc
+
+    # ----- catalog -----
+    catalog_artifacts = _resolve_catalog_artifacts(args)
+    if catalog_artifacts is not None:
+        manifest_path, embeddings_path = catalog_artifacts
         catalog = MealCatalog.load_from_artifact(
-            manifest_path=args.catalog_artifact,
-            embeddings_path=args.catalog_embeddings,
+            manifest_path=manifest_path,
+            embeddings_path=embeddings_path,
         )
     else:
         # Use the requested embedding_dim for the dummy catalog so smoke
@@ -240,6 +310,8 @@ def main() -> None:
         num_days=args.num_days,
         meals_per_day=args.meals_per_day,
         total_timesteps=args.total_timesteps,
+        learning_rate=args.learning_rate,
+        gamma=args.gamma,
         seed=args.seed,
         w_health=args.w_health,
         w_diversity=args.w_diversity,
@@ -258,7 +330,7 @@ def main() -> None:
             f"--styles_artifact={args.styles_artifact} loader is awaiting "
             f"the artifact format; omit the flag to use the dummy partition."
         )
-    style_lists = make_dummy_style_template_lists(
+    style_lists = make_style_template_lists(
         catalog,
         style_names=tuple(TRAIN_STYLES) + tuple(EVAL_STYLES),
         per_style=max(1, catalog.num_meals // (len(TRAIN_STYLES) + len(EVAL_STYLES))),
@@ -325,11 +397,24 @@ def main() -> None:
     print(f"  Randomise tgt : {randomize_targets}")
     print(f"  Randomise pref: {args.randomize_preference}")
     print(f"  Bootstrap pool: {bootstrap_source}")
+    print("  Q-network     : action scoring")
+    print(f"  TensorBoard   : {args.tb_log_dir or 'none'}")
     print(f"  Output        : {args.output_dir}")
     print()
 
-    model = make_dqn(env, cfg)
-    model.learn(total_timesteps=cfg.total_timesteps, progress_bar=True)
+    model = make_dqn(
+        env,
+        cfg,
+        catalog=catalog,
+        tensorboard_log=str(args.tb_log_dir) if args.tb_log_dir else None,
+    )
+    callback = RewardTermLogger() if args.tb_log_dir else None
+    model.learn(
+        total_timesteps=cfg.total_timesteps,
+        progress_bar=True,
+        callback=callback,
+        tb_log_name=args.tb_log_name,
+    )
 
     save_path = args.output_dir / "dqn_model"
     model.save(str(save_path))

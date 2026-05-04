@@ -37,7 +37,7 @@ from agent.profiles import (
     TRAIN_STYLES,
     EvalUserSpec,
     build_eval_pool,
-    make_dummy_style_template_lists,
+    make_style_template_lists,
 )
 from agent.user import SimulatedUser
 
@@ -369,6 +369,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Seed for RandomPolicy.",
     )
     parser.add_argument(
+        "--catalog_dir", type=Path, default=None,
+        help="Directory containing catalog_manifest.csv and "
+             "catalog_embeddings.npy. Used as the real action catalog.",
+    )
+    parser.add_argument(
         "--catalog_artifact", type=Path, default=None,
         help="Optional real catalog manifest. Currently waits on "
              "MealCatalog.load_from_artifact.",
@@ -396,6 +401,17 @@ def _normalise_policy_tags(tags: Sequence[str]) -> list[str]:
 
 
 def _load_eval_catalog(args: argparse.Namespace, cfg: AgentConfig) -> MealCatalog:
+    if args.catalog_dir is not None:
+        if args.catalog_artifact is not None or args.catalog_embeddings is not None:
+            raise SystemExit(
+                "--catalog_dir cannot be combined with --catalog_artifact "
+                "or --catalog_embeddings"
+            )
+        return MealCatalog.load_from_artifact(
+            manifest_path=args.catalog_dir / "catalog_manifest.csv",
+            embeddings_path=args.catalog_dir / "catalog_embeddings.npy",
+        )
+
     if args.catalog_artifact is not None:
         if args.catalog_embeddings is None:
             raise SystemExit("--catalog_artifact requires --catalog_embeddings")
@@ -403,6 +419,9 @@ def _load_eval_catalog(args: argparse.Namespace, cfg: AgentConfig) -> MealCatalo
             manifest_path=args.catalog_artifact,
             embeddings_path=args.catalog_embeddings,
         )
+
+    if args.catalog_embeddings is not None:
+        raise SystemExit("--catalog_embeddings requires --catalog_artifact")
 
     return MealCatalog.load_dummy(
         num_meals=cfg.num_meals,
@@ -454,7 +473,7 @@ def main() -> None:
             f"config embedding_dim {cfg.embedding_dim}"
         )
 
-    style_lists = make_dummy_style_template_lists(
+    style_lists = make_style_template_lists(
         catalog,
         style_names=tuple(TRAIN_STYLES) + tuple(EVAL_STYLES),
         per_style=max(

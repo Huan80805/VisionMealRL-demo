@@ -1,0 +1,12 @@
+{
+  "style_count": 20,
+  "row_count": 1000,
+  "random_style_match_baseline": 0.053842,
+  "silhouette_original_space": -0.04065093398094177,
+  "silhouette_projected_2d": -0.20922650396823883,
+  "same_style_neighbor_rate_at_5": 0.135,
+  "same_style_neighbor_rate_at_10": 0.1193,
+  "unique_image_hashes": 998,
+  "duplicate_image_groups": 1,
+  "duplicate_image_rows": 3
+}

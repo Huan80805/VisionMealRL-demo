@@ -12,4 +12,7 @@ dist/
 *.egg-info/
 data/
 tests/
-runs/
+.numba_cache
+.pytest_cache
+.cache/
+**/.cache/

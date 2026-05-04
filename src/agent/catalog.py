@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
@@ -17,6 +18,9 @@ class MealTemplate:
     carbs: float        # grams
     fat: float          # grams
     embedding: np.ndarray  # latent visual embedding from CV module
+    catalog_id: str = ""
+    style: str = ""
+    image_path: str = ""
 
     @property
     def nutrition(self) -> np.ndarray:
@@ -28,8 +32,8 @@ class MealCatalog:
     """Catalog of K meal templates with vectorised lookup matrices.
 
     Primary constructor takes a list of MealTemplate.
-    Use ``load_dummy`` for test/dev catalogs.
-    TODO: fix ``load_from_artifact`` once the catalog artifact provided.
+    Use ``load_dummy`` for test/dev catalogs and ``load_from_artifact``
+    for the real catalog manifest/embedding pair.
 
     The pre-stacked ``embeddings_matrix`` and ``nutrition_matrix`` exist
     so baselines can replace per-action Python loops with a single matmul
@@ -107,20 +111,93 @@ class MealCatalog:
         manifest_path: Path,
         embeddings_path: Path,
     ) -> "MealCatalog":
-        """Real loader — TODO: wires to catalog artifact.
+        """Load the real action catalog from a manifest and embedding array.
 
-        Expected format:
-          - manifest_path: CSV/JSON with one row per dish, columns
-              ``dish_name, calories, protein, carbs, fat`` (optionally
-              ``image_paths, mass``).
-          - embeddings_path: float32 .npy of shape ``(N, embedding_dim)``,
-              L2-normalised CLIP embeddings, rows aligned with the manifest.
+        Supported manifest columns:
+          - name: ``recipe_name``, ``dish_name``, or ``name``
+          - nutrition: either ``calories/protein/carbs/fat`` or
+            ``total_calories/total_protein/total_carb/total_fat``
+          - optional metadata: ``catalog_id``, ``style``, ``image_path``
 
-        Once the format is frozen, parse both into a list of MealTemplate
-        and call ``cls(meals)``. Until then, use ``load_dummy``.
+        ``embeddings_path`` must be a 2D ``.npy`` array with one row per
+        manifest row. Rows are L2-normalised on load for cosine reward and
+        preference calculations.
         """
-        raise NotImplementedError(
-            f"load_from_artifact(manifest_path={manifest_path}, "
-            f"embeddings_path={embeddings_path}) is awaiting the catalog format;"
-            f"use MealCatalog.load_dummy(...) until then."
-        )
+        manifest_path = Path(manifest_path)
+        embeddings_path = Path(embeddings_path)
+
+        rows = _load_manifest_csv(manifest_path)
+        embeddings = np.load(embeddings_path).astype(np.float32)
+        if embeddings.ndim != 2:
+            raise ValueError(
+                f"catalog embeddings must be 2D, got shape {embeddings.shape}"
+            )
+        if embeddings.shape[0] != len(rows):
+            raise ValueError(
+                "catalog embedding rows must match manifest rows: "
+                f"{embeddings.shape[0]} != {len(rows)}"
+            )
+
+        norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+        if np.any(norms <= 0.0):
+            raise ValueError("catalog embeddings contain zero-vector rows")
+        embeddings = embeddings / norms
+
+        meals: list[MealTemplate] = []
+        for i, row in enumerate(rows):
+            meal_id = _first_present(row, ("catalog_id", "dish_id", "id"), default=f"meal_{i}")
+            name = _first_present(
+                row,
+                ("recipe_name", "dish_name", "name"),
+                default=meal_id,
+            )
+            meals.append(MealTemplate(
+                name=name,
+                calories=_float_field(row, ("calories", "total_calories"), i),
+                protein=_float_field(row, ("protein", "total_protein"), i),
+                carbs=_float_field(row, ("carbs", "carb", "total_carb", "total_carbs"), i),
+                fat=_float_field(row, ("fat", "total_fat"), i),
+                embedding=embeddings[i],
+                catalog_id=meal_id,
+                style=_first_present(row, ("style", "cuisine"), default=""),
+                image_path=_first_present(row, ("image_path", "image_paths"), default=""),
+            ))
+        return cls(meals)
+
+
+def _load_manifest_csv(path: Path) -> list[dict[str, str]]:
+    if path.suffix.lower() != ".csv":
+        raise ValueError(f"catalog manifest must be CSV for now, got {path}")
+    with path.open("r", newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    if not rows:
+        raise ValueError(f"catalog manifest has no rows: {path}")
+    return rows
+
+
+def _first_present(
+    row: dict[str, str],
+    columns: Sequence[str],
+    default: str = "",
+) -> str:
+    for col in columns:
+        value = row.get(col)
+        if value not in (None, ""):
+            return value
+    return default
+
+
+def _float_field(row: dict[str, str], columns: Sequence[str], row_idx: int) -> float:
+    for col in columns:
+        value = row.get(col)
+        if value not in (None, ""):
+            try:
+                return float(value)
+            except ValueError as exc:
+                raise ValueError(
+                    f"catalog row {row_idx} column {col} is not numeric: {value!r}"
+                ) from exc
+    raise ValueError(
+        f"catalog row {row_idx} missing required numeric field; "
+        f"expected one of {tuple(columns)}"
+    )

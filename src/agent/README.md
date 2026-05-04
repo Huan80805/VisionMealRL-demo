@@ -1,12 +1,9 @@
 # Meal Planning Agent
 
-This package contains the DQN meal-planning agent. The agent chooses a
-meal template and portion size at each environment step, then receives a
-reward based on nutrition deficit closure, diversity, preference
+The agent chooses a meal template and portion size at each environment step, then receives a reward based on nutrition deficit closure, diversity, preference
 alignment, and meal-boundary bonuses.
 
-Use the project DL environment unless you intentionally installed the
-package somewhere else:
+Use the project DL environment unless you intentionally installed the package somewhere else:
 
 ```bash
 ~/.venv/dl/bin/python -m agent.train --help
@@ -15,12 +12,12 @@ package somewhere else:
 ## What Works Today
 
 - Dummy-catalog training runs end to end.
+- Real action-catalog loading works with `--catalog_dir`.
 - Optional Nutrition5K-derived recent-meal history can be loaded with
   `--nutrition5k-data`.
 - Evaluation is available as both a CLI and Python API in
   `agent.evaluate`.
-- Real action-catalog and dietary-style artifacts are still integration
-  TODOs.
+- Catalog style metadata is used for train/eval style splits.
 
 The Nutrition5K data is **not** the action catalog. It is only used to
 bootstrap the user's recent meal history. The recommendation action
@@ -28,29 +25,30 @@ space remains `MealCatalog`.
 
 ## Training
 
-Minimal smoke run:
+Dummy-catalog run:
 
 ```bash
-~/.venv/dl/bin/python -m agent.train \
-  --num_days 3 \
-  --total_timesteps 10000 \
-  --output_dir runs/agent_smoke
-```
-
-Longer dummy-catalog run:
-
-```bash
-~/.venv/dl/bin/python -m agent.train \
+python -m agent.train \
   --num_days 3 \
   --total_timesteps 200000 \
   --seed 42 \
   --output_dir runs/agent_exp1
 ```
 
+Run with the real action catalog:
+
+```bash
+python -m agent.train \
+  --num_days 3 \
+  --total_timesteps 200000 \
+  --output_dir runs/agent_catalog \
+  --catalog_dir artifacts/catalog/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train
+```
+
 Run with Nutrition5K recent-history bootstrap:
 
 ```bash
-~/.venv/dl/bin/python -m agent.train \
+python -m agent.train \
   --num_days 3 \
   --total_timesteps 200000 \
   --output_dir runs/agent_n5k_history \
@@ -67,15 +65,32 @@ Training writes:
 - `dqn_model.zip`: Stable-Baselines3 DQN model.
 - `config.json`: serialized `AgentConfig` used for the run.
 
+Training always uses SB3 DQN with the action-scoring Q-network. The Q-network scores each action from fixed catalog action features `[meal_embedding, scaled_nutrition, portion]`
+
+The default DQN learning rate is `1e-4`. Override it with
+`--learning_rate` when running ablations.
+
+TensorBoard reward-term logging:
+```bash
+python -m agent.train \
+  --num_days 3 \
+  --total_timesteps 200000 \
+  --output_dir runs/agent_catalog_logged \
+  --catalog_dir artifacts/catalog/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train \
+  --tb_log_dir runs/tensorboard \
+  --tb_log_name agent_catalog_logged
+```
+
 ## Evaluation
 
 Evaluate a run from the CLI:
 
 ```bash
-~/.venv/dl/bin/python -m agent.evaluate \
+python -m agent.evaluate \
   --run_dir runs/agent_exp1 \
   --policies dqn health multi random \
-  --output_csv runs/agent_exp1/eval_metrics.csv
+  --output_csv runs/agent_exp1/eval_metrics.csv \
+  --catalog_dir artifacts/catalog/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train
 ```
 
 Policy tags:
@@ -85,72 +100,17 @@ Policy tags:
 - `multi`: one-step multi-objective greedy baseline.
 - `random`: uniform random baseline.
 
-The CLI prints a comparison table and writes aggregate rows to CSV. Use
-the Python API when you need custom env/policy construction:
-
-```python
-from stable_baselines3 import DQN
-
-from agent.baseline import HealthGreedy, MultiObjectiveGreedy
-from agent.catalog import MealCatalog
-from agent.config import AgentConfig
-from agent.env import MealPlanningEnv
-from agent.evaluate import compare_policies, print_comparison_table
-from agent.profiles import (
-    EVAL_STYLES,
-    TRAIN_STYLES,
-    build_eval_pool,
-    make_dummy_style_template_lists,
-)
-from agent.user import SimulatedUser
-
-run_dir = "runs/agent_exp1"
-cfg = AgentConfig.from_json(f"{run_dir}/config.json")
-
-# Until the real catalog loader lands, recreate the dummy catalog with
-# the same shape. For final experiments, load the same real catalog used
-# during training.
-catalog = MealCatalog.load_dummy(
-    num_meals=cfg.num_meals,
-    embedding_dim=cfg.embedding_dim,
-    seed=cfg.seed,
-)
-
-style_lists = make_dummy_style_template_lists(
-    catalog,
-    style_names=tuple(TRAIN_STYLES) + tuple(EVAL_STYLES),
-    per_style=max(1, catalog.num_meals // (len(TRAIN_STYLES) + len(EVAL_STYLES))),
-    seed=cfg.seed,
-)
-eval_pool = build_eval_pool(style_lists, n_seeds=2, seed=cfg.seed)
-
-user = SimulatedUser.from_templates(catalog.meals[:10], seed=cfg.seed)
-env = MealPlanningEnv.from_config(cfg, catalog, user)
-
-dqn = DQN.load(f"{run_dir}/dqn_model.zip", env=env)
-policies = {
-    "DQN": dqn,
-    "HealthGreedy": HealthGreedy(env),
-    "MultiObjectiveGreedy": MultiObjectiveGreedy(env, cfg),
-}
-
-results = compare_policies(policies, env, cfg, user_iter=eval_pool)
-print_comparison_table(results)
-```
-
-The held-out evaluation pool is a grid of:
+The CLI prints a comparison table and writes aggregate rows to CSV. The held-out evaluation pool is a grid of:
 
 ```text
-5 nutrition personas x 5 held-out dietary styles x 2 seeds = 50 episodes
+5 nutrition personas x 8 held-out dietary styles x 2 seeds = 80 episodes
 ```
 
 ## Reading Metrics
 
 `print_comparison_table(...)` reports mean +/- std across episodes:
 
-- `NGA`: Nutritional Goal Adherence. Fraction of days where the final
-  daily nutrition deficit is within 10% of the daily target sum. Higher
-  is better.
+- `NGA`: Nutritional Goal Adherence. Fraction of days where the final daily nutrition deficit is within 10% of the daily target sum. Higher is better.
 - `DDS`: Dietary Diversity Score. `1 - mean_pairwise_cosine_similarity`
   across meal embeddings chosen during the episode. Higher means less
   repeated embedding content.
@@ -173,43 +133,17 @@ r_t = w_health * delta_health
 ```
 
 The diversity reward is `1 - cos(selected_embedding,
-mean_recent_embedding)`, where `mean_recent_embedding` is the normalized
-mean over the sliding `history_len` recent-meal window.
+mean_recent_embedding)`, where `mean_recent_embedding` is the normalized mean over the sliding `history_len` recent-meal window.
 
-## Data Roles
+The DQN observation includes normalized daily deficit, normalized
+episode deficit, scaled absolute daily target, and a remaining-steps
+fraction. The absolute target matters because two users can have the
+same normalized deficit but need very different catalog nutrition. The
+episode-deficit feature is normalized by `daily_target * num_days`, so it
+stays meaningful for all horizon settings. The remaining-steps feature
+keeps the finite-horizon MDP Markov for long episodes.
 
-There are three different data sources. Keep them separate.
-
-### Action Catalog
-
-The action catalog defines what the policy can recommend. Every action
-decodes to:
-
-```text
-meal_idx = action // num_portions
-portion_idx = action % num_portions
-```
-
-The environment then indexes:
-
-```python
-catalog.get_embedding(meal_idx)
-catalog.get_nutrition(meal_idx, portion)
-```
-
-Current status: `MealCatalog.load_dummy(...)` works;
-`MealCatalog.load_from_artifact(...)` is still a stub.
-
-Desired real format:
-
-- Manifest with one row per recommendable meal template.
-- Row-aligned embedding `.npy` array with shape `(N, embedding_dim)`.
-- Required nutrition columns:
-  `calories`, `protein`, `carbs`, `fat`.
-- Required identity/display fields:
-  stable meal id and human-readable meal name.
-- Optional fields:
-  source image paths, recipe text, mass, cuisine/style tags.
+## Additional data notes
 
 ### Dietary-Style Lists
 
@@ -219,66 +153,14 @@ Training and evaluation need style-filtered template lists:
 dict[str, list[MealTemplate]]
 ```
 
-Expected style keys:
+Verified style keys:
 
-- Training: `japanese`, `mediterranean`, `vegan`, `indian`, `american`
-- Evaluation: `mexican`, `korean`, `italian`, `middle_eastern`,
-  `caribbean`
+- Training: `american`, `asian`, `mediterranean`, `central europe`,
+  `nordic`, `chinese`, `indian`, `japanese`
+- Evaluation: `french`, `italian`, `mexican`, `south american`,
+  `eastern europe`, `british`, `middle eastern`, `south east asian`
 
-Current status: `make_dummy_style_template_lists(...)` creates a dummy
-disjoint partition. The real `--styles_artifact` loader is still a TODO.
-
-### Nutrition5K Recent History
-
-Nutrition5K is used to initialize what the user recently ate, not to
-define the action space.
-
-`--nutrition5k-data` expects a split directory with:
-
-```text
-dish_embeddings.npy
-dish_manifest.csv
-```
-
-The loader reads these manifest columns:
-
-- `total_calories`
-- `total_protein`
-- `total_carb`
-- `total_fat`
-
-It converts them into the agent's `[calories, protein, carbs, fat]`
-order and normalizes each embedding row. At `env.reset()`, the env
-samples `history_len` rows from this pool, appends their embeddings to
-recent history, and subtracts their nutrition from the weekly deficit.
-
-## Integration Contracts (TODOs)
-
-Needed from the meal catalogue:
-
-- Real action-catalog manifest and embedding file.
-- Confirm exact field names for meal id, meal name, nutrition columns,
-  and embedding row alignment.
-- Real dietary-style artifact mapping style names to catalog meal ids or
-  directly to `MealTemplate`-compatible rows.
-
-Needed from the Nutrition5K/CV:
-
-- Keep producing README-compatible Nutrition5K embedding split dirs:
-  `dish_embeddings.npy` + `dish_manifest.csv`.
-- Ensure manifest contains `total_calories`, `total_protein`,
-  `total_carb`, and `total_fat`.
-- For future demo/photo feedback, provide an API equivalent to:
-
-```python
-nutrition, embedding = estimate_observed_meal_from_photo(photo_path)
-```
-
-where:
-
-- `nutrition.shape == (4,)` in `[calories, protein, carbs, fat]` order.
-- `embedding.shape == (embedding_dim,)`.
-- The embedding is in the same CLIP space as the action catalog.
+The shipped catalog has 53-56 templates for each of these styles. The training split has 442 templates and the evaluation split has 443 templates. `make_style_template_lists(...)` uses real catalog style metadata when present and falls back to a dummy partition only for synthetic catalogs.
 
 ## Sweep Script
 
@@ -300,27 +182,14 @@ Useful overrides:
 ```bash
 OUTPUT_ROOT=runs/agent_sweep_demo
 POLICIES="dqn health multi random"
+TOTAL_TIMESTEPS=1000000
+W_HEALTH=3.0
+W_DIVERSITY=0.1
+W_PREFERENCE=0.1
+W_BOUNDARY=1.0
+GAMMA=0.95
+TB_LOG_ROOT=runs/agent_sweep_demo/tensorboard
 N_EVAL_SEEDS=2
 NUTRITION5K_DATA=artifacts/embeddings/open_clip_ViT-B-32_laion2b_s34b_b79k/overhead_rgb/train
 NUTRITION5K_SUBSAMPLE_SIZE=1000
 ```
-
-## Agent-side TODOs
-
-- Implement `MealCatalog.load_from_artifact(...)`.
-- Implement the real `--styles_artifact` loader.
-- Add real-catalog support to `agent.evaluate` once the catalog loader
-  is implemented.
-
-## Tests
-
-The current agent tests are scenario-level scripts:
-
-```bash
-~/.venv/dl/bin/python tests/test_agent_section2.py
-~/.venv/dl/bin/python tests/test_agent_section2_4.py
-~/.venv/dl/bin/python tests/test_agent_section2_5_6.py
-```
-
-They can also be run with `pytest` if `pytest` is installed in the
-environment.

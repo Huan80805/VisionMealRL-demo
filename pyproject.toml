@@ -16,8 +16,11 @@ dependencies = [
   "Pillow>=10.0",
   "torch>=2.0",
   "stable-baselines3>=2.7.1",
+  "tensorboard>=2.20",
+  "umap-learn>=0.5.12",
   "tqdm>=4.66",
-  "rich>=15.0.0"
+  "rich>=15.0.0",
+  "matplotlib>=3.10.9"
 ]
 
 [project.optional-dependencies]
