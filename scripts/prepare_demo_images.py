@@ -15,11 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--manifest",
         type=Path,
-        default=Path(
-            "artifacts/catalog/"
-            "open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/"
-            "finetuned_embeddings/train/catalog_manifest.csv"
-        ),
+        default=Path("artifacts/catalog/three_component/train/catalog_manifest.csv"),
     )
     parser.add_argument("--repo-root", type=Path, default=Path("."))
     parser.add_argument(
