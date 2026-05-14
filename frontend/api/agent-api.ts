@@ -63,7 +63,8 @@ function buildUpstreamUrl(spaceUrl: string, req: VercelRequest): string {
   const routePath = routePathFromQuery(req.query.path);
   const requestUrl = new URL(req.url ?? "/", "http://localhost");
   base.pathname = joinPath(base.pathname, routePath);
-  base.search = requestUrl.search;
+  base.search = requestUrl.searchParams.toString();
+  base.searchParams.delete("path");
   return base.toString();
 }
 

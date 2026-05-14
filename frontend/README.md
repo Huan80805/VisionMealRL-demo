@@ -37,7 +37,7 @@ VITE_AGENT_API_BASE=http://127.0.0.1:8000
 
 ## Vercel deployment
 
-The repo includes `frontend/vercel.json` and `frontend/api/agent-api/[...path].ts`.
+The repo includes `frontend/vercel.json` and `frontend/api/agent-api.ts`.
 On Vercel, `/agent-api/*` is rewritten to that serverless proxy. The proxy
 forwards requests to Hugging Face and attaches the private token server-side.
 

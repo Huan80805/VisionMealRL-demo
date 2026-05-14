@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/agent-api/:path*",
-      "destination": "/api/agent-api/:path*"
+      "destination": "/api/agent-api?path=:path*"
     },
     {
       "source": "/(.*)",
