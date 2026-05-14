@@ -21,3 +21,7 @@ tests/
 .cache/
 **/.cache/
 .env
+.env.local
+.env.*.local
+frontend/.env.local
+frontend/.env.*.local
