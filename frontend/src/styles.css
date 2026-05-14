@@ -84,6 +84,36 @@ input:disabled {
   border-bottom: 1px solid var(--border);
 }
 
+.brand-block {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brand-block img {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-warm);
+  object-fit: cover;
+}
+
+.brand-block div {
+  display: grid;
+  gap: 5px;
+}
+
+.brand-block p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
 .setup-header h1,
 .planning-topbar h1,
 .dashboard-header h2,
@@ -1256,6 +1286,16 @@ input:disabled {
   .recommendation-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .brand-block {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .brand-block img {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
   }
 
   .goal-grid,

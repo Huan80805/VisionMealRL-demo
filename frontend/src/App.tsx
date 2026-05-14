@@ -221,7 +221,16 @@ export default function App() {
       {view === "setup" ? (
         <section className="setup-panel">
           <header className="setup-header">
-            <h1>VisionMealRL</h1>
+            <div className="brand-block">
+              <img src="/site-icon.png" alt="" aria-hidden="true" />
+              <div>
+                <h1>VisionMealRL</h1>
+                <p>
+                  A reinforcement-learning meal planner that balances nutrition
+                  goals, preference, and diversity across a custom horizon.
+                </p>
+              </div>
+            </div>
             <div className="status-row" aria-live="polite">
               <span className={`status-dot ${health}`} />
               <span>
