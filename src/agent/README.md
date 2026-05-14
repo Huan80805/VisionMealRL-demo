@@ -38,7 +38,7 @@ Build or refresh the active catalog artifacts with:
 
 ```bash
 PYTHONPATH=src ~/.venv/dl/bin/python scripts/build_agent_catalog_artifacts.py \
-  --catalog-csv data/meal_catalog.csv \
+  --recipe-file data/meal_catalog.csv \
   --output-dir artifacts/catalog/three_component/train
 ```
 

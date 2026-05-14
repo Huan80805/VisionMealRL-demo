@@ -1,232 +1,253 @@
 # VisionMealRL
 
-CLIP embedding extraction, ingredient classification, and nutrition regression for the official Nutrition5K dataset, plus a DQN-based meal planning agent.
+VisionMealRL is an interactive meal-planning project that uses reinforcement
+learning to recommend meals over a user-selected planning horizon. The user
+sets daily nutrition goals, chooses example meals to define preference, and the
+agent recommends meal templates and portion sizes while tracking nutrition
+deficit, preference alignment, and diversity.
 
-This scaffold is aligned to the current maintained OpenCLIP package and the official Nutrition5K dataset layout:
-
-- `open-clip-torch==3.3.0` on PyPI, released February 27, 2026
-- Nutrition5K official dataset repo from Google Research (`google-research-datasets/Nutrition5k`), with 5,006 plates, official train/test splits, and dish-level nutrition metadata
-
-## Project layout
-
-```text
-VisionMealRL/
-├── configs/                  ← example TOML configs for visionmealrl CLI
-├── scripts/
-│   └── download_nutrition5k.sh
-├── src/
-│   ├── visionmealrl/         ← CV pipeline (CLIP extraction, regression, classification)
-│   └── agent/                ← DQN meal planning agent
-├── tests/
-├── README.md
-└── pyproject.toml
-```
-
-## Install
-
-Make sure to enable large files by:
-`git lfs install`
-
-The project uses [uv](https://docs.astral.sh/uv/) for environment management.
-
-```bash
-# Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# From the VisionMealRL/ directory — creates .venv and installs all deps
-uv sync
-```
-
-For GPU use, install PyTorch manually first so the wheel matches your CUDA setup, then run `uv sync`.
-
-Alternatively with plain pip:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install -e .
-```
-
-## Download Nutrition5K
-
-Use the helper script in [scripts/download_nutrition5k.sh](/Users/Jason-Yu/Desktop/GT/CS7643/VisionMealRL/scripts/download_nutrition5k.sh):
-
-```bash
-chmod +x scripts/download_nutrition5k.sh
-scripts/download_nutrition5k.sh --output-dir data
-```
-
-For the full dataset, `gsutil` is the preferred route because the official dataset is published in a public Google Cloud Storage bucket. If you only want part of the dataset, pass `--path`, for example:
-
-```bash
-scripts/download_nutrition5k.sh --output-dir data --path metadata
-```
-
-If you prefer a single tarball download:
-
-```bash
-scripts/download_nutrition5k.sh --method tarball --output-dir data --extract
-```
-
-## Nutrition5K layout
-
-The code expects the official Nutrition5K directory structure under a single root:
+The current demo is built around a DQN meal-planning agent with a
+three-component meal representation:
 
 ```text
-nutrition5k_dataset/
-├── dish_ids/splits/
-├── imagery/realsense_overhead/
-├── imagery/side_angles/
-└── metadata/
+ingredient representation + cuisine representation + recipe-name representation
 ```
 
-The loader reads:
+The frontend is a React/Vite demo, the backend is a lightweight Python HTTP
+service, and the model runtime loads trained Stable-Baselines3 DQN checkpoints.
 
-- `metadata/dish_metadata_cafe1.csv`
-- `metadata/dish_metadata_cafe2.csv`
-- split files under `dish_ids/splits/`
+## What The Demo Does
 
-## Run the Baseline
+1. User enters a planning horizon from 1 to 21 days.
+2. User enters daily calories, protein, carbs, and fat goals.
+3. User selects several example meal templates to define taste preference.
+4. For each breakfast/lunch/dinner step, the backend returns 3-4 ranked meal
+   options with image, portion, nutrition, and projected deficit.
+5. The UI updates live nutrition status, selected meal history, and final plan
+   completion metrics.
 
-This is the frozen-embedding baseline:
-
-- extract L2-normalized CLIP dish embeddings
-- train the linear nutrition regressor
-- train the linear top-100 ingredient classifier
-- write the benchmark summary and all intermediate outputs
-
-```bash
-visionmealrl run-baseline \
-  --dataset-root /path/to/nutrition5k_dataset \
-  --output-root /path/to/artifacts \
-  --model-name ViT-B-32 \
-  --pretrained laion2b_s34b_b79k \
-  --image-source overhead_rgb
-```
-
-Outputs are written under:
+Custom horizons are supported by mapping the requested length to the nearest
+trained checkpoint greater than or equal to that length:
 
 ```text
-artifacts/
-└── benchmarks/
-    ├── benchmark_runs.csv
-    └── open_clip_ViT-B-32_laion2b_s34b_b79k/
-        └── overhead_rgb/
-            └── linear_top100_at5_seed7/
-                ├── benchmark_config.json
-                ├── benchmark_summary.csv
-                ├── benchmark_summary.json
-                ├── classification/
-                ├── regression/
-                └── ...
+1 -> 1-day model
+2-3 -> 3-day model
+4-7 -> 7-day model
+8-21 -> 21-day model
 ```
 
-The baseline still writes extracted embeddings in the same split format under
-`artifacts/embeddings/...`. Each split contains:
-
-- `per_image_embeddings.npy`
-- `per_image_manifest.csv`
-- `dish_embeddings.npy`
-- `dish_manifest.csv`
-- `metadata.json`
-
-`dish_embeddings.npy` stores the dish-level embedding matrix directly as a NumPy
-array. Its rows are aligned with `dish_manifest.csv`, which contains the
-corresponding `dish_id`, image count, and nutrition targets.
-
-For downstream code that needs the embeddings joined with nutrition metadata:
-
-```python
-from visionmealrl import load_dish_embedding_lookup
-
-lookup = load_dish_embedding_lookup("artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train")
-
-dish_id = 'dish_1556572657' # whichever dish you wish to inspect
-record = lookup[dish_id]
-embedding = record["embedding"]
-nutrition_metadata = record["nutrition_metadata"]
-```
-
-## Run the Multitask Pipeline
-
-This command trains a shared CLIP visual encoder jointly for:
-
-- nutrition regression (`total_calories`, `total_mass`, `total_fat`, `total_carb`, `total_protein`)
-- ingredient multi-label classification
-
-It starts by training the task heads with the encoder frozen, then selectively
-unfreezes the last visual transformer blocks for end-to-end finetuning.
-
-```bash
-visionmealrl run-multitask \
-  --dataset-root /path/to/nutrition5k_dataset \
-  --output-root /path/to/artifacts \
-  --model-name ViT-B-32 \
-  --pretrained laion2b_s34b_b79k \
-  --image-source overhead_rgb \
-  --epochs 20 \
-  --freeze-epochs 3 \
-  --unfreeze-last-n-blocks 2
-```
-
-Outputs are written under:
+## Functionality Map
 
 ```text
-artifacts/
-└── multitask/
-    └── open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/
-        ├── best_model.pt
-        ├── label_vocabulary.json
-        ├── metrics.json
-        ├── run_config.json
-        ├── regression_predictions_test.csv
-        ├── classification_predictions_test.csv
-        ├── classification_per_class_metrics.csv
-        └── finetuned_embeddings/
-            ├── train/
-            └── test/
+src/agent/
+  RL environment, user model, catalog loader, reward logic, DQN model,
+  training, evaluation, and demo backend.
+
+frontend/
+  React/Vite web app for the interactive demo. Includes a Vercel serverless
+  proxy so private Hugging Face Spaces can be called without exposing HF_TOKEN.
+
+deploy/huggingface_space/
+  Docker Space files and deployment instructions for the Python demo backend.
+
+scripts/
+  Utility scripts for training sweeps, catalog artifact generation, catalog
+  image download, and demo-image compression.
+
+src/meal_catalog/
+  Older meal-catalog preparation utilities. The current deploy path uses the
+  script-level utilities in scripts/.
+
+src/visionmealrl/
+  Vision/model-training utilities from earlier project stages. Kept for
+  reproducibility, but not required to understand or run the current demo.
 ```
 
-The finetuned embedding export uses the same split artifact format as the
-baseline extractor (`dish_embeddings.npy`, `dish_manifest.csv`, `metadata.json`,
-plus per-image files), so downstream code can reuse the same loading path.
+## Key Runtime Artifacts
 
-## Reconstruct Embedding Model From Cached Weights
-The exported weights for the embedding model is stored in `artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt`.
+The active backend expects:
+
+```text
+runs/agent_three_component_2/
+artifacts/catalog/three_component/train/
+artifacts/catalog_demo_images/
 ```
-from pathlib import Path
 
-import numpy as np
-import torch
-from PIL import Image
+Important files:
 
-from visionmealrl.embedding import load_openclip_model_and_preprocess, resolve_device
-from visionmealrl.multitask.artifacts import load_checkpoint
+- `runs/agent_three_component_2/h{1,3,7,21}_seed42/dqn_model.zip`
+- `runs/agent_three_component_2/h{1,3,7,21}_seed42/config.json`
+- `artifacts/catalog/three_component/train/catalog_manifest.csv`
+- `artifacts/catalog/three_component/train/ingredient_embeddings.npy`
+- `artifacts/catalog/three_component/train/cuisine_embeddings.npy`
+- `artifacts/catalog/three_component/train/name_embeddings.npy`
+- `artifacts/catalog_demo_images/*.webp`
 
-checkpoint_path = Path(
-    "artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt"
-)
-image_path = Path("/path/to/dish_image.png")
+The trained agent run, current catalog artifacts, and text-embedding checkpoint
+are tracked in the project repo. The large source catalog images and compressed
+demo images are not tracked and can be regenerated from `data/meal_catalog.csv`.
 
-device = resolve_device("auto")
-checkpoint = load_checkpoint(checkpoint_path, device=device)
+## Setup
 
-clip_model, preprocess = load_openclip_model_and_preprocess(
-    model_name=checkpoint["model_name"],
-    pretrained=checkpoint["pretrained"],
-    device=device,
-)
-clip_model.load_state_dict(checkpoint["clip_model_state_dict"])
-clip_model.eval()
+Recommended project Python for local work:
 
-with Image.open(image_path) as image:
-    image_tensor = preprocess(image.convert("RGB")).unsqueeze(0).to(device)
-
-with torch.inference_mode():
-    embedding = clip_model.encode_image(image_tensor)
-    embedding = embedding / embedding.norm(dim=-1, keepdim=True).clamp(min=1e-12)
-
-embedding_np = embedding[0].detach().cpu().numpy().astype(np.float32)
-print(embedding_np)
+```bash
+~/.venv/dl/bin/python
 ```
+
+Install dependencies with your preferred environment manager, then run commands
+from the repository root with:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python ...
+```
+
+For frontend dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+## Run The Backend Locally
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python -m agent.demo_backend \
+  --host 127.0.0.1 \
+  --port 8000 \
+  --run-root runs/agent_three_component_2 \
+  --catalog-dir artifacts/catalog/three_component/train \
+  --image-dir artifacts/catalog_demo_images
+```
+
+Smoke checks:
+
+```bash
+curl http://127.0.0.1:8000/api/health
+curl http://127.0.0.1:8000/api/horizons
+curl "http://127.0.0.1:8000/api/preference-templates?limit=8"
+```
+
+## Run The Frontend Locally
+
+```bash
+cd frontend
+npm run dev
+```
+
+By default, the Vite dev server proxies `/agent-api/*` to
+`http://127.0.0.1:8000`.
+
+To test against a private Hugging Face Space locally, set these in `.env` or
+`frontend/.env.local`:
+
+```text
+HF_SPACE_URL=https://your-space-name.hf.space
+HF_TOKEN=hf_your_private_space_token
+```
+
+Do not put `HF_TOKEN` in a browser-exposed `VITE_*` variable.
+
+## Train And Evaluate Agents
+
+The detailed agent workflow is documented in `src/agent/README.md`.
+
+Typical training entry point:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python -m agent.train \
+  --num_days 7 \
+  --total_timesteps 200000 \
+  --catalog_dir artifacts/catalog/three_component/train \
+  --output_dir runs/example_agent
+```
+
+Typical evaluation entry point:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python -m agent.evaluate \
+  --run_dir runs/example_agent \
+  --catalog_dir artifacts/catalog/three_component/train \
+  --policies dqn health multi random \
+  --output_csv runs/example_agent/eval_metrics.csv
+```
+
+Horizon sweeps:
+
+```bash
+TOTAL_TIMESTEPS=200000 \
+HORIZONS="1 3 7 21" \
+SEEDS="42" \
+scripts/agent_sweep.sh
+```
+
+## Regenerate Catalog Images And Demo Images
+
+If a fresh clone has `data/meal_catalog.csv` but not `data/catalog/images`,
+download source images:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python \
+  scripts/download_catalog_images.py \
+  --recipe-file data/meal_catalog.csv \
+  --image-root data/catalog/images
+```
+
+If the three-component catalog needs to be rebuilt:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python \
+  scripts/build_agent_catalog_artifacts.py \
+  --recipe-file data/meal_catalog.csv \
+  --checkpoint-path artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt \
+  --image-root data/catalog/images \
+  --output-dir artifacts/catalog/three_component/train
+```
+
+Compress images for the demo backend:
+
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python \
+  scripts/prepare_demo_images.py \
+  --manifest artifacts/catalog/three_component/train/catalog_manifest.csv \
+  --repo-root . \
+  --output-dir artifacts/catalog_demo_images \
+  --format webp
+```
+
+## Deployment
+
+Backend deployment to Hugging Face Spaces is documented in:
+
+```text
+deploy/huggingface_space/README.md
+```
+
+Frontend deployment to Vercel is documented in:
+
+```text
+frontend/README.md
+```
+
+The intended deployment split is:
+
+- Hugging Face Space hosts the Python backend and model artifacts.
+- Vercel hosts the React frontend.
+- Vercel stores `HF_SPACE_URL` and `HF_TOKEN` as server-side environment
+  variables and proxies browser requests through `/agent-api`.
+
+## Current Status
+
+The current maintained path is the agent demo:
+
+- three-component catalog runtime,
+- action-scoring DQN checkpoints for horizons 1, 3, 7, and 21,
+- custom demo horizon support up to 21 days,
+- template-based user preference setup,
+- local backend/frontend preview,
+- Hugging Face backend deployment path,
+- Vercel frontend deployment path.
+
+Older Nutrition5K and vision-training code remains in the repository for
+project history and reproducibility, but the root README intentionally points
+new users toward the current meal-planning demo workflow.

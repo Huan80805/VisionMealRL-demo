@@ -119,7 +119,7 @@ data/catalog/images/catalog_1/rgb.png
 Then build the three-component catalog from `meal_catalog.csv`:
 
 ```bash
-PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl ~/.venv/dl/bin/python \
+PYTHONPATH=src ~/.venv/dl/bin/python \
   scripts/build_agent_catalog_artifacts.py \
   --recipe-file data/meal_catalog.csv \
   --checkpoint-path artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/best_embedding_model.pt \
