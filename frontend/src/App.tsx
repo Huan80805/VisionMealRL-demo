@@ -222,12 +222,13 @@ export default function App() {
         <section className="setup-panel">
           <header className="setup-header">
             <div className="brand-block">
-              <img src="/site-icon.png" alt="" aria-hidden="true" />
+              <img src="/site-icon-removebg.png" alt="" aria-hidden="true" />
               <div>
                 <h1>VisionMealRL</h1>
                 <p>
-                  A reinforcement-learning meal planner that balances nutrition
-                  goals, preference, and diversity across a custom horizon.
+                  A interactive meal-planning demo power by a reinforcement-learning agent. 
+                  Set nutrition goals and a custom horizon, choose meals that reflect your taste, 
+                  the agent will recommend meals that balances nutrition goals, preference, and diversity.
                 </p>
               </div>
             </div>
