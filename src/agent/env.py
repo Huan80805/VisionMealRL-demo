@@ -7,13 +7,19 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-from agent.catalog import MealCatalog
-from agent.user import SimulatedUser
+from agent.catalog import COMPONENT_NAMES, MealCatalog
+from agent.user import PREFERENCE_COMPONENT_WEIGHTS, SimulatedUser
 
 if TYPE_CHECKING:
     from agent.config import AgentConfig
 
 EpisodeResampler = Callable[[SimulatedUser, np.random.Generator], None]
+
+DIVERSITY_COMPONENT_WEIGHTS = {
+    "ingredient": 1.00,
+    "cuisine": 0.00,
+    "name": 0.00,
+}
 
 
 def estimate_observed_meal_from_photo(
@@ -23,7 +29,8 @@ def estimate_observed_meal_from_photo(
 
     The CV/integration layer should replace this with a call that returns:
       - nutrition: shape (4,), [calories, protein, carbs, fat]
-      - embedding: shape (embedding_dim,), in the same CLIP space as the catalog
+      - embedding: shape (embedding_dim,), in the same concatenated
+        component representation as the catalog
 
     The agent environment can already consume those arrays through
     ``MealPlanningEnv.step(..., observed_nutrition=..., observed_embedding=...)``.
@@ -62,12 +69,15 @@ class MealPlanningEnv(gym.Env):
         num_days: int = 1,
         meals_per_day: int = 3,
         history_len: int = 6,
+        catalog_history_bootstrap: bool = False,
+        catalog_history_preferred_fraction: float = 0.7,
         portion_levels: tuple[float, ...] = (0.75, 1.0, 1.25),
         w_health: float = 1.0,
         w_diversity: float = 0.3,
         w_preference: float = 0.2,
+        w_slot: float = 0.25,
         w_boundary: float = 0.5,
-        bootstrap_pool: Optional[tuple[np.ndarray, np.ndarray]] = None,
+        bootstrap_pool: Optional[np.ndarray] = None,
         episode_resampler: Optional[EpisodeResampler] = None,
     ):
         super().__init__()
@@ -80,6 +90,8 @@ class MealPlanningEnv(gym.Env):
         self.meals_per_day = meals_per_day
         self.horizon = num_days * meals_per_day
         self.history_len = history_len
+        self.catalog_history_bootstrap = catalog_history_bootstrap
+        self.catalog_history_preferred_fraction = float(catalog_history_preferred_fraction)
         self.portion_levels = np.array(portion_levels)
         self.num_portions = len(portion_levels)
         self.emb_dim = catalog.embedding_dim
@@ -87,6 +99,7 @@ class MealPlanningEnv(gym.Env):
         self.w_health = w_health
         self.w_diversity = w_diversity
         self.w_preference = w_preference
+        self.w_slot = w_slot
         self.w_boundary = w_boundary
         self.target_scale = np.array(
             [3200.0, 200.0, 450.0, 100.0],
@@ -109,41 +122,22 @@ class MealPlanningEnv(gym.Env):
             low=-np.inf, high=np.inf, shape=(obs_dim,), dtype=np.float32
         )
 
-        # User meal-history pool sampled at reset to (a) warm up the
-        # diversity context window with non-zero recent embeddings and
-        # (b) pre-consume part of the weekly nutrition budget — i.e.
-        # simulate a user starting the planning episode mid-week with
-        # some meals already eaten. Two row-aligned arrays:
-        #   embeddings: (N, emb_dim)
-        #   nutrition:  (N, 4) in [cal, protein, carbs, fat]
-        #
-        # This pool is prior user history and should come from the
-        # Nutrition5K-derived history artifact, not the recipe catalog.
-        # The catalog is only the action space for future recommendations.
-        # If omitted, the episode starts with no pre-consumed history.
+        # Optional external meal-history pool, used only to warm up the
+        # diversity context window with non-zero recent embeddings. Nutrition
+        # deficits are not changed by history bootstrap.
         if bootstrap_pool is None:
             self.bootstrap_embeddings = np.empty((0, self.emb_dim), dtype=np.float32)
-            self.bootstrap_nutrition = np.empty((0, 4), dtype=np.float32)
         else:
-            emb_pool, nut_pool = bootstrap_pool
-            emb_pool = np.asarray(emb_pool, dtype=np.float32)
-            nut_pool = np.asarray(nut_pool, dtype=np.float32)
+            emb_pool = np.asarray(bootstrap_pool, dtype=np.float32)
             if emb_pool.ndim != 2 or emb_pool.shape[1] != self.emb_dim:
                 raise ValueError(
                     f"bootstrap embeddings shape {emb_pool.shape} incompatible "
                     f"with embedding_dim {self.emb_dim}"
                 )
-            if nut_pool.ndim != 2 or nut_pool.shape[1] != 4:
-                raise ValueError(
-                    f"bootstrap nutrition shape {nut_pool.shape}; expected (N, 4)"
-                )
-            if emb_pool.shape[0] != nut_pool.shape[0]:
-                raise ValueError(
-                    f"bootstrap embedding rows ({emb_pool.shape[0]}) "
-                    f"!= nutrition rows ({nut_pool.shape[0]})"
-                )
-            self.bootstrap_embeddings = emb_pool
-            self.bootstrap_nutrition = nut_pool
+            norms = np.linalg.norm(emb_pool, axis=1, keepdims=True)
+            if np.any(norms <= 0.0):
+                raise ValueError("bootstrap embeddings contain zero-vector rows")
+            self.bootstrap_embeddings = emb_pool / norms
 
         # Internal state (initialized in reset)
         self._step_count = 0
@@ -158,7 +152,7 @@ class MealPlanningEnv(gym.Env):
         cfg: "AgentConfig",
         catalog: MealCatalog,
         user: SimulatedUser,
-        bootstrap_pool: Optional[tuple[np.ndarray, np.ndarray]] = None,
+        bootstrap_pool: Optional[np.ndarray] = None,
         episode_resampler: Optional[EpisodeResampler] = None,
     ) -> "MealPlanningEnv":
         """Construct environment from an AgentConfig."""
@@ -168,10 +162,13 @@ class MealPlanningEnv(gym.Env):
             num_days=cfg.num_days,
             meals_per_day=cfg.meals_per_day,
             history_len=cfg.history_len,
+            catalog_history_bootstrap=cfg.catalog_history_bootstrap,
+            catalog_history_preferred_fraction=cfg.catalog_history_preferred_fraction,
             portion_levels=cfg.portion_levels,
             w_health=cfg.w_health,
             w_diversity=cfg.w_diversity,
             w_preference=cfg.w_preference,
+            w_slot=cfg.w_slot,
             w_boundary=cfg.w_boundary,
             bootstrap_pool=bootstrap_pool,
             episode_resampler=episode_resampler,
@@ -216,6 +213,122 @@ class MealPlanningEnv(gym.Env):
         if norm <= 1e-8:
             return np.zeros(self.emb_dim, dtype=np.float32)
         return (recent_mean / norm).astype(np.float32)
+
+    def _recent_component_means(self) -> dict[str, np.ndarray]:
+        if not self._recent_embeddings:
+            return {
+                name: np.zeros(self.catalog.component_dims[name], dtype=np.float32)
+                for name in COMPONENT_NAMES
+            }
+        recent = self._recent_embeddings[-self.history_len:]
+        out: dict[str, np.ndarray] = {}
+        for component in COMPONENT_NAMES:
+            slc = self.catalog.component_slices[component]
+            if slc.stop == slc.start:
+                out[component] = np.array([], dtype=np.float32)
+                continue
+            mat = np.stack([emb[slc] for emb in recent], axis=0)
+            mean = mat.mean(axis=0)
+            norm = float(np.linalg.norm(mean))
+            if norm <= 1e-8:
+                out[component] = np.zeros_like(mean, dtype=np.float32)
+            else:
+                out[component] = (mean / norm).astype(np.float32)
+        return out
+
+    def _diversity_score(
+        self,
+        meal_components: dict[str, np.ndarray],
+    ) -> tuple[float, dict[str, float]]:
+        if not self._recent_embeddings:
+            scores = {
+                name: (1.0 if meal_components[name].size > 0 else 0.0)
+                for name in COMPONENT_NAMES
+            }
+            active = sum(
+                DIVERSITY_COMPONENT_WEIGHTS[name]
+                for name in COMPONENT_NAMES
+                if meal_components[name].size > 0
+            )
+            weighted = sum(
+                DIVERSITY_COMPONENT_WEIGHTS[name] * scores[name]
+                for name in COMPONENT_NAMES
+            )
+            return float(weighted / active if active > 0 else 0.0), scores
+
+        recent_means = self._recent_component_means()
+        scores: dict[str, float] = {}
+        weighted = 0.0
+        active_weight = 0.0
+        for component in COMPONENT_NAMES:
+            meal_vec = meal_components[component]
+            recent_vec = recent_means[component]
+            if meal_vec.size == 0 or recent_vec.size == 0:
+                scores[component] = 0.0
+                continue
+            score = 1.0 - float(np.dot(meal_vec, recent_vec))
+            scores[component] = score
+            weight = DIVERSITY_COMPONENT_WEIGHTS[component]
+            weighted += weight * score
+            active_weight += weight
+        return float(weighted / active_weight if active_weight > 0 else 0.0), scores
+
+    def _preference_score(
+        self,
+        meal_components: dict[str, np.ndarray],
+        *,
+        add_noise: bool,
+    ) -> tuple[float, dict[str, float]]:
+        return self.user.preference_component_scores(
+            meal_components,
+            weights=PREFERENCE_COMPONENT_WEIGHTS,
+            add_noise=add_noise,
+        )
+
+    def _catalog_history_embeddings(self) -> list[np.ndarray]:
+        if self.history_len <= 0 or self.catalog.num_meals == 0:
+            return []
+
+        preferred_n = int(round(self.history_len * self.catalog_history_preferred_fraction))
+        preferred_n = min(max(preferred_n, 0), self.history_len)
+        random_n = self.history_len - preferred_n
+
+        scores = np.array([
+            self.user.preference_component_scores(
+                self.catalog.get_components(meal_idx),
+                weights=PREFERENCE_COMPONENT_WEIGHTS,
+                add_noise=False,
+            )[0]
+            for meal_idx in range(self.catalog.num_meals)
+        ], dtype=np.float32)
+
+        top_n = max(preferred_n, int(np.ceil(0.20 * self.catalog.num_meals)), 1)
+        top_n = min(top_n, self.catalog.num_meals)
+        top_indices = np.argsort(scores)[-top_n:]
+
+        chosen: list[int] = []
+        if preferred_n > 0:
+            replace = preferred_n > len(top_indices)
+            chosen.extend(
+                int(i) for i in self.np_random.choice(
+                    top_indices, size=preferred_n, replace=replace
+                )
+            )
+
+        if random_n > 0:
+            all_indices = np.arange(self.catalog.num_meals)
+            if len(chosen) < self.catalog.num_meals:
+                candidates = np.setdiff1d(all_indices, np.array(chosen), assume_unique=False)
+            else:
+                candidates = all_indices
+            replace = random_n > len(candidates)
+            chosen.extend(
+                int(i) for i in self.np_random.choice(
+                    candidates, size=random_n, replace=replace
+                )
+            )
+
+        return [self.catalog.get_embedding(i).copy() for i in chosen]
 
     def _coerce_observed_meal(
         self,
@@ -293,13 +406,8 @@ class MealPlanningEnv(gym.Env):
         self._weekly_deficit = self.user.weekly_target.copy()
         self._episode_deficit = self.user.daily_target.copy() * self.num_days
 
-        # Bootstrap "user has been eating already this week": sample
-        # ``history_len`` rows from the pool, use their embeddings to
-        # warm up the diversity context (so the first few steps see a
-        # non-zero recent-mean), and subtract their nutrition from the
-        # weekly deficit (clipped to >= 0). Daily deficit is left fresh
-        # — today is a new day. Uses the env's seeded ``np_random`` so
-        # the same env-seed reproduces the same bootstrap.
+        # Diversity bootstrap only: seed the recent-meal context with
+        # compatible representation vectors. Nutrition deficits stay fresh.
         pool_size = len(self.bootstrap_embeddings)
         if pool_size > 0 and self.history_len > 0:
             indices = self.np_random.integers(
@@ -308,10 +416,8 @@ class MealPlanningEnv(gym.Env):
             self._recent_embeddings = [
                 self.bootstrap_embeddings[int(i)].copy() for i in indices
             ]
-            consumed = self.bootstrap_nutrition[indices].sum(axis=0)
-            self._weekly_deficit = np.maximum(
-                self._weekly_deficit - consumed, 0.0
-            )
+        elif self.catalog_history_bootstrap and self.history_len > 0:
+            self._recent_embeddings = self._catalog_history_embeddings()
         else:
             self._recent_embeddings = []
 
@@ -335,7 +441,8 @@ class MealPlanningEnv(gym.Env):
         Args:
             action: flat action index in [0, num_actions).
             observed_nutrition: optional CV estimate [cal, protein, carbs, fat].
-            observed_embedding: optional CV meal embedding in catalog CLIP space.
+            observed_embedding: optional observed meal representation in the
+                catalog's concatenated component space.
         """
 
         # Capture day/slot BEFORE incrementing step count so info dict
@@ -346,6 +453,7 @@ class MealPlanningEnv(gym.Env):
         meal_idx, portion = self._decode_action(action)
         catalog_nutrition = self.catalog.get_nutrition(meal_idx, portion)
         catalog_embedding = self.catalog.get_embedding(meal_idx)
+        catalog_components = self.catalog.get_components(meal_idx)
 
         observed_meal = self._coerce_observed_meal(
             observed_nutrition, observed_embedding
@@ -353,9 +461,11 @@ class MealPlanningEnv(gym.Env):
         if observed_meal is None:
             nutrition = catalog_nutrition
             embedding = catalog_embedding
+            meal_components = catalog_components
             used_observed_meal = False
         else:
             nutrition, embedding = observed_meal
+            meal_components = self.catalog.split_embedding(embedding)
             used_observed_meal = True
 
         # 1. Health: how much daily deficit was reduced. Use per-component
@@ -369,17 +479,18 @@ class MealPlanningEnv(gym.Env):
         ).mean()
         delta_health = old_daily - new_daily_abs
 
-        # 2. Diversity: dissimilarity from recent meals
-        if self._recent_embeddings:
-            recent_mean = self._recent_mean_embedding()
-            diversity = 1.0 - float(np.dot(embedding, recent_mean))
-        else:
-            diversity = 1.0
+        # 2. Diversity: dissimilarity from recent meals by component.
+        diversity, diversity_components = self._diversity_score(meal_components)
 
         # 3. Preference alignment (with stochastic noise for training)
-        pref_score = self.user.preference_score(embedding)
+        pref_score, preference_components = self._preference_score(
+            meal_components, add_noise=True
+        )
 
-        # 4. Boundary bonus at end of each day
+        # 4. Meal-slot fit. Penalty-only; actions are not masked.
+        slot_score = self.catalog.slot_score(meal_idx, current_slot)
+
+        # 5. Boundary bonus at end of each day
         boundary_bonus = 0.0
         is_last_meal_of_day = (current_slot == self.meals_per_day - 1)
         if is_last_meal_of_day:
@@ -393,6 +504,7 @@ class MealPlanningEnv(gym.Env):
         weighted_health = self.w_health * delta_health
         weighted_diversity = self.w_diversity * diversity
         weighted_preference = self.w_preference * pref_score
+        weighted_slot = self.w_slot * slot_score
         weighted_boundary = self.w_boundary * boundary_bonus
         terminal_bonus = 0.0
         weighted_terminal = 0.0
@@ -401,6 +513,7 @@ class MealPlanningEnv(gym.Env):
             weighted_health
             + weighted_diversity
             + weighted_preference
+            + weighted_slot
             + weighted_boundary
         )
 
@@ -437,12 +550,20 @@ class MealPlanningEnv(gym.Env):
             "reward_terms": {
                 "delta_health": float(delta_health),
                 "diversity": float(diversity),
+                "diversity_ingredient": float(diversity_components["ingredient"]),
+                "diversity_cuisine": float(diversity_components["cuisine"]),
+                "diversity_name": float(diversity_components["name"]),
                 "preference": float(pref_score),
+                "preference_ingredient": float(preference_components["ingredient"]),
+                "preference_cuisine": float(preference_components["cuisine"]),
+                "preference_name": float(preference_components["name"]),
+                "slot_score": float(slot_score),
                 "boundary": float(boundary_bonus),
                 "terminal": float(terminal_bonus),
                 "weighted_health": float(weighted_health),
                 "weighted_diversity": float(weighted_diversity),
                 "weighted_preference": float(weighted_preference),
+                "weighted_slot": float(weighted_slot),
                 "weighted_boundary": float(weighted_boundary),
                 "weighted_terminal": float(weighted_terminal),
                 "total": float(reward),

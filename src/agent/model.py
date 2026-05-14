@@ -99,6 +99,13 @@ def build_action_features(catalog: MealCatalog, cfg: AgentConfig) -> np.ndarray:
                 embedding,
                 nutrition / nutrition_scale,
                 np.array([float(portion) / max_portion], dtype=np.float32),
+                np.array(
+                    [
+                        1.0 if slot in catalog.meals[meal_idx].valid_slots else 0.0
+                        for slot in range(cfg.meals_per_day)
+                    ],
+                    dtype=np.float32,
+                ),
             ]))
     return np.stack(rows, axis=0).astype(np.float32)
 
@@ -110,8 +117,8 @@ class ActionScoringQNetwork(QNetwork):
     Internally, state and action features are projected into a shared
     latent space and scored by a bounded cosine-style dot product plus a
     small learned action bias. This shares learning across nutritionally/
-    visually similar actions instead of treating each action id as unrelated,
-    while keeping Q-values on the same order as episode returns.
+    representationally similar actions instead of treating each action id as
+    unrelated, while keeping Q-values on the same order as episode returns.
     """
 
     def __init__(

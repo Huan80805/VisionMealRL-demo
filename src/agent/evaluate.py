@@ -32,6 +32,8 @@ from agent.baseline import HealthGreedy, MultiObjectiveGreedy, RandomPolicy
 from agent.catalog import MealCatalog
 from agent.config import AgentConfig
 from agent.env import MealPlanningEnv
+from agent.env import DIVERSITY_COMPONENT_WEIGHTS
+from agent.user import PREFERENCE_COMPONENT_WEIGHTS
 from agent.profiles import (
     EVAL_STYLES,
     TRAIN_STYLES,
@@ -51,7 +53,8 @@ class EpisodeResult:
     """Raw data collected during a single rollout."""
     total_return: float
     daily_deficits: list          # one np.ndarray per day (daily_target - daily_nutrition)
-    meal_embeddings: list         # one np.ndarray per step
+    meal_embeddings: list         # one concatenated np.ndarray per step
+    meal_components: list         # one dict[str, np.ndarray] per step
     pref_scores: list             # float per step: cos_sim(meal_emb, user_pref)
     daily_target: np.ndarray      # user target used for this episode
     episode_target: np.ndarray    # daily_target × env.num_days
@@ -81,15 +84,40 @@ class AggregatedMetrics:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
-def _pairwise_cosine_sim(embeddings: list[np.ndarray]) -> float:
-    """Mean pairwise cosine similarity of a list of (approximately) unit vectors."""
-    if len(embeddings) < 2:
+def _weighted_component_similarity(
+    left: dict[str, np.ndarray],
+    right: dict[str, np.ndarray],
+    weights: dict[str, float],
+) -> float:
+    weighted = 0.0
+    active_weight = 0.0
+    for component, weight in weights.items():
+        l_vec = left[component]
+        r_vec = right[component]
+        if l_vec.size == 0 or r_vec.size == 0:
+            continue
+        weighted += float(weight) * float(np.dot(l_vec, r_vec))
+        active_weight += float(weight)
+    return float(weighted / active_weight if active_weight > 0 else 0.0)
+
+
+def _pairwise_weighted_component_sim(
+    meal_components: list[dict[str, np.ndarray]],
+) -> float:
+    """Mean pairwise weighted component similarity for episode meals."""
+    if len(meal_components) < 2:
         return 0.0
-    mat = np.stack(embeddings, axis=0)  # (N, emb_dim)
-    gram = mat @ mat.T                  # (N, N)
-    n = len(embeddings)
-    off_diag = 1.0 - np.eye(n)
-    return float((gram * off_diag).sum() / (off_diag.sum() + 1e-8))
+    sims = []
+    for i in range(len(meal_components)):
+        for j in range(i + 1, len(meal_components)):
+            sims.append(
+                _weighted_component_similarity(
+                    meal_components[i],
+                    meal_components[j],
+                    DIVERSITY_COMPONENT_WEIGHTS,
+                )
+            )
+    return float(np.mean(sims)) if sims else 0.0
 
 
 def _run_episode(
@@ -102,6 +130,7 @@ def _run_episode(
     obs, _ = env.reset(seed=seed)
     total_return = 0.0
     meal_embeddings: list[np.ndarray] = []
+    meal_components: list[dict[str, np.ndarray]] = []
     pref_scores: list[float] = []
     daily_deficits: list[np.ndarray] = []
 
@@ -119,9 +148,16 @@ def _run_episode(
 
         emb = info["embedding"]
         meal_embeddings.append(emb.copy())
+        components = env.catalog.get_components(int(info["meal_idx"]))
+        meal_components.append({k: v.copy() for k, v in components.items()})
 
-        # Preference score without noise for reproducible evaluation
-        pref_scores.append(float(np.dot(env.user.preference_embedding, emb)))
+        # Preference score without noise for reproducible evaluation.
+        pref_score, _component_scores = env.user.preference_component_scores(
+            components,
+            weights=PREFERENCE_COMPONENT_WEIGHTS,
+            add_noise=False,
+        )
+        pref_scores.append(pref_score)
 
         daily_nutrition += nutrition
         if slot == env.meals_per_day - 1:
@@ -133,6 +169,7 @@ def _run_episode(
         total_return=total_return,
         daily_deficits=daily_deficits,
         meal_embeddings=meal_embeddings,
+        meal_components=meal_components,
         pref_scores=pref_scores,
         daily_target=env.user.daily_target.copy(),
         episode_target=env.user.daily_target.copy() * env.num_days,
@@ -159,8 +196,8 @@ def _aggregate(
             nga = 0.0
         nga_vals.append(nga)
 
-        # DDS: 1 − mean pairwise cosine similarity
-        dds_vals.append(1.0 - _pairwise_cosine_sim(r.meal_embeddings))
+        # DDS: 1 − mean pairwise weighted component similarity
+        dds_vals.append(1.0 - _pairwise_weighted_component_sim(r.meal_components))
 
         # PA: mean cosine similarity to user preference
         pa_vals.append(float(np.mean(r.pref_scores)) if r.pref_scores else 0.0)
@@ -370,17 +407,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--catalog_dir", type=Path, default=None,
-        help="Directory containing catalog_manifest.csv and "
-             "catalog_embeddings.npy. Used as the real action catalog.",
-    )
-    parser.add_argument(
-        "--catalog_artifact", type=Path, default=None,
-        help="Optional real catalog manifest. Currently waits on "
-             "MealCatalog.load_from_artifact.",
-    )
-    parser.add_argument(
-        "--catalog_embeddings", type=Path, default=None,
-        help="Catalog embedding .npy required with --catalog_artifact.",
+        help="Directory containing catalog_manifest.csv plus ingredient, cuisine, "
+             "and name embedding matrices. When omitted, a dummy catalog is used.",
     )
     return parser
 
@@ -402,26 +430,9 @@ def _normalise_policy_tags(tags: Sequence[str]) -> list[str]:
 
 def _load_eval_catalog(args: argparse.Namespace, cfg: AgentConfig) -> MealCatalog:
     if args.catalog_dir is not None:
-        if args.catalog_artifact is not None or args.catalog_embeddings is not None:
-            raise SystemExit(
-                "--catalog_dir cannot be combined with --catalog_artifact "
-                "or --catalog_embeddings"
-            )
         return MealCatalog.load_from_artifact(
             manifest_path=args.catalog_dir / "catalog_manifest.csv",
-            embeddings_path=args.catalog_dir / "catalog_embeddings.npy",
         )
-
-    if args.catalog_artifact is not None:
-        if args.catalog_embeddings is None:
-            raise SystemExit("--catalog_artifact requires --catalog_embeddings")
-        return MealCatalog.load_from_artifact(
-            manifest_path=args.catalog_artifact,
-            embeddings_path=args.catalog_embeddings,
-        )
-
-    if args.catalog_embeddings is not None:
-        raise SystemExit("--catalog_embeddings requires --catalog_artifact")
 
     return MealCatalog.load_dummy(
         num_meals=cfg.num_meals,

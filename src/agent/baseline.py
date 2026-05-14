@@ -79,7 +79,7 @@ class MultiObjectiveGreedy:
     def _parse_obs(
         self, obs: np.ndarray
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Extract (daily_deficit, recent_mean_emb, user_pref) from observation."""
+        """Extract daily deficit from observation."""
         daily_norm = obs[self._s_daily]
         daily_deficit = daily_norm * (self.env.user.daily_target + 1e-8)
         recent_emb = obs[self._s_meal_emb]
@@ -98,7 +98,7 @@ class MultiObjectiveGreedy:
             portion_idx = action % self.env.num_portions
             portion = self.env.portion_levels[portion_idx]
             nutrition = self.env.catalog.get_nutrition(meal_idx, portion)
-            embedding = self.env.catalog.get_embedding(meal_idx)
+            components = self.env.catalog.get_components(meal_idx)
 
             # Health component
             old_daily = np.abs(
@@ -110,15 +110,22 @@ class MultiObjectiveGreedy:
             ).mean()
 
             # Diversity component
-            diversity = 1.0 - float(np.dot(recent_emb, embedding))
+            diversity, _diversity_components = self.env._diversity_score(components)
 
             # Preference component (no noise — deterministic baseline)
-            pref_score = float(np.dot(user_pref, embedding))
+            pref_score, _preference_components = self.env._preference_score(
+                components, add_noise=False
+            )
+
+            slot_score = self.env.catalog.slot_score(
+                meal_idx, int(np.argmax(obs[self._s_time]))
+            )
 
             score = (
                 self.cfg.w_health * delta_health
                 + self.cfg.w_diversity * diversity
                 + self.cfg.w_preference * pref_score
+                + self.cfg.w_slot * slot_score
             )
 
             if score > best_score:

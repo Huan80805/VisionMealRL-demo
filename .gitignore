@@ -3,12 +3,16 @@
 .venv/
 __pycache__/
 artifacts/benchmarks
+artifacts/catalog_demo_images/
 artifacts/embeddings
 artifacts/multitask/*/epoch_checkpoints
 artifacts/multitask/*/*.csv
 artifacts/multitask/*/*.json
 build/
 dist/
+frontend/dist/
+frontend/node_modules/
+*.tsbuildinfo
 *.egg-info/
 data/
 tests/
@@ -16,3 +20,4 @@ tests/
 .pytest_cache
 .cache/
 **/.cache/
+.env

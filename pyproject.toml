@@ -30,6 +30,7 @@ dev = [
 
 [project.scripts]
 visionmealrl = "visionmealrl.cli:main"
+agent-demo-backend = "agent.demo_backend:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

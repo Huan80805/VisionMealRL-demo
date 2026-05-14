@@ -13,19 +13,21 @@ set -euo pipefail
 #   W_HEALTH=3.0
 #   W_DIVERSITY=0.1
 #   W_PREFERENCE=0.1
+#   W_SLOT=0.25
 #   W_BOUNDARY=1.0
 #   GAMMA=0.95
 #   N_EVAL_SEEDS=2
 #   TB_LOG_ROOT=runs/agent_sweep/tensorboard
-#   NUTRITION5K_SUBSAMPLE_SIZE=1000
-#   CATALOG_DIR=/path/to/catalog
-#   NUTRITION5K_DATA=/path/to/nutrition5k_data
+#   CATALOG_DIR=artifacts/catalog/three_component/train
+#   CATALOG_HISTORY_BOOTSTRAP=1
+#   CATALOG_HISTORY_PREFERRED_FRACTION=0.7
+#   BOOTSTRAP_POOL_NPY=/path/to/compatible_history_embeddings.npy
 #
 # Example:
 #   TOTAL_TIMESTEPS=10000 HORIZONS="1 3" SEEDS="42" scripts/agent_sweep.sh
-CATALOG_DIR="${CATALOG_DIR:-artifacts/catalog/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train}"
-NUTRITION5K_DATA="${NUTRITION5K_DATA:-artifacts/multitask/open_clip_ViT-B-32_laion2b_s34b_b79k_overhead_rgb/finetuned_embeddings/train}"
+CATALOG_DIR="${CATALOG_DIR:-artifacts/catalog/three_component/train}"
 PYTHON_BIN="${PYTHON_BIN:-$HOME/.venv/dl/bin/python}"
+export PYTHONPATH="${PYTHONPATH:-src}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-runs/agent_sweep}"
 HORIZONS="${HORIZONS:-1 3 7 21}"
 SEEDS="${SEEDS:-42}"
@@ -36,10 +38,13 @@ MEALS_PER_DAY="${MEALS_PER_DAY:-3}"
 EMBEDDING_DIM="${EMBEDDING_DIM:-512}"
 TB_LOG_ROOT="${TB_LOG_ROOT:-runs/agent_sweep/tensorboard}"
 W_HEALTH="${W_HEALTH:-1.0}"
-W_DIVERSITY="${W_DIVERSITY:-0.3}"
-W_PREFERENCE="${W_PREFERENCE:-0.2}"
+W_DIVERSITY="${W_DIVERSITY:-0.10}"
+W_PREFERENCE="${W_PREFERENCE:-1.0}"
+W_SLOT="${W_SLOT:-0.25}"
 W_BOUNDARY="${W_BOUNDARY:-0.5}"
-GAMMA="${GAMMA:-0.99}"
+GAMMA="${GAMMA:-0.95}"
+CATALOG_HISTORY_BOOTSTRAP="${CATALOG_HISTORY_BOOTSTRAP:-1}"
+CATALOG_HISTORY_PREFERRED_FRACTION="${CATALOG_HISTORY_PREFERRED_FRACTION:-0.0}"
 
 mkdir -p "$OUTPUT_ROOT"
 
@@ -58,13 +63,19 @@ for horizon in $HORIZONS; do
       --w_health "$W_HEALTH"
       --w_diversity "$W_DIVERSITY"
       --w_preference "$W_PREFERENCE"
+      --w_slot "$W_SLOT"
       --w_boundary "$W_BOUNDARY"
       --gamma "$GAMMA"
-      --nutrition5k-data "$NUTRITION5K_DATA"
       --catalog_dir "$CATALOG_DIR"
+      --catalog_history_preferred_fraction "$CATALOG_HISTORY_PREFERRED_FRACTION"
     )
-    if [[ -n "${NUTRITION5K_SUBSAMPLE_SIZE:-}" ]]; then
-      train_args+=(--nutrition5k-subsample-size "$NUTRITION5K_SUBSAMPLE_SIZE")
+    if [[ "$CATALOG_HISTORY_BOOTSTRAP" == "0" ]]; then
+      train_args+=(--no-catalog_history_bootstrap)
+    else
+      train_args+=(--catalog_history_bootstrap)
+    fi
+    if [[ -n "${BOOTSTRAP_POOL_NPY:-}" ]]; then
+      train_args+=(--bootstrap_pool_npy "$BOOTSTRAP_POOL_NPY")
     fi
     if [[ -n "${TB_LOG_ROOT:-}" ]]; then
       train_args+=(--tb_log_dir "$TB_LOG_ROOT" --tb_log_name "h${horizon}_seed${seed}_dqn")

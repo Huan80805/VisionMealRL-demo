@@ -10,14 +10,16 @@ class AgentConfig:
     """Central hyperparameter store for all agent experiments.
 
     Pass --num_days from the CLI to vary the planning horizon (Experiment 2).
-    embedding_dim defaults to 512 to match CLIP ViT-B/32 output.
+    embedding_dim is the concatenated meal representation dimension.
     """
 
     num_meals: int = 30
-    embedding_dim: int = 512          # CLIP ViT-B/32 output
+    embedding_dim: int = 512
     num_days: int = 3                 # TUNABLE — Exp 2 variable
     meals_per_day: int = 3
     history_len: int = 6
+    catalog_history_bootstrap: bool = True
+    catalog_history_preferred_fraction: float = 0.7
     portion_levels: tuple = (0.75, 1.0, 1.25)
     daily_cal: float = 2000.0
     daily_protein: float = 80.0
@@ -26,6 +28,7 @@ class AgentConfig:
     w_health: float = 1.0
     w_diversity: float = 0.3
     w_preference: float = 0.2
+    w_slot: float = 0.25
     w_boundary: float = 0.5
     total_timesteps: int = 1_000_000
     learning_rate: float = 1e-4
@@ -73,6 +76,7 @@ class AgentConfig:
         assert self.num_days > 0, "num_days must be positive"
         assert self.meals_per_day > 0, "meals_per_day must be positive"
         assert self.history_len > 0, "history_len must be positive"
+        assert 0.0 <= self.catalog_history_preferred_fraction <= 1.0
         assert len(self.portion_levels) > 0, "portion_levels must not be empty"
         assert self.daily_cal > 0 and self.daily_protein > 0
         assert self.daily_carbs > 0 and self.daily_fat > 0
@@ -88,8 +92,6 @@ class AgentConfig:
         """Restore config from a JSON file written by to_json()."""
         path = Path(path)
         data = json.loads(path.read_text())
-        # Keep old run folders evaluable after removing the architecture flag.
-        data.pop("policy_arch", None)
         if "portion_levels" in data:
             data["portion_levels"] = tuple(data["portion_levels"])
         return cls(**data)

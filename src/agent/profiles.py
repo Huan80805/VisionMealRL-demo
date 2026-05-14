@@ -21,12 +21,13 @@ disjoint partition.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Callable, Sequence
 
 import numpy as np
 
-from agent.catalog import MealCatalog, MealTemplate
+from agent.catalog import COMPONENT_NAMES, MealCatalog, MealTemplate
 from agent.user import SimulatedUser
 
 
@@ -140,10 +141,47 @@ def apply_random_preference(
     k = min(k, len(template_pool))
     indices = rng.choice(len(template_pool), size=k, replace=False)
     chosen = [template_pool[int(i)] for i in indices]
-    embeddings = np.stack([t.embedding for t in chosen], axis=0)
-    pref = embeddings.mean(axis=0)
-    pref = pref / (np.linalg.norm(pref) + 1e-8)
-    user.preference_embedding = pref.astype(np.float32)
+    component_means = {}
+    for component in COMPONENT_NAMES:
+        rows = np.stack(
+            [getattr(t, f"{component}_embedding") for t in chosen],
+            axis=0,
+        )
+        component_means[component] = rows.mean(axis=0)
+    user.set_preference_components(
+        component_means["ingredient"],
+        component_means["cuisine"],
+        component_means["name"],
+    )
+
+
+def apply_style_random_preference(
+    user: SimulatedUser,
+    style_template_lists: Mapping[str, Sequence[MealTemplate]],
+    k_range: tuple[int, int],
+    rng: np.random.Generator,
+    style_names: Sequence[str] | None = None,
+) -> str:
+    """Redraw preference from one sampled style bucket.
+
+    This creates sharper training users than sampling from the full union of
+    training templates. It mirrors eval users, whose preference vector is built
+    from one held-out style at a time.
+
+    Returns the selected style name for diagnostics/tests.
+    """
+    if style_names is None:
+        style_names = tuple(style_template_lists.keys())
+    candidates = [
+        style for style in style_names
+        if style in style_template_lists and len(style_template_lists[style]) > 0
+    ]
+    if not candidates:
+        raise ValueError("style_template_lists must contain at least one non-empty style")
+
+    style = str(rng.choice(candidates))
+    apply_random_preference(user, style_template_lists[style], k_range, rng)
+    return style
 
 
 # ---------------------------------------------------------------------------
@@ -154,27 +192,39 @@ EpisodeResampler = Callable[[SimulatedUser, np.random.Generator], None]
 
 
 def make_training_resampler(
-    template_pool: Sequence[MealTemplate],
+    template_pool: Sequence[MealTemplate] | Mapping[str, Sequence[MealTemplate]],
     k_range: tuple[int, int] = (5, 31),
     randomize_targets: bool = True,
     randomize_preference: bool = True,
+    style_names: Sequence[str] | None = None,
 ) -> EpisodeResampler:
     """Build the callable consumed by ``MealPlanningEnv.episode_resampler``.
 
     On each ``env.reset()`` the user is mutated in place: targets are
     redrawn from ``TARGET_RANGES`` (if ``randomize_targets``) and the
-    preference embedding is rebuilt from a random subset of
-    ``template_pool`` (if ``randomize_preference``).
+    preference embedding is rebuilt (if ``randomize_preference``). When
+    ``template_pool`` is a ``style -> templates`` mapping, one style is sampled
+    first and then templates are sampled within that style. This is the
+    preferred real-catalog training path. A flat sequence is still accepted for
+    dummy catalogs and older tests.
 
-    ``template_pool`` must be the union of templates from the *training*
-    styles (``TRAIN_STYLES``) so the policy never sees eval-style
-    preferences during training.
+    The pool must contain only *training* styles (``TRAIN_STYLES``), so the
+    policy never sees eval-style preferences during training.
     """
     def _resample(user: SimulatedUser, rng: np.random.Generator) -> None:
         if randomize_targets:
             apply_random_targets(user, rng)
         if randomize_preference:
-            apply_random_preference(user, template_pool, k_range, rng)
+            if isinstance(template_pool, Mapping):
+                apply_style_random_preference(
+                    user,
+                    template_pool,
+                    k_range,
+                    rng,
+                    style_names=style_names,
+                )
+            else:
+                apply_random_preference(user, template_pool, k_range, rng)
     return _resample
 
 

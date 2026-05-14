@@ -1,0 +1,4 @@
+gymnasium>=1.1.1
+numpy>=2.0
+stable-baselines3>=2.7.1
+torch>=2.0
